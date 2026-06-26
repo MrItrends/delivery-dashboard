@@ -1,0 +1,276 @@
+// TBI Digital Delivery — data model.
+// Dev uses SQLite (file:./dev.db). For prod, switch provider to "postgresql"
+// and set DATABASE_URL in Vercel.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// ---------------------------------------------------------------------------
+// Identity
+// ---------------------------------------------------------------------------
+model User {
+  id           String       @id @default(cuid())
+  name         String
+  email        String       @unique
+  passwordHash String?
+  role         String       @default("contributor")
+  avatarColor  String?
+  createdAt    DateTime     @default(now())
+
+  memberships  Membership[]
+  comments     Comment[]
+  evidence     Evidence[]
+  notifications Notification[]
+  auditEntries AuditEntry[]
+}
+
+model Workspace {
+  id           String       @id @default(cuid())
+  name         String
+  identifier   String?      @unique
+  organization String?
+  country      String?
+  timezone     String?
+  language     String?      @default("en-GB")
+  createdAt    DateTime     @default(now())
+
+  memberships  Membership[]
+  portfolios   Portfolio[]
+}
+
+model Membership {
+  id          String    @id @default(cuid())
+  userId      String
+  workspaceId String
+  role        String    @default("contributor")
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, workspaceId])
+}
+
+// ---------------------------------------------------------------------------
+// Delivery hierarchy
+// ---------------------------------------------------------------------------
+model Portfolio {
+  id             String         @id @default(cuid())
+  workspaceId    String
+  name           String
+  description    String?
+  owner          String?
+  reportingPeriod String?
+  health         String         @default("healthy")
+  budgetHealth   String         @default("healthy")
+  riskLevel      String         @default("healthy")
+  archived       Boolean        @default(false)
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+
+  workspace      Workspace      @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  priorityAreas  PriorityArea[]
+}
+
+model PriorityArea {
+  id           String    @id @default(cuid())
+  portfolioId  String
+  name         String
+  mission      String?
+  owner        String?
+  health       String    @default("healthy")
+  budgetHealth String    @default("healthy")
+  targetStatus String    @default("healthy")
+  archived     Boolean   @default(false)
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  portfolio    Portfolio @relation(fields: [portfolioId], references: [id], onDelete: Cascade)
+  projects     Project[]
+  targets      Target[]
+}
+
+model Project {
+  id                 String         @id @default(cuid())
+  priorityAreaId     String
+  name               String
+  description        String?
+  owner              String?
+  health             String         @default("healthy")
+  budgetHealth       String         @default("healthy")
+  deliveryConfidence String         @default("healthy")
+  archived           Boolean        @default(false)
+  createdAt          DateTime       @default(now())
+  updatedAt          DateTime       @updatedAt
+
+  priorityArea       PriorityArea   @relation(fields: [priorityAreaId], references: [id], onDelete: Cascade)
+  interventions      Intervention[]
+  decisions          Decision[]
+  risks              Risk[]
+}
+
+model Intervention {
+  id           String     @id @default(cuid())
+  projectId    String
+  name         String
+  objective    String?
+  owner        String?
+  status       String     @default("planned")
+  health       String     @default("healthy")
+  budgetHealth String     @default("healthy")
+  dueDate      String?
+  archived     Boolean    @default(false)
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+
+  project      Project    @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  activities   Activity[]
+  milestones   Milestone[]
+  evidence     Evidence[]
+}
+
+model Activity {
+  id             String     @id @default(cuid())
+  interventionId String
+  name           String
+  owner          String?
+  status         String     @default("planned")
+  priority       String     @default("medium")
+  dueLabel       String?
+  overdue        Boolean    @default(false)
+  progress       Int        @default(0)
+  archived       Boolean    @default(false)
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @updatedAt
+
+  intervention   Intervention @relation(fields: [interventionId], references: [id], onDelete: Cascade)
+  evidence       Evidence[]
+}
+
+model Milestone {
+  id             String   @id @default(cuid())
+  interventionId String
+  name           String
+  owner          String?
+  due            String?
+  status         String   @default("planned")
+  groupLabel     String   @default("Upcoming")
+  dependency     String?
+  createdAt      DateTime @default(now())
+
+  intervention   Intervention @relation(fields: [interventionId], references: [id], onDelete: Cascade)
+}
+
+model Target {
+  id             String   @id @default(cuid())
+  priorityAreaId String
+  name           String
+  current        Float
+  target         Float
+  unit           String
+  trend          String   @default("flat")
+  status         String   @default("healthy")
+  forecast       String?
+  confidence     String   @default("Medium")
+  createdAt      DateTime @default(now())
+
+  priorityArea   PriorityArea @relation(fields: [priorityAreaId], references: [id], onDelete: Cascade)
+}
+
+model Risk {
+  id          String   @id @default(cuid())
+  projectId   String?
+  title       String
+  severity    String   @default("at-risk")
+  owner       String?
+  impact      String   @default("Medium")
+  likelihood  String   @default("Medium")
+  mitigation  String?
+  status      String   @default("active")
+  nextReview  String?
+  createdAt   DateTime @default(now())
+
+  project     Project? @relation(fields: [projectId], references: [id], onDelete: Cascade)
+}
+
+model Decision {
+  id                 String   @id @default(cuid())
+  projectId          String?
+  decision           String
+  owner              String?
+  date               String?
+  status             String   @default("active")
+  statusLabel        String   @default("Pending")
+  linkedIntervention String?
+  outcome            String?
+  type               String   @default("Operational")
+  evidenceCount      Int      @default(0)
+  createdAt          DateTime @default(now())
+
+  project            Project? @relation(fields: [projectId], references: [id], onDelete: Cascade)
+}
+
+// ---------------------------------------------------------------------------
+// Collaboration
+// ---------------------------------------------------------------------------
+model Comment {
+  id         String   @id @default(cuid())
+  objectType String
+  objectId   String
+  authorId   String
+  body       String
+  resolved   Boolean  @default(false)
+  pinned     Boolean  @default(false)
+  createdAt  DateTime @default(now())
+
+  author     User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
+}
+
+model Evidence {
+  id             String   @id @default(cuid())
+  name           String
+  type           String   @default("doc")
+  version        Int      @default(1)
+  size           String?
+  url            String?
+  uploadedById   String
+  activityId     String?
+  interventionId String?
+  createdAt      DateTime @default(now())
+
+  uploadedBy     User          @relation(fields: [uploadedById], references: [id], onDelete: Cascade)
+  activity       Activity?     @relation(fields: [activityId], references: [id], onDelete: SetNull)
+  intervention   Intervention? @relation(fields: [interventionId], references: [id], onDelete: SetNull)
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  userId    String
+  type      String
+  actor     String?
+  action    String
+  target    String?
+  context   String?
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model AuditEntry {
+  id         String   @id @default(cuid())
+  objectType String
+  objectId   String
+  actorId    String?
+  action     String
+  field      String?
+  previous   String?
+  next       String?
+  createdAt  DateTime @default(now())
+
+  actor      User?    @relation(fields: [actorId], references: [id], onDelete: SetNull)
+}
