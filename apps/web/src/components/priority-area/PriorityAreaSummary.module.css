@@ -1,0 +1,15 @@
+.wrap { display: flex; flex-direction: column; gap: var(--space-4); }
+
+.statusRow { display: flex; align-items: center; gap: var(--space-4); flex-wrap: wrap; }
+
+.statusItem { display: flex; align-items: center; gap: var(--space-2); }
+
+.statusLabel {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-tertiary);
+  font-weight: var(--font-weight-medium);
+}
+
+.statusDivider { width: 1px; height: 16px; background-color: var(--color-border-default); }
+
+@media (max-width: 560px) { .statusDivider { display: none; } }

@@ -1,0 +1,86 @@
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-3);
+}
+
+.cell {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius-lg);
+  background-color: var(--color-surface-page);
+}
+
+.head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.name {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-primary);
+  line-height: var(--line-height-snug);
+}
+
+.figures { display: flex; align-items: baseline; gap: var(--space-3); }
+
+.current {
+  font-size: var(--font-size-3xl);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+  letter-spacing: var(--letter-spacing-tight);
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.unit { font-size: var(--font-size-lg); font-weight: var(--font-weight-medium); color: var(--color-text-tertiary); }
+
+.target {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-tertiary);
+}
+.targetIcon { color: var(--color-text-tertiary); }
+
+.sparkRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.pct {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-secondary);
+  font-variant-numeric: tabular-nums;
+}
+
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding-top: var(--space-2);
+  border-top: 1px solid var(--color-border-subtle);
+}
+
+.forecast { font-size: var(--font-size-xs); color: var(--color-text-secondary); }
+.confidence { font-size: var(--font-size-xs); color: var(--color-text-tertiary); }
+
+/* Skeleton */
+.skLabel { width: 60%; height: 13px; border-radius: var(--radius-sm); }
+.skValue { width: 40%; height: 28px; border-radius: var(--radius-sm); }
+.skSpark { width: 100%; height: 24px; border-radius: var(--radius-sm); }
+
+@media (max-width: 768px) {
+  .grid { grid-template-columns: 1fr; }
+}
