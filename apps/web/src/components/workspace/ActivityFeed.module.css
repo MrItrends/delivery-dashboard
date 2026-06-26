@@ -1,0 +1,112 @@
+.feed {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+.group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.groupLabel {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  text-transform: uppercase;
+  letter-spacing: var(--letter-spacing-wide);
+  color: var(--color-text-tertiary);
+}
+
+.list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+}
+
+.entry {
+  display: flex;
+  gap: var(--space-3);
+  padding: var(--space-2) 0;
+  position: relative;
+}
+
+/* Timeline rail — connecting line behind the avatars */
+.rail {
+  position: relative;
+  flex-shrink: 0;
+  display: flex;
+  justify-content: center;
+}
+
+.rail::before {
+  content: '';
+  position: absolute;
+  top: 24px;
+  bottom: -16px;
+  left: 50%;
+  width: 1px;
+  background-color: var(--color-border-default);
+  transform: translateX(-50%);
+}
+
+.entry:last-child .rail::before {
+  display: none;
+}
+
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+  padding-top: 1px;
+}
+
+.text {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  line-height: var(--line-height-snug);
+}
+
+.actor {
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+}
+
+.target {
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-primary);
+}
+
+.meta {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  font-size: var(--font-size-xs);
+  color: var(--color-text-tertiary);
+}
+
+.metaIcon {
+  color: var(--color-text-tertiary);
+  flex-shrink: 0;
+}
+
+/* Skeleton */
+.skeletonRow {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-2) 0;
+}
+.skeletonAvatar {
+  width: 20px;
+  height: 20px;
+  border-radius: var(--radius-full);
+  flex-shrink: 0;
+}
+.skeletonLine {
+  height: 12px;
+  flex: 1;
+  max-width: 260px;
+  border-radius: var(--radius-sm);
+}

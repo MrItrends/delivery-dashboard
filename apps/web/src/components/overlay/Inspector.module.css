@@ -24,6 +24,15 @@
   pointer-events: none;
 }
 
+/* Responsive Inspector — full width on mobile, sits below the top bar */
+@media (max-width: 768px) {
+  .panel {
+    width: 100% !important;
+    top: var(--topbar-height);
+    height: calc(100vh - var(--topbar-height));
+  }
+}
+
 /* Header */
 .header {
   display: flex;

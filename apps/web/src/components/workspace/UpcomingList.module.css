@@ -1,0 +1,93 @@
+.list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  padding: var(--space-3) var(--space-4);
+  border-bottom: 1px solid var(--color-border-subtle);
+}
+
+.row:last-child {
+  border-bottom: none;
+}
+
+.date {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  flex-shrink: 0;
+  text-align: center;
+}
+
+.dateNum {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+  line-height: 1;
+}
+
+.dateDay {
+  font-size: 11px;
+  color: var(--color-text-tertiary);
+  margin-top: 2px;
+}
+
+.content {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.title {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-primary);
+  line-height: var(--line-height-snug);
+}
+
+.context {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-tertiary);
+}
+
+.kind {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  padding: 2px var(--space-2);
+  border-radius: var(--radius-sm);
+  flex-shrink: 0;
+  border: 1px solid;
+}
+
+.review    { color: var(--color-brand-700); background: var(--color-brand-50); border-color: var(--color-brand-200); }
+.milestone { color: var(--color-status-healthy-text); background: var(--color-status-healthy-bg); border-color: var(--color-status-healthy-border); }
+.deadline  { color: var(--color-status-atrisk-text); background: var(--color-status-atrisk-bg); border-color: var(--color-status-atrisk-border); }
+.funding   { color: var(--color-text-secondary); background: var(--color-surface-subtle); border-color: var(--color-border-default); }
+.meeting   { color: var(--color-text-secondary); background: var(--color-surface-subtle); border-color: var(--color-border-default); }
+
+/* Skeleton */
+.skeletonRow {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  padding: var(--space-3) var(--space-4);
+  border-bottom: 1px solid var(--color-border-subtle);
+}
+.skeletonDate { width: 44px; height: 32px; border-radius: var(--radius-sm); flex-shrink: 0; }
+.skeletonText { height: 14px; flex: 1; max-width: 240px; border-radius: var(--radius-sm); }
+
+@media (max-width: 560px) {
+  .kind { display: none; }
+}
