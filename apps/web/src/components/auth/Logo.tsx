@@ -10,7 +10,7 @@ export function Logo({ tone = 'dark', showWordmark = true }: LogoProps) {
   return (
     <div
       className={`${styles.logo} ${tone === 'light' ? styles.light : ''}`}
-      aria-label="Delivery Dashboard"
+      aria-label="TBI Digital Delivery"
     >
       <span className={styles.mark} aria-hidden="true">
         <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
@@ -28,7 +28,7 @@ export function Logo({ tone = 'dark', showWordmark = true }: LogoProps) {
           <rect x="8" y="17.1" width="6" height="2.4" rx="1.2" fill="white" opacity="0.7" />
         </svg>
       </span>
-      {showWordmark && <span className={styles.wordmark}>Delivery Dashboard</span>}
+      {showWordmark && <span className={styles.wordmark}>TBI Digital Delivery</span>}
     </div>
   )
 }

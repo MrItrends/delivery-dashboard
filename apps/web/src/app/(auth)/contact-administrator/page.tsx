@@ -16,7 +16,7 @@ export default function ContactAdministratorPage() {
         tone="neutral"
         showLogo={false}
         title="Contact your administrator"
-        description="Access to Delivery Dashboard is managed by your organisation. Your workspace administrator can grant access, reset accounts, and resolve sign-in problems."
+        description="Access to TBI Digital Delivery is managed by your organisation. Your workspace administrator can grant access, reset accounts, and resolve sign-in problems."
         detail={
           <span>
             Not sure who that is? Ask your programme or delivery lead — they can

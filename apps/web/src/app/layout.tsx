@@ -5,8 +5,8 @@ import { ToastRegion } from '@/components/feedback/Toast'
 
 export const metadata: Metadata = {
   title: {
-    template: '%s — Delivery Dashboard',
-    default: 'Delivery Dashboard',
+    template: '%s — TBI Digital Delivery',
+    default: 'TBI Digital Delivery',
   },
   description: 'The operating system for government delivery.',
 }

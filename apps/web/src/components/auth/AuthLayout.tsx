@@ -18,7 +18,7 @@ export function AuthLayout({ children }: AuthLayoutProps) {
       <main className={styles.formColumn}>
         <div className={styles.formInner}>{children}</div>
       </main>
-      <aside className={styles.brandColumn} aria-label="About Delivery Dashboard">
+      <aside className={styles.brandColumn} aria-label="About TBI Digital Delivery">
         <BrandPanel />
       </aside>
     </div>

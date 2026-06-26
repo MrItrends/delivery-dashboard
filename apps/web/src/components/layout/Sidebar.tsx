@@ -46,8 +46,8 @@ export function Sidebar({ collapsed, onToggleCollapse, onOpenPalette }: SidebarP
       <div className={styles.workspaceHeader}>
         {!collapsed && (
           <div className={styles.workspaceName}>
-            <div className={styles.workspaceAvatar}>D</div>
-            <span className={styles.workspaceLabel}>Delivery Dashboard</span>
+            <div className={styles.workspaceAvatar}>T</div>
+            <span className={styles.workspaceLabel}>TBI Digital Delivery</span>
           </div>
         )}
         <button

@@ -104,7 +104,7 @@ export function AuthFooter() {
         <span className={styles.footerDot} aria-hidden="true">·</span>
         <Link href="/privacy" className={styles.footerLegalLink}>Privacy</Link>
         <span className={styles.footerDot} aria-hidden="true">·</span>
-        <span>© {new Date().getFullYear()} Delivery Dashboard</span>
+        <span>© {new Date().getFullYear()} TBI Digital Delivery</span>
       </p>
     </footer>
   )
