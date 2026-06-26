@@ -116,7 +116,7 @@ export function Drawer({
         aria-modal="true"
         aria-label={title}
         aria-hidden={!open}
-        inert={!open ? '' : undefined}
+        inert={!open ? true : undefined}
       >
         {/* Header */}
         <div className={styles.header}>

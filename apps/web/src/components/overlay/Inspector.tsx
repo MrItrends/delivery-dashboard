@@ -81,7 +81,7 @@ export function Inspector({
         role="complementary"
         aria-label={title ? `${title} details` : 'Details panel'}
         aria-hidden={!open}
-        inert={!open ? '' : undefined}
+        inert={!open ? true : undefined}
       >
         {/* Header */}
         <div className={styles.header}>
