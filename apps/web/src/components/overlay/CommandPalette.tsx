@@ -7,7 +7,11 @@ import {
   useCallback,
   useMemo,
 } from 'react'
+import { useToastStore } from '@/stores/useToastStore'
 import styles from './CommandPalette.module.css'
+
+const go = (href: string) => () => { window.location.href = href }
+const toast = (msg: string) => () => useToastStore.getState().info(msg)
 
 export interface PaletteCommand {
   id: string
@@ -27,61 +31,35 @@ interface CommandPaletteProps {
 }
 
 const DEFAULT_COMMANDS: PaletteCommand[] = [
-  {
-    id: 'nav-home',
-    label: 'Go to Home',
-    description: 'Workspace home',
-    category: 'Navigate',
-    shortcut: 'G H',
-    icon: '⌂',
-    action: () => { window.location.href = '/' },
-    keywords: ['workspace', 'home', 'dashboard'],
-  },
-  {
-    id: 'nav-portfolio',
-    label: 'Go to Portfolio',
-    category: 'Navigate',
-    shortcut: 'G P',
-    icon: '◈',
-    action: () => { window.location.href = '/portfolio' },
-    keywords: ['portfolio', 'strategy'],
-  },
-  {
-    id: 'nav-my-work',
-    label: 'Go to My Work',
-    category: 'Navigate',
-    shortcut: 'G W',
-    icon: '✓',
-    action: () => { window.location.href = '/my-work' },
-    keywords: ['my work', 'activities', 'assigned'],
-  },
-  {
-    id: 'nav-notifications',
-    label: 'Go to Notifications',
-    category: 'Navigate',
-    shortcut: 'G N',
-    icon: '◎',
-    action: () => { window.location.href = '/notifications' },
-    keywords: ['notifications', 'alerts', 'inbox'],
-  },
-  {
-    id: 'nav-search',
-    label: 'Go to Search',
-    category: 'Navigate',
-    shortcut: 'G S',
-    icon: '⌕',
-    action: () => { window.location.href = '/search' },
-    keywords: ['search', 'find'],
-  },
-  {
-    id: 'nav-settings',
-    label: 'Go to Settings',
-    category: 'Navigate',
-    shortcut: 'G ,',
-    icon: '⚙',
-    action: () => { window.location.href = '/settings' },
-    keywords: ['settings', 'preferences', 'configuration'],
-  },
+  // Navigate
+  { id: 'nav-home', label: 'Go to Home', category: 'Navigate', shortcut: 'G H', action: go('/'), keywords: ['workspace', 'home', 'dashboard'] },
+  { id: 'nav-portfolio', label: 'Go to Portfolio', category: 'Navigate', shortcut: 'G P', action: go('/portfolio'), keywords: ['strategy'] },
+  { id: 'nav-priority', label: 'Go to Priority Areas', category: 'Navigate', action: go('/priority-areas'), keywords: ['priority', 'objectives'] },
+  { id: 'nav-projects', label: 'Go to Projects', category: 'Navigate', shortcut: 'G R', action: go('/projects'), keywords: ['programmes'] },
+  { id: 'nav-interventions', label: 'Go to Interventions', category: 'Navigate', shortcut: 'G I', action: go('/interventions'), keywords: ['delivery'] },
+  { id: 'nav-calendar', label: 'Go to Calendar', category: 'Navigate', shortcut: 'G C', action: go('/calendar'), keywords: ['schedule', 'reviews'] },
+  { id: 'nav-reports', label: 'Go to Reports', category: 'Navigate', action: go('/reports'), keywords: ['reporting'] },
+  { id: 'nav-team', label: 'Go to Team', category: 'Navigate', shortcut: 'G T', action: go('/team'), keywords: ['people', 'members'] },
+  { id: 'nav-notifications', label: 'Go to Notifications', category: 'Navigate', shortcut: 'G N', action: go('/notifications'), keywords: ['alerts', 'inbox'] },
+
+  // Create
+  { id: 'create-project', label: 'Create Project', category: 'Create', shortcut: 'C P', action: toast('New Project — opens in a drawer (coming soon)'), keywords: ['new', 'add', 'programme'] },
+  { id: 'create-intervention', label: 'Create Intervention', category: 'Create', shortcut: 'C I', action: toast('New Intervention — coming soon'), keywords: ['new', 'add'] },
+  { id: 'create-activity', label: 'Create Activity', category: 'Create', shortcut: 'C', action: toast('New Activity — coming soon'), keywords: ['new', 'task'] },
+  { id: 'create-report', label: 'Generate Report', category: 'Create', action: toast('Generate Report — coming soon'), keywords: ['report', 'export', 'pdf'] },
+
+  // Actions
+  { id: 'act-assign', label: 'Assign to…', category: 'Actions', action: toast('Assign — select an object first'), keywords: ['assign', 'owner', 'delegate'] },
+  { id: 'act-invite', label: 'Invite team member', category: 'Actions', action: toast('Invite — opens the team panel'), keywords: ['invite', 'add user', 'member'] },
+
+  // Workspace
+  { id: 'ws-switch', label: 'Switch workspace…', category: 'Workspace', action: toast('Use the workspace switcher in the sidebar'), keywords: ['change', 'workspace'] },
+  { id: 'ws-manage', label: 'Manage workspace', category: 'Workspace', action: go('/settings'), keywords: ['settings', 'admin'] },
+
+  // Preferences
+  { id: 'pref-settings', label: 'Open Settings', category: 'Preferences', shortcut: 'G ,', action: go('/settings'), keywords: ['preferences', 'configuration'] },
+  { id: 'pref-shortcuts', label: 'Keyboard shortcuts', category: 'Preferences', action: toast('Keyboard shortcuts'), keywords: ['keys', 'hotkeys'] },
+  { id: 'pref-appearance', label: 'Appearance', category: 'Preferences', action: toast('Appearance'), keywords: ['theme', 'dark mode'] },
 ]
 
 function normalize(str: string) {

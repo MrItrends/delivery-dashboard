@@ -1,0 +1,51 @@
+.menu {
+  position: fixed;
+  z-index: var(--z-overlay);
+  min-width: 180px;
+  background-color: var(--color-surface-overlay);
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-3);
+  padding: var(--space-1);
+  animation: ctxIn var(--duration-fast) var(--ease-out);
+}
+
+@keyframes ctxIn {
+  from { opacity: 0; transform: scale(0.97); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  width: 100%;
+  padding: var(--space-2) var(--space-3);
+  background: none;
+  border: none;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  text-align: left;
+  font-family: var(--font-family-sans);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  transition: background-color var(--duration-fast) var(--ease-out),
+              color var(--duration-fast) var(--ease-out);
+}
+
+.item:hover {
+  background-color: var(--color-surface-hover);
+  color: var(--color-text-primary);
+}
+
+.icon { color: var(--color-text-tertiary); flex-shrink: 0; }
+
+.danger { color: var(--color-text-danger); }
+.danger:hover { background-color: var(--color-status-critical-bg); color: var(--color-action-danger); }
+.danger .icon { color: var(--color-text-danger); }
+
+.separator {
+  height: 1px;
+  background-color: var(--color-border-default);
+  margin: var(--space-1) 0;
+}

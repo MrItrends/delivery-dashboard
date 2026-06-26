@@ -10,17 +10,17 @@ interface CreateOption {
   id: string
   label: string
   icon: IconName
-  shortcut?: string
 }
 
 const OPTIONS: CreateOption[] = [
-  { id: 'project', label: 'Project', icon: 'shield' },
-  { id: 'intervention', label: 'Intervention', icon: 'check-circle' },
-  { id: 'activity', label: 'Activity', icon: 'check', shortcut: 'C' },
-  { id: 'report', label: 'Report', icon: 'clock' },
+  { id: 'project', label: 'Project', icon: 'folder' },
+  { id: 'intervention', label: 'Intervention', icon: 'layers' },
+  { id: 'activity', label: 'Activity', icon: 'check-circle' },
+  { id: 'report', label: 'Report', icon: 'document' },
 ]
 
-export function CreateMenu() {
+/** Compact icon-only variant for tight headers. */
+export function CreateMenu({ compact = false }: { compact?: boolean }) {
   const [open, setOpen] = useState(false)
   const ref = useRef<HTMLDivElement>(null)
   const toast = useToastStore()
@@ -42,7 +42,7 @@ export function CreateMenu() {
     }
   }, [open])
 
-  function handleSelect(option: CreateOption) {
+  function select(option: CreateOption) {
     setOpen(false)
     toast.info(`New ${option.label} — opens in a drawer (coming soon)`)
   }
@@ -51,13 +51,14 @@ export function CreateMenu() {
     <div className={styles.wrap} ref={ref}>
       <Button
         variant="primary"
-        size="md"
+        size={compact ? 'sm' : 'md'}
         onClick={() => setOpen((v) => !v)}
         aria-haspopup="menu"
         aria-expanded={open}
-        iconRight={<Icon name="arrow-right" size={15} className={open ? styles.chevUp : styles.chev} />}
+        aria-label="Create new"
+        iconLeft={<Icon name="plus" size={compact ? 15 : 16} />}
       >
-        Create
+        {compact ? '' : 'Create'}
       </Button>
 
       {open && (
@@ -68,13 +69,12 @@ export function CreateMenu() {
               type="button"
               role="menuitem"
               className={styles.item}
-              onClick={() => handleSelect(option)}
+              onClick={() => select(option)}
             >
               <span className={styles.itemIcon} aria-hidden="true">
                 <Icon name={option.icon} size={16} />
               </span>
               <span className={styles.itemLabel}>{option.label}</span>
-              {option.shortcut && <kbd className={styles.kbd}>{option.shortcut}</kbd>}
             </button>
           ))}
         </div>

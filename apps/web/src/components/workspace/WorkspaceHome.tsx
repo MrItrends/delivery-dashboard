@@ -15,7 +15,6 @@ import { PriorityList } from './PriorityList'
 import { ActivityFeed } from './ActivityFeed'
 import { UpcomingList } from './UpcomingList'
 import { WorkspaceSidebar } from './WorkspaceSidebar'
-import { CreateMenu } from './CreateMenu'
 import { ItemInspector, type InspectorDetail } from './ItemInspector'
 import {
   WORKSPACE_NAME,
@@ -112,7 +111,6 @@ function WorkspaceHomeInner() {
       title={WORKSPACE_NAME}
       status={WORKSPACE_HEALTH.overall}
       metadata={[{ label: 'Reporting period', value: REPORTING_PERIOD }]}
-      primaryAction={<CreateMenu />}
     />
   )
 

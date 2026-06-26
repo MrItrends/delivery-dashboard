@@ -9,6 +9,7 @@
   display: flex;
   flex-direction: column;
   min-width: 0;
+  margin-left: var(--frame-nav-width, var(--sidebar-width));
   transition: margin-left var(--duration-moderate) var(--ease-in-out);
 }
 
@@ -16,4 +17,27 @@
   flex: 1;
   overflow-y: auto;
   padding-top: var(--topbar-height);
+}
+
+/* Mobile drawer backdrop */
+.mobileBackdrop {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.4);
+  z-index: calc(var(--z-sticky) - 1);
+  animation: fadeIn var(--duration-normal) var(--ease-out);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@media (max-width: 768px) {
+  .main { margin-left: 0; }
+  .content { padding-bottom: 56px; } /* room for bottom nav */
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .main { transition: none; }
 }

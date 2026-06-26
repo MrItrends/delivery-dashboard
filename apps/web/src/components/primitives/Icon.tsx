@@ -21,6 +21,30 @@ export type IconName =
   | 'google'
   | 'microsoft'
   | 'spinner'
+  // Frame / navigation
+  | 'home'
+  | 'grid'
+  | 'target'
+  | 'folder'
+  | 'layers'
+  | 'calendar'
+  | 'document'
+  | 'search'
+  | 'users'
+  | 'bell'
+  | 'settings'
+  | 'pin'
+  | 'plus'
+  | 'chevron-down'
+  | 'chevron-right'
+  | 'menu'
+  | 'more-horizontal'
+  | 'logout'
+  | 'sliders'
+  | 'keyboard'
+  | 'building'
+  | 'sun'
+  | 'inbox'
 
 interface IconProps {
   name: IconName
@@ -167,6 +191,169 @@ export function Icon({ name, size = 20, className, ...rest }: IconProps) {
         <svg {...common}>
           <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="1.5" opacity="0.2" />
           <path d="M21 12a9 9 0 0 0-9-9" {...stroke} />
+        </svg>
+      )
+    case 'home':
+      return (
+        <svg {...common}>
+          <path d="M4 11.5 12 5l8 6.5" {...stroke} />
+          <path d="M6 10v9h12v-9" {...stroke} />
+        </svg>
+      )
+    case 'grid':
+      return (
+        <svg {...common}>
+          <rect x="4" y="4" width="7" height="7" rx="1.5" {...stroke} />
+          <rect x="13" y="4" width="7" height="7" rx="1.5" {...stroke} />
+          <rect x="4" y="13" width="7" height="7" rx="1.5" {...stroke} />
+          <rect x="13" y="13" width="7" height="7" rx="1.5" {...stroke} />
+        </svg>
+      )
+    case 'target':
+      return (
+        <svg {...common}>
+          <circle cx="12" cy="12" r="8" {...stroke} />
+          <circle cx="12" cy="12" r="4" {...stroke} />
+          <circle cx="12" cy="12" r="0.6" fill="currentColor" stroke="none" />
+        </svg>
+      )
+    case 'folder':
+      return (
+        <svg {...common}>
+          <path d="M4 7a2 2 0 0 1 2-2h3l2 2h7a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V7Z" {...stroke} />
+        </svg>
+      )
+    case 'layers':
+      return (
+        <svg {...common}>
+          <path d="m12 4 8 4-8 4-8-4 8-4Z" {...stroke} />
+          <path d="m4 12 8 4 8-4" {...stroke} />
+          <path d="m4 16 8 4 8-4" {...stroke} />
+        </svg>
+      )
+    case 'calendar':
+      return (
+        <svg {...common}>
+          <rect x="4" y="5" width="16" height="16" rx="2" {...stroke} />
+          <path d="M4 9h16M8 3v4M16 3v4" {...stroke} />
+        </svg>
+      )
+    case 'document':
+      return (
+        <svg {...common}>
+          <path d="M7 3h7l4 4v14a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1Z" {...stroke} />
+          <path d="M14 3v4h4M9 12h6M9 16h6" {...stroke} />
+        </svg>
+      )
+    case 'search':
+      return (
+        <svg {...common}>
+          <circle cx="11" cy="11" r="6.5" {...stroke} />
+          <path d="m20 20-3.8-3.8" {...stroke} />
+        </svg>
+      )
+    case 'users':
+      return (
+        <svg {...common}>
+          <circle cx="9" cy="9" r="3.2" {...stroke} />
+          <path d="M3.5 19a5.5 5.5 0 0 1 11 0" {...stroke} />
+          <path d="M16 6.2a3.2 3.2 0 0 1 0 5.6M16.5 13.6a5.5 5.5 0 0 1 4 5.4" {...stroke} />
+        </svg>
+      )
+    case 'bell':
+      return (
+        <svg {...common}>
+          <path d="M6 9a6 6 0 0 1 12 0c0 5 2 6 2 6H4s2-1 2-6Z" {...stroke} />
+          <path d="M10 19a2 2 0 0 0 4 0" {...stroke} />
+        </svg>
+      )
+    case 'settings':
+      return (
+        <svg {...common}>
+          <circle cx="12" cy="12" r="3" {...stroke} />
+          <path d="M12 3v2.5M12 18.5V21M4.2 7.2l1.8 1M18 15.8l1.8 1M3 12h2.5M18.5 12H21M4.2 16.8l1.8-1M18 8.2l1.8-1" {...stroke} />
+        </svg>
+      )
+    case 'pin':
+      return (
+        <svg {...common}>
+          <path d="M9 4h6l-1 6 3 3H7l3-3-1-6Z" {...stroke} />
+          <path d="M12 16v4" {...stroke} />
+        </svg>
+      )
+    case 'plus':
+      return (
+        <svg {...common}>
+          <path d="M12 5v14M5 12h14" {...stroke} />
+        </svg>
+      )
+    case 'chevron-down':
+      return (
+        <svg {...common}>
+          <path d="m6 9 6 6 6-6" {...stroke} />
+        </svg>
+      )
+    case 'chevron-right':
+      return (
+        <svg {...common}>
+          <path d="m9 6 6 6-6 6" {...stroke} />
+        </svg>
+      )
+    case 'menu':
+      return (
+        <svg {...common}>
+          <path d="M4 7h16M4 12h16M4 17h16" {...stroke} />
+        </svg>
+      )
+    case 'more-horizontal':
+      return (
+        <svg {...common}>
+          <circle cx="6" cy="12" r="1.1" fill="currentColor" stroke="none" />
+          <circle cx="12" cy="12" r="1.1" fill="currentColor" stroke="none" />
+          <circle cx="18" cy="12" r="1.1" fill="currentColor" stroke="none" />
+        </svg>
+      )
+    case 'logout':
+      return (
+        <svg {...common}>
+          <path d="M14 5H6a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h8" {...stroke} />
+          <path d="M17 8l4 4-4 4M21 12H10" {...stroke} />
+        </svg>
+      )
+    case 'sliders':
+      return (
+        <svg {...common}>
+          <path d="M4 8h10M18 8h2M4 16h2M10 16h10" {...stroke} />
+          <circle cx="16" cy="8" r="2" {...stroke} />
+          <circle cx="8" cy="16" r="2" {...stroke} />
+        </svg>
+      )
+    case 'keyboard':
+      return (
+        <svg {...common}>
+          <rect x="3" y="6" width="18" height="12" rx="2" {...stroke} />
+          <path d="M7 10h.01M11 10h.01M15 10h.01M8 14h8" {...stroke} />
+        </svg>
+      )
+    case 'building':
+      return (
+        <svg {...common}>
+          <rect x="5" y="3" width="14" height="18" rx="1.5" {...stroke} />
+          <path d="M9 7h2M13 7h2M9 11h2M13 11h2M9 15h6v6" {...stroke} />
+        </svg>
+      )
+    case 'sun':
+      return (
+        <svg {...common}>
+          <circle cx="12" cy="12" r="4" {...stroke} />
+          <path d="M12 3v2M12 19v2M3 12h2M19 12h2M5.6 5.6l1.4 1.4M17 17l1.4 1.4M18.4 5.6 17 7M7 17l-1.4 1.4" {...stroke} />
+        </svg>
+      )
+    case 'inbox':
+      return (
+        <svg {...common}>
+          <path d="M4 13l2.5-7h11L20 13v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-5Z" {...stroke} />
+          <path d="M4 13h5a3 3 0 0 0 6 0h5" {...stroke} />
         </svg>
       )
     default:

@@ -1,8 +1,18 @@
-// Layout
+// Layout / Frame
 export { AppShell } from './layout/AppShell'
 export { Sidebar } from './layout/Sidebar'
-export { TopBar } from './layout/TopBar'
+export { GlobalHeader } from './layout/GlobalHeader'
+export { WorkspaceSwitcher } from './layout/WorkspaceSwitcher'
+export { UserMenu } from './layout/UserMenu'
+export { NotificationPanel } from './layout/NotificationPanel'
+export { BottomNav } from './layout/BottomNav'
+export { CreateMenu } from './layout/CreateMenu'
 export { PageHeader } from './layout/PageHeader'
+
+// Primitives (frame)
+export { Icon } from './primitives/Icon'
+export { useContextMenu } from './primitives/ContextMenu'
+export type { IconName } from './primitives/Icon'
 
 // Navigation
 export { Breadcrumb } from './navigation/Breadcrumb'

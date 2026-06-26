@@ -238,9 +238,9 @@
   /* ---------------------------------------------------------------------------
      LAYOUT — Fixed dimensions
      --------------------------------------------------------------------------- */
-  --sidebar-width:          240px;
-  --sidebar-collapsed-width: 56px;
-  --topbar-height:          56px;
+  --sidebar-width:          272px;
+  --sidebar-collapsed-width: 72px;
+  --topbar-height:          64px;
   --inspector-width:        480px;
   --inspector-width-expanded: 720px;
   --drawer-width:           560px;

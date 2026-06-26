@@ -1,15 +1,10 @@
-.wrap {
-  position: relative;
-}
-
-.chev { transform: rotate(90deg); transition: transform var(--duration-fast) var(--ease-out); }
-.chevUp { transform: rotate(-90deg); transition: transform var(--duration-fast) var(--ease-out); }
+.wrap { position: relative; }
 
 .menu {
   position: absolute;
   top: calc(100% + 6px);
   right: 0;
-  min-width: 220px;
+  min-width: 200px;
   background-color: var(--color-surface-overlay);
   border: 1px solid var(--color-border-default);
   border-radius: var(--radius-lg);
@@ -39,9 +34,7 @@
   transition: background-color var(--duration-fast) var(--ease-out);
 }
 
-.item:hover {
-  background-color: var(--color-surface-hover);
-}
+.item:hover { background-color: var(--color-surface-hover); }
 
 .itemIcon {
   display: flex;
@@ -60,14 +53,4 @@
   font-size: var(--font-size-sm);
   font-weight: var(--font-weight-medium);
   color: var(--color-text-primary);
-}
-
-.kbd {
-  font-family: var(--font-family-mono);
-  font-size: 11px;
-  color: var(--color-text-tertiary);
-  background-color: var(--color-neutral-100);
-  border: 1px solid var(--color-border-default);
-  border-radius: var(--radius-xs);
-  padding: 1px 5px;
 }
