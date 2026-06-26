@@ -1,0 +1,103 @@
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  height: 22px;
+  padding: 0 var(--space-2);
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  white-space: nowrap;
+  border: 1px solid;
+}
+
+.sm {
+  height: 18px;
+  padding: 0 6px;
+  font-size: 11px;
+}
+
+.dot {
+  width: 6px;
+  height: 6px;
+  border-radius: var(--radius-full);
+  flex-shrink: 0;
+}
+
+/* Status variants */
+.healthy {
+  background-color: var(--color-status-healthy-bg);
+  color: var(--color-status-healthy-text);
+  border-color: var(--color-status-healthy-border);
+}
+.healthy .dot { background-color: var(--color-status-healthy-dot); }
+
+.atRisk {
+  background-color: var(--color-status-atrisk-bg);
+  color: var(--color-status-atrisk-text);
+  border-color: var(--color-status-atrisk-border);
+}
+.atRisk .dot { background-color: var(--color-status-atrisk-dot); }
+
+.critical {
+  background-color: var(--color-status-critical-bg);
+  color: var(--color-status-critical-text);
+  border-color: var(--color-status-critical-border);
+}
+.critical .dot { background-color: var(--color-status-critical-dot); }
+
+.planned {
+  background-color: var(--color-status-planned-bg);
+  color: var(--color-status-planned-text);
+  border-color: var(--color-status-planned-border);
+}
+.planned .dot { background-color: var(--color-status-planned-dot); }
+
+.active {
+  background-color: var(--color-brand-50);
+  color: var(--color-brand-700);
+  border-color: var(--color-brand-200);
+}
+.active .dot { background-color: var(--color-brand-600); }
+
+.blocked {
+  background-color: var(--color-status-blocked-bg);
+  color: var(--color-status-blocked-text);
+  border-color: var(--color-status-blocked-border);
+}
+.blocked .dot { background-color: var(--color-status-blocked-dot); }
+
+.complete {
+  background-color: var(--color-status-complete-bg);
+  color: var(--color-status-complete-text);
+  border-color: var(--color-status-complete-border);
+}
+.complete .dot { background-color: var(--color-status-complete-dot); }
+
+.approved {
+  background-color: var(--color-status-approved-bg);
+  color: var(--color-status-approved-text);
+  border-color: var(--color-status-approved-border);
+}
+.approved .dot { background-color: var(--color-status-approved-dot); }
+
+.draft {
+  background-color: var(--color-status-draft-bg);
+  color: var(--color-status-draft-text);
+  border-color: var(--color-status-draft-border);
+}
+.draft .dot { background-color: var(--color-status-draft-dot); }
+
+.archived {
+  background-color: var(--color-status-archived-bg);
+  color: var(--color-status-archived-text);
+  border-color: var(--color-status-archived-border);
+}
+.archived .dot { background-color: var(--color-status-archived-dot); }
+
+.cancelled {
+  background-color: var(--color-neutral-100);
+  color: var(--color-neutral-500);
+  border-color: var(--color-neutral-200);
+}
+.cancelled .dot { background-color: var(--color-neutral-400); }

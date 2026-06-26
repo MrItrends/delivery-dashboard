@@ -1,0 +1,87 @@
+.status {
+  display: flex;
+  flex-direction: column;
+}
+
+.logoRow {
+  margin-bottom: var(--space-10);
+}
+
+/* Icon badge */
+.iconBadge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 52px;
+  height: 52px;
+  border-radius: var(--radius-xl);
+  margin-bottom: var(--space-5);
+  border: 1px solid;
+}
+
+.iconBadge.neutral {
+  background-color: var(--color-surface-subtle);
+  border-color: var(--color-border-default);
+  color: var(--color-text-secondary);
+}
+
+.iconBadge.success {
+  background-color: var(--color-status-healthy-bg);
+  border-color: var(--color-status-healthy-border);
+  color: var(--color-status-healthy-dot);
+}
+
+.iconBadge.warning {
+  background-color: var(--color-status-atrisk-bg);
+  border-color: var(--color-status-atrisk-border);
+  color: var(--color-status-atrisk-dot);
+}
+
+.iconBadge.error {
+  background-color: var(--color-status-critical-bg);
+  border-color: var(--color-status-critical-border);
+  color: var(--color-status-critical-dot);
+}
+
+.title {
+  font-size: var(--font-size-3xl);
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: var(--letter-spacing-tight);
+  color: var(--color-text-primary);
+  line-height: var(--line-height-tight);
+}
+
+.description {
+  margin-top: var(--space-3);
+  font-size: var(--font-size-md);
+  color: var(--color-text-secondary);
+  line-height: var(--line-height-relaxed);
+  max-width: 380px;
+}
+
+/* Detail block — e.g. the email address */
+.detail {
+  margin-top: var(--space-5);
+  padding: var(--space-3) var(--space-4);
+  background-color: var(--color-surface-subtle);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-primary);
+}
+
+/* Actions */
+.actions {
+  margin-top: var(--space-8);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+/* Footnote */
+.footnote {
+  margin-top: var(--space-6);
+  font-size: var(--font-size-xs);
+  color: var(--color-text-tertiary);
+  line-height: var(--line-height-normal);
+}

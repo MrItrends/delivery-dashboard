@@ -1,0 +1,98 @@
+.header {
+  background-color: var(--color-surface-page);
+  border-bottom: 1px solid var(--color-border-default);
+}
+
+.inner {
+  padding: var(--space-6) var(--space-8) var(--space-5);
+  max-width: var(--content-max-width);
+}
+
+.breadcrumb {
+  margin-bottom: var(--space-3);
+}
+
+/* Title row */
+.titleRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+}
+
+.titleLeft {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-width: 0;
+  flex: 1;
+}
+
+.title {
+  font-size: var(--font-size-4xl);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-tight);
+  letter-spacing: var(--letter-spacing-tight);
+  color: var(--color-text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex-shrink: 0;
+}
+
+.secondaryActions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.primaryAction {
+  display: flex;
+  align-items: center;
+}
+
+/* Description */
+.description {
+  margin-top: var(--space-2);
+  font-size: var(--font-size-base);
+  color: var(--color-text-secondary);
+  line-height: var(--line-height-normal);
+  max-width: 640px;
+}
+
+/* Metadata row */
+.metadataRow {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  margin-top: var(--space-3);
+  flex-wrap: wrap;
+}
+
+.metadataItem {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.metadataLabel {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-tertiary);
+  font-weight: var(--font-weight-medium);
+}
+
+.metadataValue {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-secondary);
+}
+
+/* Tabs slot */
+.tabs {
+  padding: 0 var(--space-8);
+}

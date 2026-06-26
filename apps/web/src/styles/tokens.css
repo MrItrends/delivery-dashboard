@@ -1,0 +1,260 @@
+/* =============================================================================
+   DELIVERY DASHBOARD — DESIGN TOKENS
+   All visual decisions are expressed here. Nothing is hardcoded elsewhere.
+   ============================================================================= */
+
+:root {
+  /* ---------------------------------------------------------------------------
+     COLOR — NEUTRAL SCALE
+     Foundation of the interface. White dominates. Everything else is structure.
+     --------------------------------------------------------------------------- */
+  --color-neutral-0:   #ffffff;
+  --color-neutral-50:  #f8f9fa;
+  --color-neutral-100: #f1f3f5;
+  --color-neutral-200: #e9ecef;
+  --color-neutral-300: #dee2e6;
+  --color-neutral-400: #ced4da;
+  --color-neutral-500: #adb5bd;
+  --color-neutral-600: #868e96;
+  --color-neutral-700: #495057;
+  --color-neutral-800: #343a40;
+  --color-neutral-900: #212529;
+  --color-neutral-950: #0d0f10;
+
+  /* ---------------------------------------------------------------------------
+     COLOR — BRAND
+     Used sparingly. Active state, focus rings, primary actions.
+     --------------------------------------------------------------------------- */
+  --color-brand-50:  #eff6ff;
+  --color-brand-100: #dbeafe;
+  --color-brand-200: #bfdbfe;
+  --color-brand-300: #93c5fd;
+  --color-brand-400: #60a5fa;
+  --color-brand-500: #3b82f6;
+  --color-brand-600: #2563eb;
+  --color-brand-700: #1d4ed8;
+  --color-brand-800: #1e40af;
+  --color-brand-900: #1e3a8a;
+
+  /* ---------------------------------------------------------------------------
+     COLOR — STATUS
+     Semantic meaning only. Never used for decoration.
+     --------------------------------------------------------------------------- */
+  --color-status-healthy-bg:   #f0fdf4;
+  --color-status-healthy-text: #166534;
+  --color-status-healthy-border: #bbf7d0;
+  --color-status-healthy-dot:  #16a34a;
+
+  --color-status-atrisk-bg:    #fffbeb;
+  --color-status-atrisk-text:  #92400e;
+  --color-status-atrisk-border: #fde68a;
+  --color-status-atrisk-dot:   #d97706;
+
+  --color-status-critical-bg:  #fef2f2;
+  --color-status-critical-text: #991b1b;
+  --color-status-critical-border: #fecaca;
+  --color-status-critical-dot: #dc2626;
+
+  --color-status-planned-bg:   #f8f9fa;
+  --color-status-planned-text: #495057;
+  --color-status-planned-border: #dee2e6;
+  --color-status-planned-dot:  #adb5bd;
+
+  --color-status-blocked-bg:   #fef2f2;
+  --color-status-blocked-text: #7f1d1d;
+  --color-status-blocked-border: #fca5a5;
+  --color-status-blocked-dot:  #b91c1c;
+
+  --color-status-complete-bg:  #f0fdf4;
+  --color-status-complete-text: #14532d;
+  --color-status-complete-border: #86efac;
+  --color-status-complete-dot: #15803d;
+
+  --color-status-approved-bg:  #f0fdf4;
+  --color-status-approved-text: #14532d;
+  --color-status-approved-border: #6ee7b7;
+  --color-status-approved-dot: #059669;
+
+  --color-status-draft-bg:     #f8f9fa;
+  --color-status-draft-text:   #6c757d;
+  --color-status-draft-border: #dee2e6;
+  --color-status-draft-dot:    #adb5bd;
+
+  --color-status-archived-bg:  #f1f3f5;
+  --color-status-archived-text: #868e96;
+  --color-status-archived-border: #dee2e6;
+  --color-status-archived-dot: #ced4da;
+
+  /* ---------------------------------------------------------------------------
+     COLOR — SEMANTIC TEXT
+     --------------------------------------------------------------------------- */
+  --color-text-primary:   var(--color-neutral-900);
+  --color-text-secondary: var(--color-neutral-600);
+  --color-text-tertiary:  var(--color-neutral-500);
+  --color-text-disabled:  var(--color-neutral-400);
+  --color-text-inverse:   var(--color-neutral-0);
+  --color-text-link:      var(--color-brand-600);
+  --color-text-danger:    #dc2626;
+
+  /* ---------------------------------------------------------------------------
+     COLOR — SEMANTIC SURFACE
+     --------------------------------------------------------------------------- */
+  --color-surface-page:        var(--color-neutral-0);
+  --color-surface-subtle:      var(--color-neutral-50);
+  --color-surface-elevated:    var(--color-neutral-0);
+  --color-surface-overlay:     var(--color-neutral-0);
+  --color-surface-inverse:     var(--color-neutral-900);
+  --color-surface-hover:       var(--color-neutral-50);
+  --color-surface-selected:    var(--color-brand-50);
+  --color-surface-focus:       var(--color-brand-50);
+
+  /* ---------------------------------------------------------------------------
+     COLOR — SEMANTIC BORDER
+     --------------------------------------------------------------------------- */
+  --color-border-default:  var(--color-neutral-200);
+  --color-border-subtle:   var(--color-neutral-100);
+  --color-border-strong:   var(--color-neutral-300);
+  --color-border-focus:    var(--color-brand-500);
+  --color-border-danger:   #dc2626;
+  --color-border-success:  #16a34a;
+
+  /* ---------------------------------------------------------------------------
+     COLOR — SEMANTIC ACTION
+     --------------------------------------------------------------------------- */
+  --color-action-primary:         var(--color-brand-600);
+  --color-action-primary-hover:   var(--color-brand-700);
+  --color-action-primary-active:  var(--color-brand-800);
+  --color-action-primary-text:    var(--color-neutral-0);
+  --color-action-danger:          #dc2626;
+  --color-action-danger-hover:    #b91c1c;
+
+  /* ---------------------------------------------------------------------------
+     SPACING — 8px base unit
+     All spacing is a multiple of 8px.
+     --------------------------------------------------------------------------- */
+  --space-0:  0;
+  --space-1:  4px;
+  --space-2:  8px;
+  --space-3:  12px;
+  --space-4:  16px;
+  --space-5:  20px;
+  --space-6:  24px;
+  --space-7:  28px;
+  --space-8:  32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
+  --space-20: 80px;
+  --space-24: 96px;
+
+  /* ---------------------------------------------------------------------------
+     TYPOGRAPHY — PP Neue Montreal
+     Loaded via @font-face in typography.css
+     --------------------------------------------------------------------------- */
+  --font-family-sans: 'PP Neue Montreal', 'Inter', system-ui, -apple-system, sans-serif;
+  --font-family-mono: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', ui-monospace, monospace;
+
+  --font-size-xs:   12px;
+  --font-size-sm:   13px;
+  --font-size-base: 14px;
+  --font-size-md:   15px;
+  --font-size-lg:   16px;
+  --font-size-xl:   18px;
+  --font-size-2xl:  20px;
+  --font-size-3xl:  24px;
+  --font-size-4xl:  30px;
+  --font-size-5xl:  36px;
+  --font-size-6xl:  48px;
+
+  --font-weight-regular:  400;
+  --font-weight-medium:   500;
+  --font-weight-semibold: 600;
+  --font-weight-bold:     700;
+
+  --line-height-tight:   1.25;
+  --line-height-snug:    1.375;
+  --line-height-normal:  1.5;
+  --line-height-relaxed: 1.625;
+
+  --letter-spacing-tight:  -0.025em;
+  --letter-spacing-normal:  0;
+  --letter-spacing-wide:    0.025em;
+
+  /* ---------------------------------------------------------------------------
+     BORDER RADIUS
+     Engineered, not playful.
+     --------------------------------------------------------------------------- */
+  --radius-none: 0;
+  --radius-xs:   2px;
+  --radius-sm:   4px;
+  --radius-md:   6px;
+  --radius-lg:   8px;
+  --radius-xl:   12px;
+  --radius-2xl:  16px;
+  --radius-full: 9999px;
+
+  /* ---------------------------------------------------------------------------
+     ELEVATION — Shadow scale
+     Use borders first. Shadows only when floating.
+     --------------------------------------------------------------------------- */
+  --shadow-0: none;
+  --shadow-1: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-2: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
+  --shadow-3: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+  --shadow-4: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+  --shadow-5: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+
+  /* ---------------------------------------------------------------------------
+     MOTION
+     Motion explains. Nothing more.
+     --------------------------------------------------------------------------- */
+  --duration-instant:  0ms;
+  --duration-fast:     100ms;
+  --duration-normal:   150ms;
+  --duration-moderate: 200ms;
+  --duration-slow:     250ms;
+  --duration-slower:   350ms;
+
+  --ease-linear:     linear;
+  --ease-in:         cubic-bezier(0.4, 0, 1, 1);
+  --ease-out:        cubic-bezier(0, 0, 0.2, 1);
+  --ease-in-out:     cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-spring:     cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  /* ---------------------------------------------------------------------------
+     Z-INDEX STACK
+     --------------------------------------------------------------------------- */
+  --z-base:          0;
+  --z-raised:        1;
+  --z-dropdown:      100;
+  --z-sticky:        200;
+  --z-inspector:     300;
+  --z-drawer:        400;
+  --z-modal:         500;
+  --z-toast:         600;
+  --z-palette:       700;
+  --z-overlay:       800;
+
+  /* ---------------------------------------------------------------------------
+     LAYOUT — Fixed dimensions
+     --------------------------------------------------------------------------- */
+  --sidebar-width:          240px;
+  --sidebar-collapsed-width: 56px;
+  --topbar-height:          56px;
+  --inspector-width:        480px;
+  --inspector-width-expanded: 720px;
+  --drawer-width:           560px;
+  --page-header-height:     auto;
+  --content-max-width:      1440px;
+}
+
+/* Reduced motion overrides */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --duration-fast:     0ms;
+    --duration-normal:   0ms;
+    --duration-moderate: 0ms;
+    --duration-slow:     0ms;
+    --duration-slower:   0ms;
+  }
+}

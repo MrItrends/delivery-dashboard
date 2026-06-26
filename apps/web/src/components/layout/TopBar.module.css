@@ -1,0 +1,87 @@
+.topbar {
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: var(--sidebar-width);
+  height: var(--topbar-height);
+  background-color: var(--color-surface-page);
+  border-bottom: 1px solid var(--color-border-default);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 var(--space-6);
+  z-index: var(--z-sticky);
+  transition: left var(--duration-moderate) var(--ease-in-out);
+}
+
+.left {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  min-width: 0;
+}
+
+.breadcrumbPlaceholder {
+  height: 16px;
+}
+
+.right {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.iconButton {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  font-size: var(--font-size-lg);
+  color: var(--color-text-secondary);
+  text-decoration: none;
+  transition: background-color var(--duration-fast) var(--ease-out),
+              color var(--duration-fast) var(--ease-out);
+}
+
+.iconButton:hover {
+  background-color: var(--color-surface-hover);
+  color: var(--color-text-primary);
+}
+
+.divider {
+  width: 1px;
+  height: 20px;
+  background-color: var(--color-border-default);
+  margin: 0 var(--space-1);
+}
+
+.avatarButton {
+  background: none;
+  border: none;
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  padding: 2px;
+  transition: box-shadow var(--duration-fast) var(--ease-out);
+}
+
+.avatarButton:hover {
+  box-shadow: 0 0 0 2px var(--color-border-focus);
+}
+
+.avatar {
+  width: 32px;
+  height: 32px;
+  background-color: var(--color-neutral-700);
+  color: var(--color-text-inverse);
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-bold);
+}

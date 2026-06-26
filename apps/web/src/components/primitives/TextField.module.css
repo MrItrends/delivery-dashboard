@@ -1,0 +1,157 @@
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.label {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-secondary);
+  line-height: 1;
+}
+
+.labelHidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Input wrapper — the bordered surface */
+.inputWrap {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  height: 48px;
+  padding: 0 var(--space-3);
+  background-color: var(--color-surface-page);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-lg);
+  transition:
+    border-color var(--duration-normal) var(--ease-out),
+    box-shadow var(--duration-normal) var(--ease-out),
+    background-color var(--duration-normal) var(--ease-out);
+}
+
+.inputWrap:hover:not(.disabled) {
+  border-color: var(--color-neutral-400);
+}
+
+.inputWrap:focus-within {
+  border-color: var(--color-border-focus);
+  box-shadow: 0 0 0 3px var(--color-brand-100);
+}
+
+.inputWrap.error {
+  border-color: var(--color-border-danger);
+}
+
+.inputWrap.error:focus-within {
+  box-shadow: 0 0 0 3px var(--color-status-critical-bg);
+}
+
+.inputWrap.success {
+  border-color: var(--color-border-success);
+}
+
+.inputWrap.success:focus-within {
+  box-shadow: 0 0 0 3px var(--color-status-healthy-bg);
+}
+
+.inputWrap.disabled {
+  background-color: var(--color-surface-subtle);
+  border-color: var(--color-border-default);
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+/* The input itself */
+.input {
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-family: var(--font-family-sans);
+  font-size: var(--font-size-md);
+  color: var(--color-text-primary);
+  padding: 0;
+}
+
+.input::placeholder {
+  color: var(--color-text-tertiary);
+}
+
+.input:disabled {
+  cursor: not-allowed;
+}
+
+/* Auto-fill — keep it on the white canvas */
+.input:-webkit-autofill,
+.input:-webkit-autofill:focus {
+  -webkit-text-fill-color: var(--color-text-primary);
+  transition: background-color 9999s ease-out;
+}
+
+/* Icons */
+.leadingIcon {
+  display: flex;
+  align-items: center;
+  color: var(--color-text-tertiary);
+  flex-shrink: 0;
+}
+
+.inputWrap:focus-within .leadingIcon {
+  color: var(--color-text-secondary);
+}
+
+.statusIcon {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.error .statusIcon { color: var(--color-status-critical-dot); }
+.success .statusIcon { color: var(--color-status-healthy-dot); }
+
+/* Show / hide password toggle */
+.toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border: none;
+  background: none;
+  border-radius: var(--radius-sm);
+  color: var(--color-text-tertiary);
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: color var(--duration-fast) var(--ease-out),
+              background-color var(--duration-fast) var(--ease-out);
+}
+
+.toggle:hover {
+  color: var(--color-text-primary);
+  background-color: var(--color-surface-hover);
+}
+
+/* Message line */
+.message {
+  font-size: var(--font-size-xs);
+  line-height: var(--line-height-snug);
+  color: var(--color-text-tertiary);
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.messageError { color: var(--color-status-critical-text); }
+.messageSuccess { color: var(--color-status-healthy-text); }
