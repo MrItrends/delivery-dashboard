@@ -16,6 +16,10 @@
   width: var(--sidebar-collapsed-width);
 }
 
+/* Sidebar links never underline on hover (overrides the global a:hover rule). */
+.sidebar a:hover,
+.sidebar a:focus { text-decoration: none; }
+
 /* Scroll region (primary nav + pinned + recent) */
 .scroll {
   flex: 1;
