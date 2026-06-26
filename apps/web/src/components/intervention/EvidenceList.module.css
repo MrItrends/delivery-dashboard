@@ -1,0 +1,57 @@
+.wrap { display: flex; flex-direction: column; gap: var(--space-3); }
+
+/* Dropzone */
+.dropzone {
+  display: flex; align-items: center; gap: var(--space-3);
+  padding: var(--space-4);
+  border: 1px dashed var(--color-border-strong); border-radius: var(--radius-xl);
+  background-color: var(--color-surface-page);
+  transition: border-color var(--duration-fast) var(--ease-out), background-color var(--duration-fast) var(--ease-out);
+}
+.dragOver { border-color: var(--color-brand-500); background-color: var(--color-brand-50); }
+.input { position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
+.dropIcon { color: var(--color-text-tertiary); flex-shrink: 0; }
+.dropText { display: flex; align-items: baseline; gap: var(--space-2); flex-wrap: wrap; }
+.dropBtn { background: none; border: none; padding: 0; font-family: var(--font-family-sans); font-size: var(--font-size-sm); font-weight: var(--font-weight-medium); color: var(--color-text-link); cursor: pointer; }
+.dropBtn:hover { text-decoration: underline; }
+.dropHint { font-size: var(--font-size-xs); color: var(--color-text-tertiary); }
+
+/* Uploading */
+.uploadingRow {
+  display: flex; align-items: center; gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid var(--color-border-default); border-radius: var(--radius-lg);
+  background-color: var(--color-surface-subtle);
+}
+.uploadingIcon { color: var(--color-brand-600); flex-shrink: 0; }
+.uploadBar { flex: 1; height: 5px; background-color: var(--color-neutral-200); border-radius: var(--radius-full); overflow: hidden; max-width: 240px; }
+.uploadFill { display: block; height: 100%; background-color: var(--color-brand-500); border-radius: var(--radius-full); transition: width var(--duration-slow) var(--ease-out); }
+.uploadPct { font-size: var(--font-size-xs); color: var(--color-text-tertiary); font-variant-numeric: tabular-nums; }
+
+/* File list */
+.list { list-style: none; border: 1px solid var(--color-border-default); border-radius: var(--radius-xl); overflow: hidden; background-color: var(--color-surface-page); }
+.row { display: flex; align-items: center; gap: var(--space-3); padding: var(--space-3) var(--space-4); border-bottom: 1px solid var(--color-border-subtle); }
+.row:last-child { border-bottom: none; }
+.row:hover { background-color: var(--color-surface-hover); }
+
+.typeIcon { display: flex; align-items: center; justify-content: center; width: 32px; height: 32px; border-radius: var(--radius-md); background-color: var(--color-surface-subtle); color: var(--color-text-secondary); flex-shrink: 0; }
+
+.fileMain { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 1px; }
+.fileTop { display: flex; align-items: center; gap: var(--space-2); }
+.fileName { font-size: var(--font-size-sm); font-weight: var(--font-weight-medium); color: var(--color-text-primary); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.version { font-size: 10px; font-weight: var(--font-weight-semibold); color: var(--color-text-secondary); background-color: var(--color-neutral-100); border: 1px solid var(--color-border-default); border-radius: var(--radius-xs); padding: 0 4px; }
+.linked { font-size: var(--font-size-xs); color: var(--color-text-tertiary); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+.uploader { display: flex; align-items: center; gap: var(--space-2); }
+.uploaderMeta { font-size: var(--font-size-xs); color: var(--color-text-tertiary); white-space: nowrap; }
+.size { font-size: var(--font-size-xs); color: var(--color-text-tertiary); width: 56px; text-align: right; }
+
+.rowActions { display: flex; align-items: center; gap: 2px; }
+.actionBtn { display: flex; align-items: center; justify-content: center; width: 26px; height: 26px; border: none; background: none; border-radius: var(--radius-sm); cursor: pointer; color: var(--color-text-tertiary); transition: background-color var(--duration-fast) var(--ease-out), color var(--duration-fast) var(--ease-out); }
+.actionBtn:hover { background-color: var(--color-neutral-100); color: var(--color-text-primary); }
+
+.skeleton { height: 56px; border-radius: var(--radius-lg); }
+
+@media (max-width: 640px) {
+  .uploader, .size { display: none; }
+}

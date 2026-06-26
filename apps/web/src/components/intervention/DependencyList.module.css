@@ -1,0 +1,43 @@
+.list { list-style: none; border: 1px solid var(--color-border-default); border-radius: var(--radius-xl); overflow: hidden; background-color: var(--color-surface-page); }
+
+.row {
+  display: flex; align-items: center; gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  border-bottom: 1px solid var(--color-border-subtle);
+}
+.row:last-child { border-bottom: none; }
+
+.critical { box-shadow: inset 3px 0 0 var(--color-status-critical-dot); }
+
+.from { font-size: var(--font-size-sm); font-weight: var(--font-weight-medium); color: var(--color-text-primary); flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+.rel {
+  display: inline-flex; align-items: center; gap: 3px;
+  font-size: var(--font-size-xs); font-weight: var(--font-weight-medium);
+  color: var(--color-text-tertiary);
+  padding: 2px var(--space-2);
+  background-color: var(--color-surface-subtle);
+  border-radius: var(--radius-sm);
+  flex-shrink: 0;
+}
+.rel_blocked-by { color: var(--color-status-critical-text); background-color: var(--color-status-critical-bg); }
+.rel_blocks { color: var(--color-status-atrisk-text); background-color: var(--color-status-atrisk-bg); }
+
+.to { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 1px; }
+.toName { font-size: var(--font-size-sm); color: var(--color-text-primary); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.toType { font-size: var(--font-size-xs); color: var(--color-text-tertiary); }
+
+.criticalTag {
+  font-size: 10px; font-weight: var(--font-weight-semibold);
+  text-transform: uppercase; letter-spacing: var(--letter-spacing-wide);
+  color: var(--color-status-critical-text); background-color: var(--color-status-critical-bg);
+  border: 1px solid var(--color-status-critical-border); border-radius: var(--radius-xs);
+  padding: 1px 5px; flex-shrink: 0;
+}
+
+.skeleton { height: 48px; margin: var(--space-2) var(--space-4); border-radius: var(--radius-md); }
+
+@media (max-width: 768px) {
+  .row { flex-wrap: wrap; }
+  .from, .to { flex-basis: 100%; }
+}

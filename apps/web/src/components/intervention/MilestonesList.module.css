@@ -1,0 +1,46 @@
+.list { border: 1px solid var(--color-border-default); border-radius: var(--radius-xl); overflow: hidden; background-color: var(--color-surface-page); }
+
+.group { border-bottom: 1px solid var(--color-border-subtle); }
+.group:last-child { border-bottom: none; }
+
+.groupLabel {
+  font-size: var(--font-size-xs); font-weight: var(--font-weight-semibold);
+  text-transform: uppercase; letter-spacing: var(--letter-spacing-wide);
+  color: var(--color-text-tertiary);
+  padding: var(--space-3) var(--space-4) var(--space-1);
+}
+
+.group ul { list-style: none; }
+
+.row {
+  display: flex; align-items: center; gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  border-top: 1px solid var(--color-border-subtle);
+}
+.groupLabel + ul .row:first-child { border-top: none; }
+
+.diamond { width: 10px; height: 10px; transform: rotate(45deg); border-radius: 2px; flex-shrink: 0; }
+.d_complete { background-color: var(--color-status-healthy-dot); }
+.d_at-risk { background-color: var(--color-status-atrisk-dot); }
+.d_planned { background-color: var(--color-neutral-400); }
+.d_critical { background-color: var(--color-status-critical-dot); }
+.d_active { background-color: var(--color-brand-500); }
+
+.main { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 1px; }
+.name { font-size: var(--font-size-sm); font-weight: var(--font-weight-medium); color: var(--color-text-primary); }
+.dep { font-size: var(--font-size-xs); color: var(--color-text-tertiary); }
+
+.owner { display: flex; align-items: center; gap: var(--space-2); min-width: 0; }
+.ownerName { font-size: var(--font-size-xs); color: var(--color-text-secondary); white-space: nowrap; }
+
+.due { font-size: var(--font-size-sm); color: var(--color-text-secondary); width: 64px; text-align: right; }
+
+.actions { display: flex; width: 28px; justify-content: flex-end; }
+.actionBtn { display: flex; align-items: center; justify-content: center; width: 26px; height: 26px; border: none; background: none; border-radius: var(--radius-sm); cursor: pointer; color: var(--color-text-tertiary); transition: background-color var(--duration-fast) var(--ease-out), color var(--duration-fast) var(--ease-out); }
+.actionBtn:hover { background-color: var(--color-status-healthy-bg); color: var(--color-status-healthy-dot); }
+
+.skeleton { height: 48px; margin: var(--space-2) var(--space-4); border-radius: var(--radius-md); }
+
+@media (max-width: 640px) {
+  .owner .ownerName, .due { display: none; }
+}
