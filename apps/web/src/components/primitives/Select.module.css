@@ -1,0 +1,108 @@
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.label {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-secondary);
+  line-height: 1;
+}
+
+.labelHidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.selectWrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  height: 48px;
+  background-color: var(--color-surface-page);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-lg);
+  transition:
+    border-color var(--duration-normal) var(--ease-out),
+    box-shadow var(--duration-normal) var(--ease-out);
+}
+
+.selectWrap:hover:not(.disabled) {
+  border-color: var(--color-neutral-400);
+}
+
+.selectWrap:focus-within {
+  border-color: var(--color-border-focus);
+  box-shadow: 0 0 0 3px var(--color-brand-100);
+}
+
+.selectWrap.error {
+  border-color: var(--color-border-danger);
+}
+
+.selectWrap.error:focus-within {
+  box-shadow: 0 0 0 3px var(--color-status-critical-bg);
+}
+
+.selectWrap.disabled {
+  background-color: var(--color-surface-subtle);
+  opacity: 0.7;
+}
+
+.select {
+  flex: 1;
+  height: 100%;
+  width: 100%;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-family: var(--font-family-sans);
+  font-size: var(--font-size-md);
+  color: var(--color-text-primary);
+  padding: 0 var(--space-3);
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
+
+.select.placeholder {
+  color: var(--color-text-tertiary);
+}
+
+.select:disabled {
+  cursor: not-allowed;
+}
+
+.chevron {
+  position: absolute;
+  right: var(--space-3);
+  display: flex;
+  align-items: center;
+  color: var(--color-text-tertiary);
+  pointer-events: none;
+}
+
+/* point the arrow icon downward */
+.chevronIcon {
+  transform: rotate(90deg);
+}
+
+.message {
+  font-size: var(--font-size-xs);
+  line-height: var(--line-height-snug);
+  color: var(--color-text-tertiary);
+}
+
+.messageError {
+  color: var(--color-status-critical-text);
+}

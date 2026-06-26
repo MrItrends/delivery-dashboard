@@ -1,0 +1,103 @@
+.shell {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: var(--color-surface-page);
+}
+
+/* Top bar */
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: var(--z-sticky);
+  background-color: var(--color-surface-page);
+  border-bottom: 1px solid var(--color-border-default);
+}
+
+.topbarInner {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: var(--space-4);
+  height: var(--topbar-height);
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 var(--space-6);
+}
+
+.stepperSlot {
+  display: flex;
+  justify-content: center;
+  min-width: 0;
+}
+
+.topRight {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--space-3);
+}
+
+/* Banner row */
+.bannerRow {
+  max-width: 720px;
+  margin: 0 auto;
+  width: 100%;
+  padding: var(--space-4) var(--space-6) 0;
+}
+
+/* Main content — centered, single focused task */
+.main {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  padding: var(--space-12) var(--space-6) var(--space-16);
+}
+
+.content {
+  width: 100%;
+  max-width: 720px;
+}
+
+/* Footer actions */
+.footer {
+  border-top: 1px solid var(--color-border-default);
+  background-color: var(--color-surface-page);
+}
+
+.footerInner {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: var(--space-4) var(--space-6);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+}
+
+/* Tablet — reduced spacing */
+@media (max-width: 1024px) {
+  .main { padding: var(--space-10) var(--space-6) var(--space-12); }
+}
+
+/* Mobile — stacked, sticky bottom actions, no horizontal scroll */
+@media (max-width: 768px) {
+  .topbarInner {
+    grid-template-columns: 1fr auto;
+    padding: 0 var(--space-4);
+  }
+  /* On mobile the stepper moves out of the top bar (rendered inline by page) */
+  .stepperSlot { display: none; }
+
+  .main { padding: var(--space-8) var(--space-4) var(--space-20); }
+
+  .bannerRow { padding: var(--space-3) var(--space-4) 0; }
+
+  .footer {
+    position: sticky;
+    bottom: 0;
+    box-shadow: 0 -1px 0 var(--color-border-default), var(--shadow-2);
+  }
+
+  .footerInner { padding: var(--space-3) var(--space-4); }
+}

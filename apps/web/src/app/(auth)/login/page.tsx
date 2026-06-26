@@ -63,7 +63,12 @@ export default function LoginPage() {
     }
 
     toast.success('Signed in')
-    router.push('/')
+    // Demo: a brand-new account drops into first-time workspace setup.
+    if (values.email.toLowerCase().startsWith('new@')) {
+      router.push('/welcome')
+    } else {
+      router.push('/')
+    }
   }
 
   function handleSSO(provider: 'microsoft' | 'google') {

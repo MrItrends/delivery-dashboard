@@ -1,0 +1,84 @@
+.stepper {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+}
+
+.list {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  list-style: none;
+}
+
+.item {
+  display: flex;
+  align-items: center;
+}
+
+.dot {
+  width: 3px;
+  height: 3px;
+  border-radius: var(--radius-full);
+  background-color: var(--color-border-strong);
+  margin: 0 var(--space-3);
+  flex-shrink: 0;
+}
+
+.step {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  background: none;
+  border: none;
+  padding: 0;
+  font-family: var(--font-family-sans);
+  font-size: var(--font-size-sm);
+  white-space: nowrap;
+  line-height: 1;
+}
+
+/* States */
+.upcoming {
+  color: var(--color-text-tertiary);
+  font-weight: var(--font-weight-regular);
+}
+
+.current {
+  color: var(--color-text-primary);
+  font-weight: var(--font-weight-semibold);
+}
+
+.done {
+  color: var(--color-text-secondary);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+}
+
+.done:hover {
+  color: var(--color-text-primary);
+}
+
+.check {
+  color: var(--color-status-healthy-dot);
+}
+
+/* Compact indicator — shown only on narrow screens */
+.compact {
+  display: none;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-secondary);
+}
+
+.compactLabel {
+  color: var(--color-text-primary);
+  font-weight: var(--font-weight-semibold);
+  margin-left: 4px;
+}
+
+/* Below ~960px the full label list gets cramped — show the compact form */
+@media (max-width: 960px) {
+  .list { display: none; }
+  .compact { display: block; }
+}

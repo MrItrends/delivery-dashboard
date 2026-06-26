@@ -1,0 +1,119 @@
+/* Step content — subtle fade/slide on change */
+.stepContent {
+  animation: stepIn var(--duration-moderate) var(--ease-out);
+}
+
+@keyframes stepIn {
+  from { opacity: 0; transform: translateX(6px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+/* Footer button clusters */
+.footerLeft {
+  display: flex;
+  align-items: center;
+}
+
+.footerRight {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+/* Loading (hydration) */
+.loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  gap: var(--space-3);
+  color: var(--color-text-tertiary);
+}
+
+.loadingSpinner { color: var(--color-brand-600); }
+
+.loadingText {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-tertiary);
+}
+
+/* Complete screen */
+.complete {
+  display: flex;
+  flex-direction: column;
+}
+
+.completeBadge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 52px;
+  height: 52px;
+  border-radius: var(--radius-xl);
+  background-color: var(--color-status-healthy-bg);
+  border: 1px solid var(--color-status-healthy-border);
+  color: var(--color-status-healthy-dot);
+  margin-bottom: var(--space-5);
+}
+
+.completeTitle {
+  font-size: var(--font-size-4xl);
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: var(--letter-spacing-tight);
+  line-height: var(--line-height-tight);
+  color: var(--color-text-primary);
+}
+
+.completeCopy {
+  margin-top: var(--space-3);
+  margin-bottom: var(--space-8);
+  font-size: var(--font-size-md);
+  color: var(--color-text-secondary);
+  line-height: var(--line-height-relaxed);
+  max-width: 520px;
+}
+
+.completeActions {
+  margin-top: var(--space-8);
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.nextSteps {
+  margin-top: var(--space-8);
+  padding-top: var(--space-6);
+  border-top: 1px solid var(--color-border-default);
+}
+
+.nextStepsTitle {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  text-transform: uppercase;
+  letter-spacing: var(--letter-spacing-wide);
+  color: var(--color-text-tertiary);
+  margin-bottom: var(--space-3);
+}
+
+.nextStepsList {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.nextStepsItem {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+}
+
+.nextStepsIcon { color: var(--color-text-tertiary); flex-shrink: 0; }
+
+@media (max-width: 640px) {
+  .completeTitle { font-size: var(--font-size-3xl); }
+  .completeActions { flex-direction: column; align-items: stretch; }
+}
