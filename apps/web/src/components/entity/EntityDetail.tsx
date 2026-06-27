@@ -15,6 +15,7 @@ import { ENTITIES } from '@/lib/data/entities'
 import { EntityCollection } from './EntityCollection'
 import { EntityFormDrawer } from './EntityFormDrawer'
 import { CommentThread } from '@/components/collaboration/CommentThread'
+import { DocumentList } from '@/components/collaboration/DocumentList'
 import page from '@/components/portfolio/PortfolioWorkspace.module.css'
 import sect from './EntityCollection.module.css'
 
@@ -75,6 +76,13 @@ export function EntityDetail({ entityKey, id }: EntityDetailProps) {
       />
       <div className={page.body} style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-8)' }}>
         {childKey && <EntityCollection entityKey={childKey} parentId={id} embedded />}
+
+        <section className={sect.section} aria-label="Evidence & documents">
+          <div className={sect.sectionHeader}>
+            <h2 className={sect.sectionTitle}>Evidence &amp; documents</h2>
+          </div>
+          <DocumentList objectType={config.table} objectId={id} />
+        </section>
 
         <section className={sect.section} aria-label="Discussion">
           <div className={sect.sectionHeader}>
