@@ -46,14 +46,14 @@ const DEFAULT_COMMANDS: PaletteCommand[] = [
   { id: 'nav-notifications', label: 'Go to Notifications', category: 'Navigate', shortcut: 'G N', action: go('/notifications'), keywords: ['alerts', 'inbox'] },
 
   // Create
-  { id: 'create-project', label: 'Create Project', category: 'Create', shortcut: 'C P', action: toast('New Project — opens in a drawer (coming soon)'), keywords: ['new', 'add', 'programme'] },
-  { id: 'create-intervention', label: 'Create Intervention', category: 'Create', shortcut: 'C I', action: toast('New Intervention — coming soon'), keywords: ['new', 'add'] },
-  { id: 'create-activity', label: 'Create Activity', category: 'Create', shortcut: 'C', action: toast('New Activity — coming soon'), keywords: ['new', 'task'] },
+  { id: 'create-project', label: 'Create project', category: 'Create', shortcut: 'C P', action: go('/projects'), keywords: ['new', 'add', 'programme'] },
+  { id: 'create-intervention', label: 'Create intervention', category: 'Create', shortcut: 'C I', action: go('/interventions'), keywords: ['new', 'add'] },
+  { id: 'create-activity', label: 'Create activity', category: 'Create', shortcut: 'C', action: go('/interventions'), keywords: ['new', 'task'] },
   { id: 'create-report', label: 'Generate Report', category: 'Create', action: go('/reports'), keywords: ['report', 'export', 'pdf'] },
 
   // Actions
   { id: 'act-assign', label: 'Assign to…', category: 'Actions', action: toast('Assign — select an object first'), keywords: ['assign', 'owner', 'delegate'] },
-  { id: 'act-invite', label: 'Invite team member', category: 'Actions', action: toast('Invite — opens the team panel'), keywords: ['invite', 'add user', 'member'] },
+  { id: 'act-invite', label: 'Invite team member', category: 'Actions', action: go('/team'), keywords: ['invite', 'add user', 'member'] },
 
   // Workspace
   { id: 'ws-switch', label: 'Switch workspace…', category: 'Workspace', action: toast('Use the workspace switcher in the sidebar'), keywords: ['change', 'workspace'] },
@@ -61,8 +61,8 @@ const DEFAULT_COMMANDS: PaletteCommand[] = [
 
   // Preferences
   { id: 'pref-settings', label: 'Open Settings', category: 'Preferences', shortcut: 'G ,', action: go('/settings'), keywords: ['preferences', 'configuration'] },
-  { id: 'pref-shortcuts', label: 'Keyboard shortcuts', category: 'Preferences', action: toast('Keyboard shortcuts'), keywords: ['keys', 'hotkeys'] },
-  { id: 'pref-appearance', label: 'Appearance', category: 'Preferences', action: toast('Appearance'), keywords: ['theme', 'dark mode'] },
+  { id: 'pref-shortcuts', label: 'Keyboard shortcuts', category: 'Preferences', action: go('/shortcuts'), keywords: ['keys', 'hotkeys'] },
+  { id: 'pref-appearance', label: 'Appearance', category: 'Preferences', action: go('/settings'), keywords: ['theme', 'dark mode'] },
 ]
 
 function normalize(str: string) {
