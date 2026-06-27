@@ -6,6 +6,7 @@ import { Icon } from '@/components/primitives/Icon'
 import { Button } from '@/components/primitives/Button'
 import { useToastStore } from '@/stores/useToastStore'
 import { useComments, useCommentMutations } from '@/lib/data/useComments'
+import { useRealtime } from '@/lib/data/useRealtime'
 import type { Comment } from '@/lib/data/comments'
 import styles from './CommentThread.module.css'
 
@@ -34,6 +35,7 @@ export function CommentThread({ objectType, objectId }: CommentThreadProps) {
   const toast = useToastStore()
   const { data, isLoading } = useComments(objectType, objectId)
   const { add, flag } = useCommentMutations(objectType, objectId)
+  useRealtime('comments', ['comments', objectType, objectId], { column: 'object_id', value: objectId })
   const [draft, setDraft] = useState('')
   const [showResolved, setShowResolved] = useState(false)
 

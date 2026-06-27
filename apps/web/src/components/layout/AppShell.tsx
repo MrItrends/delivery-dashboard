@@ -10,6 +10,7 @@ import { useAppStore } from '@/stores/useAppStore'
 import { useOnline } from '@/lib/hooks/useOnline'
 import { useIsMobile } from '@/lib/hooks/useMediaQuery'
 import { useUnreadCount } from '@/lib/data/useNotifications'
+import { useRealtime } from '@/lib/data/useRealtime'
 import styles from './AppShell.module.css'
 
 interface AppShellProps {
@@ -43,6 +44,7 @@ export function AppShell({ children, emptyWorkspace }: AppShellProps) {
     : 'var(--sidebar-width)'
 
   const unread = useUnreadCount()
+  useRealtime('notifications', ['notifications'])
 
   return (
     <div
