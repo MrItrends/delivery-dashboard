@@ -25,10 +25,10 @@ interface MenuEntry {
 }
 
 const ENTRIES: MenuEntry[] = [
-  { label: 'Profile', icon: 'users', onClick: ({ toast }) => toast.info('Profile') },
-  { label: 'Preferences', icon: 'sliders', onClick: ({ toast }) => toast.info('Preferences') },
+  { label: 'Profile', icon: 'users', onClick: ({ router }) => router.push('/profile') },
+  { label: 'Preferences', icon: 'sliders', onClick: ({ router }) => router.push('/settings') },
   { label: 'Keyboard shortcuts', icon: 'keyboard', onClick: ({ toast }) => toast.info('Keyboard shortcuts') },
-  { label: 'Appearance', icon: 'sun', onClick: ({ toast }) => toast.info('Appearance') },
+  { label: 'Appearance', icon: 'sun', onClick: ({ router }) => router.push('/settings') },
   { label: 'Workspace settings', icon: 'settings', onClick: ({ router }) => router.push('/settings') },
   { label: 'Log out', icon: 'logout', danger: true, separatorBefore: true, onClick: ({ router }) => router.push('/login') },
 ]

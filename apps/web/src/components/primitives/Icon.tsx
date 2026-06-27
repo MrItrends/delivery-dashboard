@@ -50,16 +50,18 @@ interface IconProps {
   name: IconName
   size?: number
   className?: string
+  style?: React.CSSProperties
   'aria-hidden'?: boolean
 }
 
-export function Icon({ name, size = 20, className, ...rest }: IconProps) {
+export function Icon({ name, size = 20, className, style, ...rest }: IconProps) {
   const common = {
     width: size,
     height: size,
     viewBox: '0 0 24 24',
     fill: 'none',
     className,
+    style,
     'aria-hidden': rest['aria-hidden'] ?? true,
     focusable: false as const,
   }
