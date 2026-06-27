@@ -23,6 +23,7 @@ export interface Workspace {
   country: string | null
   timezone: string | null
   language: string | null
+  currency: string | null
 }
 
 export async function getWorkspace(): Promise<Workspace | null> {

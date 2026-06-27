@@ -61,10 +61,9 @@ export async function getPortfolio(id: string): Promise<Portfolio | null> {
 
 export async function createPortfolio(input: PortfolioInput): Promise<Portfolio> {
   const supabase = createClient()
-  const workspaceId = await getCurrentWorkspaceId()
-  if (!workspaceId) {
-    throw new Error('No workspace found. Create a workspace first.')
-  }
+  // Lazily provision the user's own workspace if they don't have one yet.
+  const { ensureWorkspaceId } = await import('./setup')
+  const workspaceId = await ensureWorkspaceId()
   const { data, error } = await supabase
     .from(TABLE)
     .insert({ ...input, workspace_id: workspaceId })

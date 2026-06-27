@@ -12,6 +12,8 @@ import { FormBanner } from '@/components/auth/AuthScaffold'
 import { useOnline } from '@/lib/hooks/useOnline'
 import { useOnboardingStore, type SetupStep } from '@/stores/useOnboardingStore'
 import { ROLES, COUNTRIES } from '@/lib/onboarding/options'
+import { isSupabaseConfigured } from '@/lib/supabase/client'
+import { provisionWorkspace } from '@/lib/data/setup'
 import {
   WorkspaceStep,
   OrganizationStep,
@@ -48,6 +50,7 @@ export default function SetupPage() {
 
   const stepRef = useRef<StepHandle>(null)
   const [creating, setCreating] = useState(false)
+  const [createError, setCreateError] = useState<string | null>(null)
   const [saveState, setSaveState] = useState<SaveState>('idle')
 
   // Auto-save indicator — react to any store change while editing.
@@ -77,11 +80,29 @@ export default function SetupPage() {
 
   const doCreate = useCallback(() => {
     setCreating(true)
-    // Simulated workspace provisioning.
-    setTimeout(() => {
-      setCreating(false)
-      setStep(5)
-    }, 1200)
+    setCreateError(null)
+    const finish = () => { setCreating(false); setStep(5) }
+    if (!isSupabaseConfigured) { setTimeout(finish, 600); return }
+    void (async () => {
+      try {
+        const st = useOnboardingStore.getState()
+        await provisionWorkspace({
+          name: st.workspace.name,
+          organization: st.organization.orgName || st.workspace.organization,
+          country: st.workspace.country,
+          timezone: st.workspace.timezone,
+          language: st.workspace.language,
+          currency: 'NGN',
+          portfolioName: st.portfolio.name,
+          portfolioOwner: st.portfolio.owner,
+          portfolioDescription: st.portfolio.description,
+        })
+        finish()
+      } catch {
+        setCreating(false)
+        setCreateError('We couldn’t create your workspace. Check your connection and try again.')
+      }
+    })()
   }, [setStep])
 
   const advance = useCallback(
@@ -176,7 +197,9 @@ export default function SetupPage() {
       stepper={<Stepper steps={STEPS} current={step} onStepClick={(i) => setStep(i as SetupStep)} />}
       topRight={<SaveIndicator state={saveState} />}
       banner={
-        observerBlocked ? (
+        createError ? (
+          <FormBanner tone="error">{createError}</FormBanner>
+        ) : observerBlocked ? (
           <FormBanner tone="info">
             Observers can&rsquo;t create portfolios. You can skip this step — an
             administrator can set one up for you later.

@@ -55,20 +55,32 @@ export const TIMEZONES: SelectOption[] = [
   { value: 'America/Los_Angeles', label: '(GMT−08:00) Pacific Time' },
 ]
 
+// Sectors mirror Nigerian federal ministry portfolios.
 export const SECTORS: SelectOption[] = [
-  { value: 'health', label: 'Health & Social Care' },
+  { value: 'health', label: 'Health' },
   { value: 'education', label: 'Education' },
-  { value: 'infrastructure', label: 'Infrastructure & Transport' },
-  { value: 'justice', label: 'Justice & Home Affairs' },
-  { value: 'finance', label: 'Finance & Treasury' },
-  { value: 'defence', label: 'Defence & Security' },
-  { value: 'environment', label: 'Environment & Climate' },
-  { value: 'digital', label: 'Digital & Technology' },
-  { value: 'economy', label: 'Economy & Trade' },
-  { value: 'housing', label: 'Housing & Communities' },
-  { value: 'agriculture', label: 'Agriculture & Rural Affairs' },
-  { value: 'foreign', label: 'Foreign Affairs' },
+  { value: 'works-housing', label: 'Works & Housing' },
+  { value: 'power', label: 'Power' },
+  { value: 'agriculture', label: 'Agriculture & Food Security' },
+  { value: 'water', label: 'Water Resources' },
+  { value: 'transportation', label: 'Transportation' },
+  { value: 'finance', label: 'Finance & National Planning' },
+  { value: 'humanitarian', label: 'Humanitarian Affairs & Poverty Reduction' },
+  { value: 'digital', label: 'Communications & Digital Economy' },
+  { value: 'interior', label: 'Interior & Security' },
+  { value: 'environment', label: 'Environment' },
   { value: 'other', label: 'Other' },
+]
+
+// Currency — Naira first (see NORTH_STAR §3).
+export const CURRENCIES: SelectOption[] = [
+  { value: 'NGN', label: '₦ Nigerian Naira' },
+  { value: 'USD', label: '$ US Dollar' },
+  { value: 'GBP', label: '£ British Pound' },
+  { value: 'EUR', label: '€ Euro' },
+  { value: 'GHS', label: '₵ Ghanaian Cedi' },
+  { value: 'KES', label: 'KSh Kenyan Shilling' },
+  { value: 'ZAR', label: 'R South African Rand' },
 ]
 
 export const REPORTING_PERIODS: SelectOption[] = [
@@ -92,15 +104,17 @@ export const REPORTING_FREQUENCIES: SelectOption[] = [
   { value: 'quarterly', label: 'Quarterly' },
 ]
 
+// National priorities framed for Nigeria.
 export const STRATEGIC_THEMES: SelectOption[] = [
-  { value: 'economic-growth', label: 'Economic Growth' },
-  { value: 'public-service-reform', label: 'Public Service Reform' },
-  { value: 'digital-transformation', label: 'Digital Transformation' },
+  { value: 'economic-growth', label: 'Economic Growth & Diversification' },
+  { value: 'food-security', label: 'Food Security' },
   { value: 'health-outcomes', label: 'Health Outcomes' },
-  { value: 'education-outcomes', label: 'Education Outcomes' },
-  { value: 'net-zero', label: 'Net Zero & Climate' },
-  { value: 'national-security', label: 'National Security' },
+  { value: 'human-capital', label: 'Education & Human Capital' },
+  { value: 'power-energy', label: 'Power & Energy' },
   { value: 'infrastructure', label: 'Infrastructure Delivery' },
+  { value: 'security-justice', label: 'Security & Justice' },
+  { value: 'digital-economy', label: 'Digital Economy' },
+  { value: 'poverty-reduction', label: 'Poverty Reduction' },
   { value: 'other', label: 'Other' },
 ]
 

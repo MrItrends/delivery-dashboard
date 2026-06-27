@@ -10,7 +10,7 @@ import { Button } from '@/components/primitives/Button'
 import { useToastStore } from '@/stores/useToastStore'
 import { useAppStore } from '@/stores/useAppStore'
 import { getWorkspace, updateWorkspace } from '@/lib/data/admin'
-import { TIMEZONES, COUNTRIES } from '@/lib/onboarding/options'
+import { TIMEZONES, COUNTRIES, CURRENCIES } from '@/lib/onboarding/options'
 import page from '@/components/portfolio/PortfolioWorkspace.module.css'
 import s from '@/components/pages/pages.module.css'
 
@@ -20,11 +20,11 @@ export default function SettingsPage() {
   const setDensity = useAppStore((st) => st.setDensity)
   const { data, refetch } = useQuery({ queryKey: ['workspace'], queryFn: getWorkspace })
 
-  const [form, setForm] = useState({ name: '', organization: '', country: '', timezone: '' })
+  const [form, setForm] = useState({ name: '', organization: '', country: '', timezone: '', currency: '' })
   const [saving, setSaving] = useState(false)
 
   useEffect(() => {
-    if (data) setForm({ name: data.name ?? '', organization: data.organization ?? '', country: data.country ?? '', timezone: data.timezone ?? '' })
+    if (data) setForm({ name: data.name ?? '', organization: data.organization ?? '', country: data.country ?? '', timezone: data.timezone ?? '', currency: data.currency ?? 'NGN' })
   }, [data])
 
   const set = (k: keyof typeof form) => (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => setForm((f) => ({ ...f, [k]: e.target.value }))
@@ -49,6 +49,7 @@ export default function SettingsPage() {
               <TextField label="Organisation" value={form.organization} onChange={set('organization')} />
               <Select label="Country" options={COUNTRIES} value={form.country} onChange={set('country')} placeholder="Select a country" />
               <Select label="Timezone" options={TIMEZONES} value={form.timezone} onChange={set('timezone')} placeholder="Select a timezone" />
+              <Select label="Currency" options={CURRENCIES} value={form.currency} onChange={set('currency')} placeholder="Select a currency" />
             </div>
             <div className={s.formActions}>
               <Button variant="primary" size="md" loading={saving} onClick={save} disabled={!data}>Save changes</Button>
