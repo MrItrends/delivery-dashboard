@@ -1,9 +1,11 @@
 'use client'
 
+import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { signupSchema, type SignupValues } from '@/lib/validation/auth'
+import { createClient } from '@/lib/supabase/client'
 import { useToastStore } from '@/stores/useToastStore'
 import { Button } from '@/components/primitives/Button'
 import { TextField } from '@/components/primitives/TextField'
@@ -16,11 +18,13 @@ import {
   AltAction,
   WorkspaceHint,
   AuthFooter,
+  FormBanner,
 } from '@/components/auth/AuthScaffold'
 
 export default function SignUpPage() {
   const router = useRouter()
   const toast = useToastStore()
+  const [formError, setFormError] = useState<string | null>(null)
 
   const {
     register,
@@ -35,10 +39,32 @@ export default function SignUpPage() {
 
   const passwordValue = watch('password')
 
-  async function onSubmit(_values: SignupValues) {
-    await new Promise((r) => setTimeout(r, 1100))
+  async function onSubmit(values: SignupValues) {
+    setFormError(null)
+    const supabase = createClient()
+    const { data, error } = await supabase.auth.signUp({
+      email: values.email,
+      password: values.password,
+      options: { data: { name: values.name, role: 'contributor' } },
+    })
+
+    if (error) {
+      setFormError(
+        error.message.toLowerCase().includes('registered')
+          ? 'An account with this email already exists. Sign in instead.'
+          : 'We couldn’t create your account. Please try again.'
+      )
+      return
+    }
+
     toast.success('Account created')
-    router.push('/check-email?context=signup')
+    // If the project requires email confirmation there's no session yet.
+    if (data.session) {
+      router.push('/welcome')
+      router.refresh()
+    } else {
+      router.push(`/check-email?context=signup&email=${encodeURIComponent(values.email)}`)
+    }
   }
 
   return (
@@ -47,6 +73,8 @@ export default function SignUpPage() {
         title="Request access"
         subtitle="Create your account to join your organisation's workspace."
       />
+
+      {formError && <FormBanner tone="error">{formError}</FormBanner>}
 
       <SSOButtons disabled={isSubmitting} />
       <AuthDivider label="or sign up with email" />

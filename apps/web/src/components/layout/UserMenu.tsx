@@ -5,9 +5,11 @@ import { useRouter } from 'next/navigation'
 import { Avatar } from '@/components/primitives/Avatar'
 import { Icon, type IconName } from '@/components/primitives/Icon'
 import { useToastStore } from '@/stores/useToastStore'
+import { useAppStore } from '@/stores/useAppStore'
+import { createClient, isSupabaseConfigured } from '@/lib/supabase/client'
 import styles from './UserMenu.module.css'
 
-const USER = { name: 'Ahmed Yusuf', email: 'ahmed.yusuf@gov.uk' }
+const FALLBACK_USER = { name: 'Ahmed Yusuf', email: 'ahmed.yusuf@gov.uk' }
 
 interface MenuCtx {
   router: ReturnType<typeof useRouter>
@@ -36,6 +38,17 @@ export function UserMenu({ collapsed }: { collapsed: boolean }) {
   const ref = useRef<HTMLDivElement>(null)
   const router = useRouter()
   const toast = useToastStore()
+  const storeUser = useAppStore((s) => s.user)
+  const user = storeUser ?? FALLBACK_USER
+
+  async function handleLogout() {
+    setOpen(false)
+    if (isSupabaseConfigured) {
+      try { await createClient().auth.signOut() } catch { /* noop */ }
+    }
+    router.push('/login')
+    router.refresh()
+  }
 
   useEffect(() => {
     function onDoc(e: MouseEvent) {
@@ -62,14 +75,14 @@ export function UserMenu({ collapsed }: { collapsed: boolean }) {
         onClick={() => setOpen((v) => !v)}
         aria-haspopup="menu"
         aria-expanded={open}
-        aria-label={`Account: ${USER.name}`}
-        data-tooltip={collapsed ? USER.name : undefined}
+        aria-label={`Account: ${user.name}`}
+        data-tooltip={collapsed ? user.name : undefined}
       >
-        <Avatar name={USER.name} size="sm" />
+        <Avatar name={user.name} size="sm" />
         {!collapsed && (
           <span className={styles.info}>
-            <span className={styles.name}>{USER.name}</span>
-            <span className={styles.email}>{USER.email}</span>
+            <span className={styles.name}>{user.name}</span>
+            <span className={styles.email}>{user.email}</span>
           </span>
         )}
       </button>
@@ -77,10 +90,10 @@ export function UserMenu({ collapsed }: { collapsed: boolean }) {
       {open && (
         <div className={styles.menu} role="menu" aria-label="Account menu">
           <div className={styles.header}>
-            <Avatar name={USER.name} size="md" />
+            <Avatar name={user.name} size="md" />
             <span className={styles.headerInfo}>
-              <span className={styles.name}>{USER.name}</span>
-              <span className={styles.email}>{USER.email}</span>
+              <span className={styles.name}>{user.name}</span>
+              <span className={styles.email}>{user.email}</span>
             </span>
           </div>
           <div className={styles.divider} role="separator" />
@@ -91,7 +104,10 @@ export function UserMenu({ collapsed }: { collapsed: boolean }) {
                 type="button"
                 role="menuitem"
                 className={`${styles.item} ${entry.danger ? styles.danger : ''}`}
-                onClick={() => { setOpen(false); entry.onClick({ router, toast }) }}
+                onClick={() => {
+                  if (entry.label === 'Log out') { handleLogout(); return }
+                  setOpen(false); entry.onClick({ router, toast })
+                }}
               >
                 <Icon name={entry.icon} size={16} className={styles.itemIcon} />
                 {entry.label}

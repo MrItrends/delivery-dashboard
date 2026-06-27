@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { loginSchema, type LoginValues } from '@/lib/validation/auth'
+import { createClient } from '@/lib/supabase/client'
 import { useOnline } from '@/lib/hooks/useOnline'
 import { useToastStore } from '@/stores/useToastStore'
 import { Button } from '@/components/primitives/Button'
@@ -47,28 +48,27 @@ export default function LoginPage() {
   async function onSubmit(values: LoginValues) {
     setSubmitState({ kind: 'idle' })
 
-    // Simulated authentication outcomes
-    await new Promise((r) => setTimeout(r, 1100))
+    const supabase = createClient()
+    const { error } = await supabase.auth.signInWithPassword({
+      email: values.email,
+      password: values.password,
+    })
 
-    if (values.email.toLowerCase() === 'locked@gov.uk') {
-      setSubmitState({ kind: 'locked' })
-      return
-    }
-    if (values.password === 'wrong') {
-      setSubmitState({
-        kind: 'error',
-        message: 'Incorrect password. Try again or reset it below.',
-      })
+    if (error) {
+      const msg = error.message.toLowerCase()
+      if (msg.includes('locked') || msg.includes('too many')) {
+        setSubmitState({ kind: 'locked' })
+      } else if (msg.includes('not confirmed') || msg.includes('confirm')) {
+        setSubmitState({ kind: 'error', message: 'Please confirm your email before signing in.' })
+      } else {
+        setSubmitState({ kind: 'error', message: 'Incorrect email or password. Try again or reset it below.' })
+      }
       return
     }
 
     toast.success('Signed in')
-    // Demo: a brand-new account drops into first-time workspace setup.
-    if (values.email.toLowerCase().startsWith('new@')) {
-      router.push('/welcome')
-    } else {
-      router.push('/')
-    }
+    router.push('/')
+    router.refresh()
   }
 
   function handleSSO(provider: 'microsoft' | 'google') {
