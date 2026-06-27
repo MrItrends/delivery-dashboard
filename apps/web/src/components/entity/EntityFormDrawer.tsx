@@ -6,6 +6,7 @@ import { TextField } from '@/components/primitives/TextField'
 import { Select } from '@/components/primitives/Select'
 import { Fields } from '@/components/onboarding/FormLayout'
 import { useParentOptions } from '@/lib/data/useEntity'
+import { ensureParentId } from '@/lib/data/setup'
 import type { EntityConfig, FieldDef } from '@/lib/data/entities'
 import type { Row } from '@/lib/data/crud'
 
@@ -36,9 +37,11 @@ export function EntityFormDrawer({ open, mode, config, initial, parentId, submit
   const [form, setForm] = useState<Record<string, unknown>>({})
   const [parent, setParent] = useState<string>('')
   const [error, setError] = useState<string | null>(null)
+  const [resolving, setResolving] = useState(false)
 
   const needsParentPicker = !!config.parent && !parentId
   const parentOptions = useParentOptions(config.parent?.table, 'name', open && needsParentPicker)
+  const hasParentOptions = (parentOptions.data?.length ?? 0) > 0
 
   useEffect(() => {
     if (!open) return
@@ -54,9 +57,11 @@ export function EntityFormDrawer({ open, mode, config, initial, parentId, submit
     if (error) setError(null)
   }
 
-  function submit() {
+  async function submit() {
     if (String(form.name ?? '').trim().length < 2) { setError(`Enter a ${config.singular.toLowerCase()} name`); return }
-    if (needsParentPicker && !parent) { setError(`Select a ${config.parent!.label.toLowerCase()}`); return }
+    // A parent is required only when parents exist to choose from. With an empty
+    // workspace we provision a sensible default rather than dead-ending.
+    if (needsParentPicker && hasParentOptions && !parent) { setError(`Select a ${config.parent!.label.toLowerCase()}`); return }
 
     const input: Record<string, unknown> = {}
     for (const f of config.fields) {
@@ -65,7 +70,17 @@ export function EntityFormDrawer({ open, mode, config, initial, parentId, submit
       if (f.type === 'date') v = v === '' ? null : v
       input[f.name] = v
     }
-    if (config.parent) input[config.parent.key] = parentId ?? parent
+
+    if (config.parent) {
+      let pid = parentId ?? parent
+      if (!pid) {
+        setResolving(true)
+        try { pid = (await ensureParentId(config.key)) ?? '' }
+        catch { setResolving(false); setError('Could not prepare its parent. Try again.'); return }
+        setResolving(false)
+      }
+      input[config.parent.key] = pid
+    }
     onSubmit(input)
   }
 
@@ -103,19 +118,28 @@ export function EntityFormDrawer({ open, mode, config, initial, parentId, submit
       title={mode === 'create' ? `Create ${config.singular.toLowerCase()}` : `Edit ${config.singular.toLowerCase()}`}
       primaryLabel={mode === 'create' ? `Create ${config.singular.toLowerCase()}` : 'Save changes'}
       onPrimary={submit}
-      primaryLoading={submitting}
+      primaryLoading={submitting || resolving}
       secondaryLabel="Cancel"
       onSecondary={onClose}
     >
       <Fields>
         {needsParentPicker && (
-          <Select
-            label={config.parent!.label}
-            options={parentOptions.data ?? []}
-            value={parent}
-            onChange={(e) => { setParent(e.target.value); if (error) setError(null) }}
-            placeholder={parentOptions.isLoading ? 'Loading…' : `Select a ${config.parent!.label.toLowerCase()}`}
-          />
+          parentOptions.isLoading ? null : hasParentOptions ? (
+            <Select
+              label={config.parent!.label}
+              options={parentOptions.data ?? []}
+              value={parent}
+              onChange={(e) => { setParent(e.target.value); if (error) setError(null) }}
+              placeholder={`Select a ${config.parent!.label.toLowerCase()}`}
+            />
+          ) : (
+            <div>
+              <label style={labelStyle}>{config.parent!.label}</label>
+              <p style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-text-tertiary)', margin: 0 }}>
+                No {config.parent!.label.toLowerCase()} yet — a default one will be created for you.
+              </p>
+            </div>
+          )
         )}
         {config.fields.map(renderField)}
       </Fields>

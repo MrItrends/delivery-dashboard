@@ -66,3 +66,72 @@ export async function ensureWorkspaceId(): Promise<string> {
   if (existing) return existing
   return provisionWorkspace({ name: 'My workspace' })
 }
+
+// --- Parent-chain provisioning --------------------------------------------
+// Used when a user creates a child object in an otherwise-empty workspace.
+// We reuse the existing ancestor where one exists, and only create a default
+// when none does. The user can rename any default afterwards.
+
+async function firstId(table: string): Promise<string | null> {
+  const { data } = await createClient().from(table).select('id').eq('archived', false).order('created_at', { ascending: true }).limit(1).maybeSingle()
+  return (data?.id as string) ?? null
+}
+
+async function ensurePortfolioId(): Promise<string> {
+  const existing = await firstId('portfolios')
+  if (existing) return existing
+  const supabase = createClient()
+  const workspaceId = await ensureWorkspaceId()
+  const { data: ws } = await supabase.from('workspaces').select('name').eq('id', workspaceId).maybeSingle()
+  const name = (ws?.name as string)?.trim() || 'General'
+  const { data, error } = await supabase.from('portfolios')
+    .insert({ workspace_id: workspaceId, name, health: 'healthy', budget_health: 'healthy', risk_level: 'healthy' })
+    .select('id').single()
+  if (error) throw error
+  return data.id as string
+}
+
+async function ensurePriorityAreaId(): Promise<string> {
+  const existing = await firstId('priority_areas')
+  if (existing) return existing
+  const portfolioId = await ensurePortfolioId()
+  const { data, error } = await createClient().from('priority_areas')
+    .insert({ portfolio_id: portfolioId, name: 'General priority area', health: 'healthy', budget_health: 'healthy', target_status: 'healthy' })
+    .select('id').single()
+  if (error) throw error
+  return data.id as string
+}
+
+async function ensureProjectId(): Promise<string> {
+  const existing = await firstId('projects')
+  if (existing) return existing
+  const priorityAreaId = await ensurePriorityAreaId()
+  const { data, error } = await createClient().from('projects')
+    .insert({ priority_area_id: priorityAreaId, name: 'General project', health: 'healthy', budget_health: 'healthy', delivery_confidence: 'healthy', status: 'planned' })
+    .select('id').single()
+  if (error) throw error
+  return data.id as string
+}
+
+async function ensureInterventionId(): Promise<string> {
+  const existing = await firstId('interventions')
+  if (existing) return existing
+  const projectId = await ensureProjectId()
+  const { data, error } = await createClient().from('interventions')
+    .insert({ project_id: projectId, name: 'General intervention', status: 'planned', health: 'healthy', budget_health: 'healthy' })
+    .select('id').single()
+  if (error) throw error
+  return data.id as string
+}
+
+/** Resolve (creating if needed) the parent id for a child entity created with
+ *  no parent selected. Returns null for top-level entities. */
+export async function ensureParentId(childKey: string): Promise<string | null> {
+  switch (childKey) {
+    case 'priorityArea': return ensurePortfolioId()
+    case 'project': return ensurePriorityAreaId()
+    case 'intervention': return ensureProjectId()
+    case 'activity': return ensureInterventionId()
+    default: return null
+  }
+}

@@ -1,9 +1,10 @@
 'use client'
 
 import { useState, useRef, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 import { Button } from '@/components/primitives/Button'
 import { Icon, type IconName } from '@/components/primitives/Icon'
-import { useToastStore } from '@/stores/useToastStore'
+import { GlobalCreateDrawer } from '@/components/entity/GlobalCreateDrawer'
 import styles from './CreateMenu.module.css'
 
 interface CreateOption {
@@ -13,6 +14,7 @@ interface CreateOption {
 }
 
 const OPTIONS: CreateOption[] = [
+  { id: 'priorityArea', label: 'Priority area', icon: 'target' },
   { id: 'project', label: 'Project', icon: 'folder' },
   { id: 'intervention', label: 'Intervention', icon: 'layers' },
   { id: 'activity', label: 'Activity', icon: 'check-circle' },
@@ -22,8 +24,9 @@ const OPTIONS: CreateOption[] = [
 /** Compact icon-only variant for tight headers. */
 export function CreateMenu({ compact = false }: { compact?: boolean }) {
   const [open, setOpen] = useState(false)
+  const [createKey, setCreateKey] = useState<string | null>(null)
   const ref = useRef<HTMLDivElement>(null)
-  const toast = useToastStore()
+  const router = useRouter()
 
   useEffect(() => {
     function onDoc(e: MouseEvent) {
@@ -44,7 +47,8 @@ export function CreateMenu({ compact = false }: { compact?: boolean }) {
 
   function select(option: CreateOption) {
     setOpen(false)
-    toast.info(`New ${option.label} — opens in a drawer (coming soon)`)
+    if (option.id === 'report') { router.push('/reports'); return }
+    setCreateKey(option.id)
   }
 
   return (
@@ -78,6 +82,10 @@ export function CreateMenu({ compact = false }: { compact?: boolean }) {
             </button>
           ))}
         </div>
+      )}
+
+      {createKey && (
+        <GlobalCreateDrawer entityKey={createKey} open onClose={() => setCreateKey(null)} />
       )}
     </div>
   )
