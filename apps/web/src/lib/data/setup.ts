@@ -17,6 +17,7 @@ export interface ProvisionInput {
   portfolioName?: string
   portfolioOwner?: string
   portfolioDescription?: string
+  invites?: { email: string; role: string }[]
 }
 
 /** Create the user's own workspace (and optional first portfolio) from their
@@ -55,6 +56,15 @@ export async function provisionWorkspace(input: ProvisionInput): Promise<string>
       description: input.portfolioDescription || null,
       health: 'healthy', budget_health: 'healthy', risk_level: 'healthy',
     })
+  }
+
+  // Pending invitations — collaborators join this workspace when they sign up.
+  const invites = (input.invites ?? []).filter((i) => i.email.trim())
+  if (invites.length > 0 && auth.user) {
+    await supabase.from('workspace_invites').upsert(
+      invites.map((i) => ({ workspace_id: workspaceId, email: i.email.trim().toLowerCase(), role: i.role, invited_by: auth.user!.id })),
+      { onConflict: 'workspace_id,email' }
+    )
   }
 
   return workspaceId

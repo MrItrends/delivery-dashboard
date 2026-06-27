@@ -89,3 +89,35 @@ export async function updateMemberRole(membershipId: string, role: string): Prom
   const { error } = await createClient().from('memberships').update({ role }).eq('id', membershipId)
   if (error) throw error
 }
+
+// --- Invitations -----------------------------------------------------------
+export interface WorkspaceInvite {
+  id: string
+  email: string
+  role: string
+  created_at: string
+}
+
+export async function listInvites(workspaceId: string): Promise<WorkspaceInvite[]> {
+  const { data, error } = await createClient()
+    .from('workspace_invites')
+    .select('id, email, role, created_at')
+    .eq('workspace_id', workspaceId)
+    .order('created_at', { ascending: true })
+  if (error) throw error
+  return (data ?? []) as WorkspaceInvite[]
+}
+
+export async function createInvite(workspaceId: string, email: string, role: string): Promise<void> {
+  const supabase = createClient()
+  const { data: a } = await supabase.auth.getUser()
+  const { error } = await supabase
+    .from('workspace_invites')
+    .upsert({ workspace_id: workspaceId, email: email.trim().toLowerCase(), role, invited_by: a.user?.id }, { onConflict: 'workspace_id,email' })
+  if (error) throw error
+}
+
+export async function deleteInvite(id: string): Promise<void> {
+  const { error } = await createClient().from('workspace_invites').delete().eq('id', id)
+  if (error) throw error
+}

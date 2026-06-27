@@ -96,6 +96,7 @@ export default function SetupPage() {
           portfolioName: st.portfolio.name,
           portfolioOwner: st.portfolio.owner,
           portfolioDescription: st.portfolio.description,
+          invites: st.invites.map((i) => ({ email: i.email, role: i.role })),
         })
         finish()
       } catch {

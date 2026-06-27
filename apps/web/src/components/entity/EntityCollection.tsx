@@ -12,6 +12,7 @@ import { FormBanner } from '@/components/auth/AuthScaffold'
 import { useToastStore } from '@/stores/useToastStore'
 import { isSupabaseConfigured } from '@/lib/supabase/client'
 import { useEntityList, useEntityMutations } from '@/lib/data/useEntity'
+import { useRealtime } from '@/lib/data/useRealtime'
 import { useCapabilities } from '@/lib/data/roles'
 import { ENTITIES } from '@/lib/data/entities'
 import type { Row } from '@/lib/data/crud'
@@ -38,6 +39,8 @@ export function EntityCollection({ entityKey, parentId, embedded, titleOverride,
     parentKey: config.parent?.key, parentId, includeArchived: view === 'archived',
   })
   const { create, update, archive } = useEntityMutations(config.table)
+  // Live collaboration — refresh when anyone in the workspace changes this table.
+  useRealtime(config.table, [config.table])
   const [drawerOpen, setDrawerOpen] = useState(false)
   const [editing, setEditing] = useState<Row | null>(null)
 

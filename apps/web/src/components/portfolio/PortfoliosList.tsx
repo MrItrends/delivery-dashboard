@@ -14,6 +14,7 @@ import { FormBanner } from '@/components/auth/AuthScaffold'
 import { useToastStore } from '@/stores/useToastStore'
 import { isSupabaseConfigured } from '@/lib/supabase/client'
 import { usePortfolios, useCreatePortfolio, useUpdatePortfolio, useArchivePortfolio } from '@/lib/data/usePortfolios'
+import { useRealtime } from '@/lib/data/useRealtime'
 import { useCapabilities } from '@/lib/data/roles'
 import type { Portfolio, PortfolioInput } from '@/lib/data/portfolios'
 import { PortfolioFormDrawer } from './PortfolioFormDrawer'
@@ -33,6 +34,7 @@ export function PortfoliosList() {
   const createMut = useCreatePortfolio()
   const updateMut = useUpdatePortfolio()
   const archiveMut = useArchivePortfolio()
+  useRealtime('portfolios', ['portfolios'])
 
   const [drawerOpen, setDrawerOpen] = useState(false)
   const [editing, setEditing] = useState<Portfolio | null>(null)
