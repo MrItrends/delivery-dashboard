@@ -93,12 +93,6 @@ export function WorkspaceHint({ children }: { children: React.ReactNode }) {
 export function AuthFooter() {
   return (
     <footer className={styles.footer}>
-      <p className={styles.footerText}>
-        Need access?{' '}
-        <Link href="/contact-administrator" className={styles.footerLink}>
-          Contact your administrator
-        </Link>
-      </p>
       <p className={styles.footerLegal}>
         <Link href="/terms" className={styles.footerLegalLink}>Terms</Link>
         <span className={styles.footerDot} aria-hidden="true">·</span>

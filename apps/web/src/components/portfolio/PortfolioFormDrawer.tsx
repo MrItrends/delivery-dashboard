@@ -74,7 +74,7 @@ export function PortfolioFormDrawer({ open, mode, initial, submitting, onClose, 
       <Fields>
         <TextField label="Name" placeholder="e.g. Healthcare Transformation" value={form.name} onChange={set('name')} error={error ?? undefined} autoFocus />
         <div>
-          <label style={{ display: 'block', fontSize: 'var(--font-size-sm)', fontWeight: 'var(--font-weight-medium)', color: 'var(--color-text-secondary)', marginBottom: 'var(--space-2)' }}>Description</label>
+          <label style={{ display: 'block', fontSize: 'var(--font-size-sm)', fontWeight: 'var(--font-weight-medium)', color: 'var(--color-text-primary)', marginBottom: 'var(--space-2)' }}>Description</label>
           <textarea
             value={form.description}
             onChange={(e) => setForm((f) => ({ ...f, description: e.target.value }))}

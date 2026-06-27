@@ -60,7 +60,7 @@ export default function SettingsPage() {
             <h2 className={s.cardTitle}>Appearance</h2>
             <div className={s.fields}>
               <div>
-                <label style={{ display: 'block', fontSize: 'var(--font-size-sm)', fontWeight: 'var(--font-weight-medium)', color: 'var(--color-text-secondary)', marginBottom: 'var(--space-2)' }}>Density</label>
+                <label style={{ display: 'block', fontSize: 'var(--font-size-sm)', fontWeight: 'var(--font-weight-medium)', color: 'var(--color-text-primary)', marginBottom: 'var(--space-2)' }}>Density</label>
                 <div className={s.segmented} role="group" aria-label="Density">
                   {(['comfortable', 'compact'] as const).map((d) => (
                     <button key={d} type="button" className={`${s.segBtn} ${density === d ? s.segActive : ''}`} aria-pressed={density === d} onClick={() => setDensity(d)} style={{ textTransform: 'capitalize' }}>{d}</button>

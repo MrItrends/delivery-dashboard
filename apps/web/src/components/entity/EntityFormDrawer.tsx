@@ -30,7 +30,7 @@ const textareaStyle: React.CSSProperties = {
 }
 const labelStyle: React.CSSProperties = {
   display: 'block', fontSize: 'var(--font-size-sm)', fontWeight: 'var(--font-weight-medium)',
-  color: 'var(--color-text-secondary)', marginBottom: 'var(--space-2)',
+  color: 'var(--color-text-primary)', marginBottom: 'var(--space-2)',
 }
 
 export function EntityFormDrawer({ open, mode, config, initial, parentId, submitting, onClose, onSubmit }: EntityFormDrawerProps) {
