@@ -9,8 +9,6 @@ import { useAppStore } from '@/stores/useAppStore'
 import { createClient, isSupabaseConfigured } from '@/lib/supabase/client'
 import styles from './UserMenu.module.css'
 
-const FALLBACK_USER = { name: 'Ahmed Yusuf', email: 'ahmed.yusuf@gov.uk' }
-
 interface MenuCtx {
   router: ReturnType<typeof useRouter>
   toast: { info: (m: string) => void; success: (m: string) => void }
@@ -26,10 +24,8 @@ interface MenuEntry {
 
 const ENTRIES: MenuEntry[] = [
   { label: 'Profile', icon: 'users', onClick: ({ router }) => router.push('/profile') },
-  { label: 'Preferences', icon: 'sliders', onClick: ({ router }) => router.push('/settings') },
-  { label: 'Keyboard shortcuts', icon: 'keyboard', onClick: ({ toast }) => toast.info('Keyboard shortcuts') },
-  { label: 'Appearance', icon: 'sun', onClick: ({ router }) => router.push('/settings') },
-  { label: 'Workspace settings', icon: 'settings', onClick: ({ router }) => router.push('/settings') },
+  { label: 'Settings', icon: 'settings', onClick: ({ router }) => router.push('/settings') },
+  { label: 'Keyboard shortcuts', icon: 'keyboard', onClick: ({ router }) => router.push('/shortcuts') },
   { label: 'Log out', icon: 'logout', danger: true, separatorBefore: true, onClick: ({ router }) => router.push('/login') },
 ]
 
@@ -39,7 +35,7 @@ export function UserMenu({ collapsed }: { collapsed: boolean }) {
   const router = useRouter()
   const toast = useToastStore()
   const storeUser = useAppStore((s) => s.user)
-  const user = storeUser ?? FALLBACK_USER
+  const user = { name: storeUser?.name || 'Account', email: storeUser?.email || '' }
 
   async function handleLogout() {
     setOpen(false)
@@ -82,7 +78,7 @@ export function UserMenu({ collapsed }: { collapsed: boolean }) {
         {!collapsed && (
           <span className={styles.info}>
             <span className={styles.name}>{user.name}</span>
-            <span className={styles.email}>{user.email}</span>
+            {user.email && <span className={styles.email}>{user.email}</span>}
           </span>
         )}
       </button>
@@ -93,7 +89,7 @@ export function UserMenu({ collapsed }: { collapsed: boolean }) {
             <Avatar name={user.name} size="md" />
             <span className={styles.headerInfo}>
               <span className={styles.name}>{user.name}</span>
-              <span className={styles.email}>{user.email}</span>
+              {user.email && <span className={styles.email}>{user.email}</span>}
             </span>
           </div>
           <div className={styles.divider} role="separator" />

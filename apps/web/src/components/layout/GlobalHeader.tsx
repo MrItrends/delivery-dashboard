@@ -4,7 +4,8 @@ import { usePathname } from 'next/navigation'
 import { Breadcrumb, type BreadcrumbItem } from '@/components/navigation/Breadcrumb'
 import { Icon } from '@/components/primitives/Icon'
 import { CreateMenu } from './CreateMenu'
-import { CURRENT_WORKSPACE, ROUTE_LABELS } from './navConfig'
+import { useWorkspace } from '@/lib/data/useWorkspace'
+import { ROUTE_LABELS } from './navConfig'
 import styles from './GlobalHeader.module.css'
 
 function prettify(segment: string) {
@@ -12,11 +13,11 @@ function prettify(segment: string) {
 }
 
 /** Derive the breadcrumb trail automatically from the current route. */
-function useBreadcrumb(): BreadcrumbItem[] {
+function useBreadcrumb(rootLabel: string): BreadcrumbItem[] {
   const pathname = usePathname()
   const segments = pathname.split('/').filter(Boolean)
 
-  const items: BreadcrumbItem[] = [{ label: CURRENT_WORKSPACE.name, href: '/' }]
+  const items: BreadcrumbItem[] = [{ label: rootLabel, href: '/' }]
   let path = ''
   for (const seg of segments) {
     path += `/${seg}`
@@ -43,7 +44,8 @@ export function GlobalHeader({
   unreadCount,
   offline,
 }: GlobalHeaderProps) {
-  const breadcrumb = useBreadcrumb()
+  const { data: workspace } = useWorkspace()
+  const breadcrumb = useBreadcrumb(workspace?.name ?? 'Home')
 
   return (
     <header className={styles.header} role="banner">

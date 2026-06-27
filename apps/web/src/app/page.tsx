@@ -1,10 +1,10 @@
 import { AppShell } from '@/components/layout/AppShell'
-import { WorkspaceHome } from '@/components/workspace/WorkspaceHome'
+import { HomeView } from '@/components/workspace/HomeView'
 
 export default function Home() {
   return (
     <AppShell>
-      <WorkspaceHome />
+      <HomeView />
     </AppShell>
   )
 }

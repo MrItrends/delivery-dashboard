@@ -49,7 +49,7 @@ export default function ForgotPasswordPage() {
           label="Email"
           type="email"
           icon="mail"
-          placeholder="you@department.gov.uk"
+          placeholder="you@health.gov.ng"
           autoComplete="email"
           autoFocus
           inputMode="email"

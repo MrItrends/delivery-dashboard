@@ -15,10 +15,9 @@ import styles from './AppShell.module.css'
 
 interface AppShellProps {
   children: React.ReactNode
-  emptyWorkspace?: boolean
 }
 
-export function AppShell({ children, emptyWorkspace }: AppShellProps) {
+export function AppShell({ children }: AppShellProps) {
   const isMobile = useIsMobile()
   const online = useOnline()
 
@@ -56,7 +55,6 @@ export function AppShell({ children, emptyWorkspace }: AppShellProps) {
         collapsed={collapsed}
         mobileOpen={isMobile && mobileNavOpen}
         onToggleCollapse={() => setStoreCollapsed(!storeCollapsed)}
-        emptyWorkspace={emptyWorkspace}
       />
 
       {/* Mobile drawer backdrop */}

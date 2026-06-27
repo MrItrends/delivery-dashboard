@@ -95,7 +95,7 @@ export default function SignUpPage() {
           label="Work email"
           type="email"
           icon="mail"
-          placeholder="you@department.gov.uk"
+          placeholder="you@health.gov.ng"
           autoComplete="email"
           inputMode="email"
           error={touchedFields.email ? errors.email?.message : undefined}

@@ -7,30 +7,24 @@ export interface SelectOption {
   label: string
 }
 
+// Nigeria first — the platform's primary frame of reference (see NORTH_STAR §3).
 export const COUNTRIES: SelectOption[] = [
+  { value: 'ng', label: 'Nigeria' },
+  { value: 'gh', label: 'Ghana' },
+  { value: 'ke', label: 'Kenya' },
+  { value: 'za', label: 'South Africa' },
+  { value: 'rw', label: 'Rwanda' },
   { value: 'gb', label: 'United Kingdom' },
   { value: 'us', label: 'United States' },
   { value: 'ca', label: 'Canada' },
   { value: 'au', label: 'Australia' },
-  { value: 'nz', label: 'New Zealand' },
   { value: 'ie', label: 'Ireland' },
   { value: 'sg', label: 'Singapore' },
   { value: 'ae', label: 'United Arab Emirates' },
   { value: 'sa', label: 'Saudi Arabia' },
-  { value: 'za', label: 'South Africa' },
-  { value: 'ng', label: 'Nigeria' },
-  { value: 'ke', label: 'Kenya' },
-  { value: 'gh', label: 'Ghana' },
-  { value: 'rw', label: 'Rwanda' },
   { value: 'in', label: 'India' },
-  { value: 'pk', label: 'Pakistan' },
-  { value: 'bd', label: 'Bangladesh' },
   { value: 'de', label: 'Germany' },
   { value: 'fr', label: 'France' },
-  { value: 'es', label: 'Spain' },
-  { value: 'it', label: 'Italy' },
-  { value: 'nl', label: 'Netherlands' },
-  { value: 'se', label: 'Sweden' },
   { value: 'other', label: 'Other' },
 ]
 
@@ -46,11 +40,11 @@ export const LANGUAGES: SelectOption[] = [
 ]
 
 export const TIMEZONES: SelectOption[] = [
+  { value: 'Africa/Lagos', label: '(GMT+01:00) Lagos, West Africa' },
+  { value: 'Africa/Nairobi', label: '(GMT+03:00) Nairobi, East Africa' },
   { value: 'Europe/London', label: '(GMT+00:00) London' },
   { value: 'Europe/Dublin', label: '(GMT+00:00) Dublin' },
   { value: 'Europe/Paris', label: '(GMT+01:00) Paris, Berlin, Madrid' },
-  { value: 'Africa/Lagos', label: '(GMT+01:00) Lagos, West Africa' },
-  { value: 'Africa/Nairobi', label: '(GMT+03:00) Nairobi, East Africa' },
   { value: 'Asia/Dubai', label: '(GMT+04:00) Dubai, Abu Dhabi' },
   { value: 'Asia/Karachi', label: '(GMT+05:00) Karachi' },
   { value: 'Asia/Kolkata', label: '(GMT+05:30) India' },

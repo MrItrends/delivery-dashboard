@@ -1,0 +1,52 @@
+.hero { margin-bottom: var(--space-6); }
+.heroTitle { font-size: var(--font-size-2xl); font-weight: var(--font-weight-semibold); letter-spacing: var(--letter-spacing-tight); color: var(--color-text-primary); }
+.heroSub { margin-top: var(--space-1); font-size: var(--font-size-sm); color: var(--color-text-tertiary); }
+
+.metrics {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  margin-bottom: var(--space-6);
+}
+.metric { padding: var(--space-4) var(--space-5); border-right: 1px solid var(--color-border-subtle); }
+.metric:last-child { border-right: none; }
+.metricValue { font-size: var(--font-size-2xl); font-weight: var(--font-weight-semibold); color: var(--color-text-primary); letter-spacing: var(--letter-spacing-tight); }
+.metricLabel { font-size: var(--font-size-xs); color: var(--color-text-tertiary); margin-top: 2px; }
+
+.grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-6); }
+@media (max-width: 900px) { .grid { grid-template-columns: 1fr; } }
+
+.section { margin-bottom: var(--space-6); }
+.sectionHead { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: var(--space-3); }
+.sectionTitle { font-size: var(--font-size-md); font-weight: var(--font-weight-semibold); color: var(--color-text-primary); }
+.sectionLink { font-size: var(--font-size-xs); color: var(--color-text-link); text-decoration: none; }
+.sectionLink:hover { text-decoration: underline; }
+
+/* Getting started checklist */
+.checklist { border: 1px solid var(--color-border-default); border-radius: var(--radius-xl); padding: var(--space-5) var(--space-6); margin-bottom: var(--space-6); background-color: var(--color-surface-page); }
+.checklistHead { display: flex; align-items: flex-start; justify-content: space-between; gap: var(--space-4); margin-bottom: var(--space-4); }
+.checklistTitle { font-size: var(--font-size-md); font-weight: var(--font-weight-semibold); color: var(--color-text-primary); }
+.checklistSub { margin-top: 2px; font-size: var(--font-size-sm); color: var(--color-text-tertiary); }
+.dismiss { background: none; border: none; color: var(--color-text-tertiary); font-size: var(--font-size-xs); cursor: pointer; padding: var(--space-1) var(--space-2); border-radius: var(--radius-sm); white-space: nowrap; }
+.dismiss:hover { color: var(--color-text-secondary); background-color: var(--color-surface-hover); }
+
+.step { display: flex; align-items: center; gap: var(--space-3); padding: var(--space-3) 0; border-bottom: 1px solid var(--color-border-subtle); text-decoration: none; }
+.step:last-child { border-bottom: none; }
+.tick { width: 20px; height: 20px; border-radius: var(--radius-full); border: 1.5px solid var(--color-border-strong); display: flex; align-items: center; justify-content: center; flex-shrink: 0; color: transparent; }
+.tickDone { background-color: var(--color-status-healthy-dot); border-color: var(--color-status-healthy-dot); color: #fff; }
+.stepLabel { flex: 1; font-size: var(--font-size-sm); color: var(--color-text-primary); }
+.stepLabelDone { color: var(--color-text-tertiary); text-decoration: line-through; }
+.stepGo { font-size: var(--font-size-xs); color: var(--color-text-link); }
+
+/* Welcome (empty workspace) */
+.welcome { max-width: 640px; margin: var(--space-10) auto; text-align: center; }
+.welcomeTitle { font-size: var(--font-size-3xl); font-weight: var(--font-weight-semibold); letter-spacing: var(--letter-spacing-tight); color: var(--color-text-primary); }
+.welcomeBody { margin-top: var(--space-3); font-size: var(--font-size-md); color: var(--color-text-secondary); line-height: var(--line-height-relaxed); }
+.flow { display: flex; align-items: center; justify-content: center; gap: var(--space-2); flex-wrap: wrap; margin: var(--space-6) 0; }
+.flowStep { font-size: var(--font-size-xs); font-weight: var(--font-weight-medium); color: var(--color-text-secondary); background-color: var(--color-surface-subtle); border: 1px solid var(--color-border-default); border-radius: var(--radius-md); padding: var(--space-2) var(--space-3); }
+.flowArrow { color: var(--color-text-tertiary); }
+.welcomeActions { display: flex; gap: var(--space-2); justify-content: center; margin-top: var(--space-2); }
+
+.empty { padding: var(--space-8) 0; text-align: center; font-size: var(--font-size-sm); color: var(--color-text-tertiary); }

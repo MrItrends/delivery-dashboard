@@ -60,7 +60,7 @@ export function InviteList({
           <input
             type="email"
             className={styles.emailInput}
-            placeholder="name@department.gov.uk"
+            placeholder="firstname.lastname@health.gov.ng"
             value={email}
             onChange={(e) => { setEmail(e.target.value); setError(null) }}
             onKeyDown={(e) => {

@@ -1,9 +1,9 @@
 'use client'
 
 import { useState, useRef, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 import { Icon } from '@/components/primitives/Icon'
-import { useToastStore } from '@/stores/useToastStore'
-import { CURRENT_WORKSPACE, WORKSPACES, type WorkspaceOption } from './navConfig'
+import { useWorkspace } from '@/lib/data/useWorkspace'
 import styles from './WorkspaceSwitcher.module.css'
 
 interface WorkspaceSwitcherProps {
@@ -11,11 +11,13 @@ interface WorkspaceSwitcherProps {
 }
 
 export function WorkspaceSwitcher({ collapsed }: WorkspaceSwitcherProps) {
+  const router = useRouter()
   const [open, setOpen] = useState(false)
-  const [current, setCurrent] = useState<WorkspaceOption>(CURRENT_WORKSPACE)
-  const [switching, setSwitching] = useState(false)
   const ref = useRef<HTMLDivElement>(null)
-  const toast = useToastStore()
+  const { data: workspace } = useWorkspace()
+
+  const name = workspace?.name ?? 'Workspace'
+  const initial = (workspace?.name?.trim()?.[0] ?? 'W').toUpperCase()
 
   useEffect(() => {
     function onDoc(e: MouseEvent) {
@@ -34,18 +36,6 @@ export function WorkspaceSwitcher({ collapsed }: WorkspaceSwitcherProps) {
     }
   }, [open])
 
-  function switchTo(ws: WorkspaceOption) {
-    setOpen(false)
-    if (ws.id === current.id) return
-    // Workspace switching state — brief transition, context preserved.
-    setSwitching(true)
-    setTimeout(() => {
-      setCurrent(ws)
-      setSwitching(false)
-      toast.success(`Switched to ${ws.name}`)
-    }, 650)
-  }
-
   return (
     <div className={styles.wrap} ref={ref}>
       <button
@@ -54,19 +44,14 @@ export function WorkspaceSwitcher({ collapsed }: WorkspaceSwitcherProps) {
         onClick={() => setOpen((v) => !v)}
         aria-haspopup="menu"
         aria-expanded={open}
-        aria-label={`Current workspace: ${current.name}. Switch workspace`}
-        data-tooltip={collapsed ? current.name : undefined}
+        aria-label={`Current workspace: ${name}`}
+        data-tooltip={collapsed ? name : undefined}
       >
-        <span className={styles.avatar} aria-hidden="true">
-          {switching ? <Icon name="spinner" size={16} className="spin" /> : current.initial}
-        </span>
+        <span className={styles.avatar} aria-hidden="true">{initial}</span>
         {!collapsed && (
           <>
             <span className={styles.info}>
-              <span className={styles.name}>{current.name}</span>
-              {current.environment && current.environment !== 'Production' && (
-                <span className={styles.envBadge}>{current.environment}</span>
-              )}
+              <span className={styles.name}>{name}</span>
             </span>
             <Icon name="chevron-down" size={16} className={styles.chev} />
           </>
@@ -74,37 +59,21 @@ export function WorkspaceSwitcher({ collapsed }: WorkspaceSwitcherProps) {
       </button>
 
       {open && (
-        <div className={styles.menu} role="menu" aria-label="Workspaces">
-          <p className={styles.menuLabel}>Workspaces</p>
-          {WORKSPACES.map((ws) => (
-            <button
-              key={ws.id}
-              type="button"
-              role="menuitemradio"
-              aria-checked={ws.id === current.id}
-              className={styles.wsItem}
-              onClick={() => switchTo(ws)}
-            >
-              <span className={styles.wsAvatar} aria-hidden="true">{ws.initial}</span>
-              <span className={styles.wsInfo}>
-                <span className={styles.wsName}>{ws.name}</span>
-                {ws.environment && ws.environment !== 'Production' && (
-                  <span className={styles.wsEnv}>{ws.environment}</span>
-                )}
-              </span>
-              {ws.id === current.id && <Icon name="check" size={16} className={styles.wsCheck} />}
-            </button>
-          ))}
+        <div className={styles.menu} role="menu" aria-label="Workspace">
+          <div className={styles.wsItem} aria-current="true">
+            <span className={styles.wsAvatar} aria-hidden="true">{initial}</span>
+            <span className={styles.wsInfo}>
+              <span className={styles.wsName}>{name}</span>
+              {workspace?.organization && <span className={styles.wsEnv}>{workspace.organization}</span>}
+            </span>
+            <Icon name="check" size={16} className={styles.wsCheck} />
+          </div>
 
           <div className={styles.divider} role="separator" />
 
-          <button type="button" role="menuitem" className={styles.action} onClick={() => { setOpen(false); toast.info('Create workspace') }}>
-            <Icon name="plus" size={16} className={styles.actionIcon} />
-            Create workspace
-          </button>
-          <button type="button" role="menuitem" className={styles.action} onClick={() => { setOpen(false); toast.info('Manage workspace') }}>
+          <button type="button" role="menuitem" className={styles.action} onClick={() => { setOpen(false); router.push('/settings') }}>
             <Icon name="settings" size={16} className={styles.actionIcon} />
-            Manage workspace
+            Workspace settings
           </button>
         </div>
       )}
