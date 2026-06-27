@@ -118,15 +118,7 @@ export const STRATEGIC_THEMES: SelectOption[] = [
   { value: 'other', label: 'Other' },
 ]
 
-// Invite access levels — mirrors the permission model (Observer→Admin)
-export const INVITE_PERMISSIONS: SelectOption[] = [
-  { value: 'view', label: 'Can view' },
-  { value: 'edit', label: 'Can edit' },
-  { value: 'manage', label: 'Can manage' },
-  { value: 'admin', label: 'Full access' },
-]
-
-// Roles — the eight role types, with the detail shown on the selection cards.
+// Roles — the four canonical role types, with the detail shown on the selection cards.
 export interface RoleDefinition {
   id: string
   title: string
@@ -134,53 +126,30 @@ export interface RoleDefinition {
   responsibilities: string
 }
 
+// The four canonical roles (TBI deck, p.23). See docs/NORTH_STAR.md §4.
 export const ROLES: RoleDefinition[] = [
   {
-    id: 'executive',
-    title: 'Executive',
-    description: 'Oversee delivery across the whole organisation.',
-    responsibilities: 'Strategic oversight, portfolio health, executive reporting',
-  },
-  {
-    id: 'portfolio-manager',
-    title: 'Portfolio Manager',
-    description: 'Manage a portfolio of priorities and programmes.',
-    responsibilities: 'Portfolio performance, prioritisation, cross-programme risk',
-  },
-  {
-    id: 'programme-manager',
-    title: 'Programme Manager',
-    description: 'Coordinate delivery across related projects.',
-    responsibilities: 'Programme governance, decisions, milestone assurance',
-  },
-  {
-    id: 'project-manager',
-    title: 'Project Manager',
-    description: 'Run individual projects and interventions.',
-    responsibilities: 'Project delivery, activities, budgets, day-to-day execution',
-  },
-  {
-    id: 'delivery-team',
-    title: 'Delivery Team',
-    description: 'Deliver the work and update progress.',
-    responsibilities: 'Completing activities, evidence, status updates',
-  },
-  {
-    id: 'finance',
-    title: 'Finance',
-    description: 'Oversee budgets and financial governance.',
-    responsibilities: 'Budget allocation, forecasts, expenditure approvals',
-  },
-  {
-    id: 'observer',
-    title: 'Observer',
-    description: 'View delivery without making changes.',
-    responsibilities: 'Read-only access to dashboards and reports',
-  },
-  {
-    id: 'administrator',
+    id: 'admin',
     title: 'Administrator',
-    description: 'Manage the workspace, people and settings.',
-    responsibilities: 'User management, permissions, integrations, security',
+    description: 'Run the dashboard end to end.',
+    responsibilities: 'Approve milestones, manage financiers, manage people and settings',
+  },
+  {
+    id: 'priority-area-lead',
+    title: 'Priority area lead',
+    description: 'Lead or co-lead a priority area.',
+    responsibilities: 'Create and edit its actions and milestones, manage its people',
+  },
+  {
+    id: 'intervention-lead',
+    title: 'Intervention lead',
+    description: 'Lead or co-lead an intervention.',
+    responsibilities: 'Create and edit its actions and milestones, manage its people',
+  },
+  {
+    id: 'regular',
+    title: 'Regular user',
+    description: 'Contribute to delivery.',
+    responsibilities: 'Update your own actions and raise issues within your intervention',
   },
 ]

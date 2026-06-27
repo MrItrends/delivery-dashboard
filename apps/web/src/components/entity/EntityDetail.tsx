@@ -11,6 +11,7 @@ import { FormBanner } from '@/components/auth/AuthScaffold'
 import { useToastStore } from '@/stores/useToastStore'
 import { getEntity, type Row } from '@/lib/data/crud'
 import { useEntityMutations } from '@/lib/data/useEntity'
+import { useCapabilities } from '@/lib/data/roles'
 import { ENTITIES } from '@/lib/data/entities'
 import { EntityCollection } from './EntityCollection'
 import { EntityFormDrawer } from './EntityFormDrawer'
@@ -27,6 +28,7 @@ interface EntityDetailProps {
 export function EntityDetail({ entityKey, id }: EntityDetailProps) {
   const config = ENTITIES[entityKey]!
   const toast = useToastStore()
+  const caps = useCapabilities()
   const { update } = useEntityMutations(config.table)
   const [editOpen, setEditOpen] = useState(false)
 
@@ -69,9 +71,11 @@ export function EntityDetail({ entityKey, id }: EntityDetailProps) {
         status={status}
         metadata={owner ? [{ label: 'Owner', value: (<span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}><Avatar name={owner} size="xs" /> {owner}</span>) }] : undefined}
         primaryAction={
-          <Button variant="secondary" size="md" iconLeft={<Icon name="sliders" size={16} />} onClick={() => setEditOpen(true)}>
-            Edit {config.singular.toLowerCase()}
-          </Button>
+          caps.canEdit ? (
+            <Button variant="secondary" size="md" iconLeft={<Icon name="sliders" size={16} />} onClick={() => setEditOpen(true)}>
+              Edit {config.singular.toLowerCase()}
+            </Button>
+          ) : undefined
         }
       />
       <div className={page.body} style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-8)' }}>

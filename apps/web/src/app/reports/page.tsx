@@ -14,6 +14,7 @@ import { Select } from '@/components/primitives/Select'
 import { Fields } from '@/components/onboarding/FormLayout'
 import { useToastStore } from '@/stores/useToastStore'
 import { useParentOptions } from '@/lib/data/useEntity'
+import { useCapabilities } from '@/lib/data/roles'
 import { listReports, createReport, deleteReport, type ReportInput } from '@/lib/data/reports'
 import { timeAgo } from '@/lib/format'
 import page from '@/components/portfolio/PortfolioWorkspace.module.css'
@@ -42,6 +43,7 @@ export default function ReportsPage() {
   const router = useRouter()
   const toast = useToastStore()
   const qc = useQueryClient()
+  const caps = useCapabilities()
   const { data, isLoading } = useQuery({ queryKey: ['reports'], queryFn: listReports })
   const create = useMutation({ mutationFn: (input: ReportInput) => createReport(input), onSuccess: (rep) => { qc.invalidateQueries({ queryKey: ['reports'] }); setOpen(false); toast.success('Report draft created'); router.push(`/reports/${rep.id}`) }, onError: () => toast.error('Could not create') })
   const remove = useMutation({ mutationFn: (id: string) => deleteReport(id), onSuccess: () => { qc.invalidateQueries({ queryKey: ['reports'] }); toast.success('Report deleted') } })
@@ -65,7 +67,7 @@ export default function ReportsPage() {
         <PageHeader
           title="Reports"
           description="Generated reports across the workspace — drafts, reviews and published."
-          primaryAction={<Button variant="primary" size="md" iconLeft={<Icon name="plus" size={16} />} onClick={() => { setForm({ title: '', scope_type: 'workspace', scope_id: '', period: '', audience: '' }); setOpen(true) }}>New report</Button>}
+          primaryAction={caps.canCreate ? <Button variant="primary" size="md" iconLeft={<Icon name="plus" size={16} />} onClick={() => { setForm({ title: '', scope_type: 'workspace', scope_id: '', period: '', audience: '' }); setOpen(true) }}>New report</Button> : undefined}
         />
         <div className={page.body}>
           {isLoading ? (
@@ -86,9 +88,9 @@ export default function ReportsPage() {
                       </span>
                       <span className={s.rowRight}>
                         <StatusChip status={st.status} size="sm" label={st.label} />
-                        <span role="button" tabIndex={0} className={s.roleSelect} style={{ width: 32, padding: 0, display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }} aria-label="Delete report"
+                        {caps.canArchive && <span role="button" tabIndex={0} className={s.roleSelect} style={{ width: 32, padding: 0, display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }} aria-label="Delete report"
                           onClick={(e) => { e.stopPropagation(); remove.mutate(rep.id) }}
-                          onKeyDown={(e) => { if (e.key === 'Enter') { e.stopPropagation(); remove.mutate(rep.id) } }}><Icon name="alert-circle" size={15} /></span>
+                          onKeyDown={(e) => { if (e.key === 'Enter') { e.stopPropagation(); remove.mutate(rep.id) } }}><Icon name="alert-circle" size={15} /></span>}
                       </span>
                     </button>
                   </li>

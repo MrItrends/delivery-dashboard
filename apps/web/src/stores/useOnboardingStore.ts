@@ -5,7 +5,6 @@ export interface Invite {
   id: string
   email: string
   role: string
-  permission: string
 }
 
 export interface WorkspaceData {

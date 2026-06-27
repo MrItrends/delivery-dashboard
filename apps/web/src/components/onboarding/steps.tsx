@@ -277,12 +277,6 @@ export const TeamStep = forwardRef<StepHandle>(function TeamStep(_, ref) {
   const addInvite = useOnboardingStore((s) => s.addInvite)
   const updateInvite = useOnboardingStore((s) => s.updateInvite)
   const removeInvite = useOnboardingStore((s) => s.removeInvite)
-  const role = useOnboardingStore((s) => s.role)
-
-  // Permission ceiling — only Administrators and Executives can grant full access.
-  const canGrantAdmin = role === 'administrator' || role === 'executive'
-  const roleLabel = ROLES.find((r) => r.id === role)?.title ?? 'your role'
-
   useImperativeHandle(ref, () => ({ validate: () => true }))
 
   return (
@@ -297,17 +291,7 @@ export const TeamStep = forwardRef<StepHandle>(function TeamStep(_, ref) {
           onAdd={addInvite}
           onUpdate={updateInvite}
           onRemove={removeInvite}
-          canGrantAdmin={canGrantAdmin}
         />
-        {!canGrantAdmin && (
-          <p className={styles.note}>
-            <Icon name="shield" size={15} className={styles.noteIcon} />
-            <span>
-              As {roleLabel}, you can invite collaborators up to your own access
-              level. An administrator can grant full access later.
-            </span>
-          </p>
-        )}
       </Fields>
     </>
   )

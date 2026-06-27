@@ -14,6 +14,7 @@ import { FormBanner } from '@/components/auth/AuthScaffold'
 import { useToastStore } from '@/stores/useToastStore'
 import { isSupabaseConfigured } from '@/lib/supabase/client'
 import { usePortfolios, useCreatePortfolio, useUpdatePortfolio, useArchivePortfolio } from '@/lib/data/usePortfolios'
+import { useCapabilities } from '@/lib/data/roles'
 import type { Portfolio, PortfolioInput } from '@/lib/data/portfolios'
 import { PortfolioFormDrawer } from './PortfolioFormDrawer'
 import page from './PortfolioWorkspace.module.css'
@@ -26,6 +27,7 @@ function fmtDate(iso: string) {
 export function PortfoliosList() {
   const router = useRouter()
   const toast = useToastStore()
+  const caps = useCapabilities()
   const [view, setView] = useState<'active' | 'archived'>('active')
   const { data, isLoading, isError, refetch } = usePortfolios(view === 'archived')
   const createMut = useCreatePortfolio()
@@ -74,22 +76,22 @@ export function PortfoliosList() {
     { accessorKey: 'risk_level', header: 'Risk', size: 110, cell: ({ row }) => <StatusChip status={row.original.risk_level} size="sm" /> },
     { accessorKey: 'reporting_period', header: 'Reporting period', size: 180, cell: ({ row }) => <span className={t.muted}>{row.original.reporting_period ?? '—'}</span> },
     { accessorKey: 'updated_at', header: 'Updated', size: 100, cell: ({ row }) => <span className={t.muted}>{fmtDate(row.original.updated_at)}</span> },
-    { id: 'actions', header: '', size: 80, cell: ({ row }) => (
+    ...(caps.canEdit || caps.canArchive ? [{ id: 'actions', header: '', size: 80, cell: ({ row }: { row: { original: Portfolio } }) => (
       <span className={t.actions}>
-        <button type="button" className={t.actionBtn} aria-label="Edit" onClick={(e) => { e.stopPropagation(); openEdit(row.original) }}><Icon name="sliders" size={15} /></button>
-        {row.original.archived
+        {caps.canEdit && <button type="button" className={t.actionBtn} aria-label="Edit" onClick={(e) => { e.stopPropagation(); openEdit(row.original) }}><Icon name="sliders" size={15} /></button>}
+        {caps.canArchive && (row.original.archived
           ? <button type="button" className={t.actionBtn} aria-label="Restore" onClick={(e) => { e.stopPropagation(); archive(row.original, false) }}><Icon name="arrow-left" size={15} /></button>
-          : <button type="button" className={t.actionBtn} aria-label="Archive" onClick={(e) => { e.stopPropagation(); archive(row.original, true) }}><Icon name="inbox" size={15} /></button>}
+          : <button type="button" className={t.actionBtn} aria-label="Archive" onClick={(e) => { e.stopPropagation(); archive(row.original, true) }}><Icon name="inbox" size={15} /></button>)}
       </span>
-    ) },
+    ) }] as ColumnDef<Portfolio, unknown>[] : []),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  ], [view])
+  ], [view, caps.canEdit, caps.canArchive])
 
   const header = (
     <PageHeader
       title="Portfolios"
       description="Strategic portfolios across the workspace. Each groups the priority areas you’re accountable for."
-      primaryAction={<Button variant="primary" size="md" iconLeft={<Icon name="plus" size={16} />} onClick={openCreate}>Create portfolio</Button>}
+      primaryAction={caps.canCreate ? <Button variant="primary" size="md" iconLeft={<Icon name="plus" size={16} />} onClick={openCreate}>Create portfolio</Button> : undefined}
     />
   )
 
@@ -108,7 +110,7 @@ export function PortfoliosList() {
             views={[{ id: 'active', label: 'Active' }, { id: 'archived', label: 'Archived' }]}
             activeView={view}
             onViewChange={(v) => setView(v as 'active' | 'archived')}
-            primaryAction={<Button size="sm" variant="secondary" iconLeft={<Icon name="plus" size={15} />} onClick={openCreate}>Portfolio</Button>}
+            primaryAction={caps.canCreate ? <Button size="sm" variant="secondary" iconLeft={<Icon name="plus" size={15} />} onClick={openCreate}>Portfolio</Button> : undefined}
           />
           <div className={t.tableWrap}>
             {isError ? (

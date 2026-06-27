@@ -2,18 +2,8 @@
 
 import { createClient } from '@/lib/supabase/client'
 
-// --- Roles -----------------------------------------------------------------
-export const ROLE_OPTIONS = [
-  { value: 'admin', label: 'Administrator' },
-  { value: 'executive', label: 'Executive' },
-  { value: 'portfolio-manager', label: 'Portfolio Manager' },
-  { value: 'programme-manager', label: 'Programme Manager' },
-  { value: 'project-manager', label: 'Project Manager' },
-  { value: 'delivery-team', label: 'Delivery Team' },
-  { value: 'finance', label: 'Finance' },
-  { value: 'observer', label: 'Observer' },
-]
-export const roleLabel = (v: string) => ROLE_OPTIONS.find((r) => r.value === v)?.label ?? v
+// Canonical four-role model lives in roles.ts. Re-exported for existing callers.
+export { ROLE_OPTIONS, roleLabel } from './roles'
 
 // --- Workspace -------------------------------------------------------------
 export interface Workspace {

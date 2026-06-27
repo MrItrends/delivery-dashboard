@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import { Button } from '@/components/primitives/Button'
 import { Icon, type IconName } from '@/components/primitives/Icon'
 import { GlobalCreateDrawer } from '@/components/entity/GlobalCreateDrawer'
+import { useCapabilities } from '@/lib/data/roles'
 import styles from './CreateMenu.module.css'
 
 interface CreateOption {
@@ -27,6 +28,7 @@ export function CreateMenu({ compact = false }: { compact?: boolean }) {
   const [createKey, setCreateKey] = useState<string | null>(null)
   const ref = useRef<HTMLDivElement>(null)
   const router = useRouter()
+  const caps = useCapabilities()
 
   useEffect(() => {
     function onDoc(e: MouseEvent) {
@@ -50,6 +52,8 @@ export function CreateMenu({ compact = false }: { compact?: boolean }) {
     if (option.id === 'report') { router.push('/reports'); return }
     setCreateKey(option.id)
   }
+
+  if (!caps.canCreate) return null
 
   return (
     <div className={styles.wrap} ref={ref} data-coach="create">

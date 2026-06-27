@@ -10,6 +10,7 @@ import { Button } from '@/components/primitives/Button'
 import { useToastStore } from '@/stores/useToastStore'
 import { useAppStore } from '@/stores/useAppStore'
 import { getWorkspace, updateWorkspace } from '@/lib/data/admin'
+import { useCapabilities } from '@/lib/data/roles'
 import { TIMEZONES, COUNTRIES, CURRENCIES } from '@/lib/onboarding/options'
 import page from '@/components/portfolio/PortfolioWorkspace.module.css'
 import s from '@/components/pages/pages.module.css'
@@ -18,6 +19,7 @@ export default function SettingsPage() {
   const toast = useToastStore()
   const density = useAppStore((st) => st.density)
   const setDensity = useAppStore((st) => st.setDensity)
+  const caps = useCapabilities()
   const { data, refetch } = useQuery({ queryKey: ['workspace'], queryFn: getWorkspace })
 
   const [form, setForm] = useState({ name: '', organization: '', country: '', timezone: '', currency: '' })
@@ -51,9 +53,13 @@ export default function SettingsPage() {
               <Select label="Timezone" options={TIMEZONES} value={form.timezone} onChange={set('timezone')} placeholder="Select a timezone" />
               <Select label="Currency" options={CURRENCIES} value={form.currency} onChange={set('currency')} placeholder="Select a currency" />
             </div>
-            <div className={s.formActions}>
-              <Button variant="primary" size="md" loading={saving} onClick={save} disabled={!data}>Save changes</Button>
-            </div>
+            {caps.canManageWorkspace ? (
+              <div className={s.formActions}>
+                <Button variant="primary" size="md" loading={saving} onClick={save} disabled={!data}>Save changes</Button>
+              </div>
+            ) : (
+              <p style={{ marginTop: 'var(--space-4)', fontSize: 'var(--font-size-sm)', color: 'var(--color-text-tertiary)' }}>Only an administrator can change workspace settings.</p>
+            )}
           </div>
 
           <div className={s.card}>

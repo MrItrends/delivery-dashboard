@@ -4,16 +4,16 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { AppShell } from '@/components/layout/AppShell'
 import { PageHeader } from '@/components/layout/PageHeader'
 import { Avatar } from '@/components/primitives/Avatar'
-import { Button } from '@/components/primitives/Button'
-import { Icon } from '@/components/primitives/Icon'
 import { useToastStore } from '@/stores/useToastStore'
-import { getWorkspace, listMembers, updateMemberRole, ROLE_OPTIONS } from '@/lib/data/admin'
+import { getWorkspace, listMembers, updateMemberRole } from '@/lib/data/admin'
+import { ROLE_OPTIONS, roleLabel, useCapabilities } from '@/lib/data/roles'
 import page from '@/components/portfolio/PortfolioWorkspace.module.css'
 import s from '@/components/pages/pages.module.css'
 
 export default function TeamPage() {
   const toast = useToastStore()
   const qc = useQueryClient()
+  const caps = useCapabilities()
   const { data, isLoading } = useQuery({
     queryKey: ['team'],
     queryFn: async () => {
@@ -36,7 +36,6 @@ export default function TeamPage() {
         <PageHeader
           title="Team"
           description="People in this workspace and what they can do."
-          primaryAction={<Button variant="primary" size="md" iconLeft={<Icon name="plus" size={16} />} onClick={() => toast.info('Invite by email — coming soon')}>Invite</Button>}
         />
         <div className={page.body}>
           {isLoading ? (
@@ -54,9 +53,13 @@ export default function TeamPage() {
                       <span className={s.rowSub}>{m.email}</span>
                     </span>
                     <span className={s.rowRight}>
-                      <select className={s.roleSelect} value={m.role} onChange={(e) => roleMut.mutate({ id: m.membershipId, role: e.target.value })} aria-label={`Role for ${m.name}`}>
-                        {ROLE_OPTIONS.map((r) => <option key={r.value} value={r.value}>{r.label}</option>)}
-                      </select>
+                      {caps.canManageUsers ? (
+                        <select className={s.roleSelect} value={m.role} onChange={(e) => roleMut.mutate({ id: m.membershipId, role: e.target.value })} aria-label={`Role for ${m.name}`}>
+                          {ROLE_OPTIONS.map((r) => <option key={r.value} value={r.value}>{r.label}</option>)}
+                        </select>
+                      ) : (
+                        <span className={s.tag}>{roleLabel(m.role)}</span>
+                      )}
                     </span>
                   </div>
                 </li>

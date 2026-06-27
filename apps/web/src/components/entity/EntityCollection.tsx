@@ -12,6 +12,7 @@ import { FormBanner } from '@/components/auth/AuthScaffold'
 import { useToastStore } from '@/stores/useToastStore'
 import { isSupabaseConfigured } from '@/lib/supabase/client'
 import { useEntityList, useEntityMutations } from '@/lib/data/useEntity'
+import { useCapabilities } from '@/lib/data/roles'
 import { ENTITIES } from '@/lib/data/entities'
 import type { Row } from '@/lib/data/crud'
 import { EntityFormDrawer } from './EntityFormDrawer'
@@ -31,6 +32,7 @@ export function EntityCollection({ entityKey, parentId, embedded, titleOverride,
   const config = ENTITIES[entityKey]!
   const router = useRouter()
   const toast = useToastStore()
+  const caps = useCapabilities()
   const [view, setView] = useState<'active' | 'archived'>('active')
   const { data, isLoading, isError, refetch } = useEntityList<Row>(config.table, {
     parentKey: config.parent?.key, parentId, includeArchived: view === 'archived',
@@ -60,25 +62,28 @@ export function EntityCollection({ entityKey, parentId, embedded, titleOverride,
     })
   }
 
-  const columns = useMemo<ColumnDef<Row, unknown>[]>(() => [
-    ...config.columns,
-    {
-      id: 'actions', header: '', size: 80,
-      cell: ({ row }) => (
-        <span className={t.actions}>
-          <button type="button" className={t.actionBtn} aria-label="Edit" onClick={(e) => { e.stopPropagation(); openEdit(row.original) }}><Icon name="sliders" size={15} /></button>
-          {row.original.archived
-            ? <button type="button" className={t.actionBtn} aria-label="Restore" onClick={(e) => { e.stopPropagation(); archiveRow(row.original, false) }}><Icon name="arrow-left" size={15} /></button>
-            : <button type="button" className={t.actionBtn} aria-label="Archive" onClick={(e) => { e.stopPropagation(); archiveRow(row.original, true) }}><Icon name="inbox" size={15} /></button>}
-        </span>
-      ),
-    },
+  const columns = useMemo<ColumnDef<Row, unknown>[]>(() => {
+    if (!caps.canEdit && !caps.canArchive) return config.columns
+    return [
+      ...config.columns,
+      {
+        id: 'actions', header: '', size: 80,
+        cell: ({ row }) => (
+          <span className={t.actions}>
+            {caps.canEdit && <button type="button" className={t.actionBtn} aria-label="Edit" onClick={(e) => { e.stopPropagation(); openEdit(row.original) }}><Icon name="sliders" size={15} /></button>}
+            {caps.canArchive && (row.original.archived
+              ? <button type="button" className={t.actionBtn} aria-label="Restore" onClick={(e) => { e.stopPropagation(); archiveRow(row.original, false) }}><Icon name="arrow-left" size={15} /></button>
+              : <button type="button" className={t.actionBtn} aria-label="Archive" onClick={(e) => { e.stopPropagation(); archiveRow(row.original, true) }}><Icon name="inbox" size={15} /></button>)}
+          </span>
+        ),
+      },
+    ]
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  ], [config, view])
+  }, [config, view, caps.canEdit, caps.canArchive])
 
   const onRowClick = (r: Row) => {
     if (config.childKey) router.push(`${config.route}/${r.id}`)
-    else openEdit(r)
+    else if (caps.canEdit) openEdit(r)
   }
 
   const table = (
@@ -87,7 +92,7 @@ export function EntityCollection({ entityKey, parentId, embedded, titleOverride,
         views={[{ id: 'active', label: 'Active' }, { id: 'archived', label: 'Archived' }]}
         activeView={view}
         onViewChange={(v) => setView(v as 'active' | 'archived')}
-        primaryAction={<Button size="sm" variant="secondary" iconLeft={<Icon name="plus" size={15} />} onClick={openCreate}>{config.singular}</Button>}
+        primaryAction={caps.canCreate ? <Button size="sm" variant="secondary" iconLeft={<Icon name="plus" size={15} />} onClick={openCreate}>{config.singular}</Button> : undefined}
       />
       <div className={t.tableWrap}>
         {isError ? (
@@ -126,7 +131,7 @@ export function EntityCollection({ entityKey, parentId, embedded, titleOverride,
       <section className={styles.section} aria-label={config.plural}>
         <div className={styles.sectionHeader}>
           <h2 className={styles.sectionTitle}>{config.plural} <span className={styles.count}>{rows.length}</span></h2>
-          <Button size="sm" variant="secondary" iconLeft={<Icon name="plus" size={15} />} onClick={openCreate}>{config.singular}</Button>
+          {caps.canCreate && <Button size="sm" variant="secondary" iconLeft={<Icon name="plus" size={15} />} onClick={openCreate}>{config.singular}</Button>}
         </div>
         {table}
         {drawer}
@@ -139,7 +144,7 @@ export function EntityCollection({ entityKey, parentId, embedded, titleOverride,
       <PageHeader
         title={titleOverride ?? config.plural}
         description={descriptionOverride}
-        primaryAction={<Button variant="primary" size="md" iconLeft={<Icon name="plus" size={16} />} onClick={openCreate}>Create {config.singular.toLowerCase()}</Button>}
+        primaryAction={caps.canCreate ? <Button variant="primary" size="md" iconLeft={<Icon name="plus" size={16} />} onClick={openCreate}>Create {config.singular.toLowerCase()}</Button> : undefined}
       />
       <div className={page.body}>
         {!isSupabaseConfigured && (

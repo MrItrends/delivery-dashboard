@@ -5,7 +5,7 @@ import { Button } from '@/components/primitives/Button'
 import { Icon } from '@/components/primitives/Icon'
 import { Avatar } from '@/components/primitives/Avatar'
 import { inviteEmailSchema } from '@/lib/validation/onboarding'
-import { ROLES, INVITE_PERMISSIONS } from '@/lib/onboarding/options'
+import { ROLES } from '@/lib/onboarding/options'
 import type { Invite } from '@/stores/useOnboardingStore'
 import styles from './InviteList.module.css'
 
@@ -14,8 +14,6 @@ interface InviteListProps {
   onAdd: (invite: Omit<Invite, 'id'>) => void
   onUpdate: (id: string, data: Partial<Invite>) => void
   onRemove: (id: string) => void
-  /** Simulated permission ceiling — e.g. non-admins can't grant Full access. */
-  canGrantAdmin?: boolean
 }
 
 const roleOptions = ROLES.map((r) => ({ value: r.id, label: r.title }))
@@ -25,16 +23,10 @@ export function InviteList({
   onAdd,
   onUpdate,
   onRemove,
-  canGrantAdmin = true,
 }: InviteListProps) {
   const [email, setEmail] = useState('')
-  const [role, setRole] = useState('delivery-team')
-  const [permission, setPermission] = useState('edit')
+  const [role, setRole] = useState('regular')
   const [error, setError] = useState<string | null>(null)
-
-  const permissionOptions = canGrantAdmin
-    ? INVITE_PERMISSIONS
-    : INVITE_PERMISSIONS.filter((p) => p.value !== 'admin')
 
   function handleAdd() {
     const result = inviteEmailSchema.safeParse(email.trim())
@@ -46,7 +38,7 @@ export function InviteList({
       setError('That person has already been invited')
       return
     }
-    onAdd({ email: email.trim(), role, permission })
+    onAdd({ email: email.trim(), role })
     setEmail('')
     setError(null)
   }
@@ -79,16 +71,6 @@ export function InviteList({
               <option key={o.value} value={o.value}>{o.label}</option>
             ))}
           </select>
-          <select
-            className={styles.inlineSelect}
-            value={permission}
-            onChange={(e) => setPermission(e.target.value)}
-            aria-label="Permission"
-          >
-            {permissionOptions.map((o) => (
-              <option key={o.value} value={o.value}>{o.label}</option>
-            ))}
-          </select>
         </div>
         <Button variant="secondary" size="md" onClick={handleAdd} type="button">
           Invite
@@ -118,16 +100,6 @@ export function InviteList({
                   <option key={o.value} value={o.value}>{o.label}</option>
                 ))}
               </select>
-              <select
-                className={styles.rowSelect}
-                value={invite.permission}
-                onChange={(e) => onUpdate(invite.id, { permission: e.target.value })}
-                aria-label={`Permission for ${invite.email}`}
-              >
-                {permissionOptions.map((o) => (
-                  <option key={o.value} value={o.value}>{o.label}</option>
-                ))}
-              </select>
               <button
                 type="button"
                 className={styles.removeBtn}
@@ -141,18 +113,9 @@ export function InviteList({
         </ul>
       ) : (
         <p className={styles.empty}>
-          No invitations yet. Add colleagues above — you can always invite more later.
+          No invitations yet. Add colleagues above — you can invite more later.
         </p>
       )}
-
-      {/* CSV import — future-ready placeholder */}
-      <div className={styles.csvRow}>
-        <button type="button" className={styles.csvBtn} disabled>
-          <Icon name="arrow-right" size={16} className={styles.csvIcon} />
-          Import from CSV
-        </button>
-        <span className={styles.csvHint}>Coming soon</span>
-      </div>
     </div>
   )
 }
