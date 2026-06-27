@@ -1,5 +1,6 @@
 import { AppShell } from '@/components/layout/AppShell'
 import { PageHeader } from '@/components/layout/PageHeader'
+import { TourLaunchButton } from '@/components/coachmarks/TourLaunchButton'
 import page from '@/components/portfolio/PortfolioWorkspace.module.css'
 import s from '@/components/pages/pages.module.css'
 
@@ -14,7 +15,7 @@ export default function HelpPage() {
   return (
     <AppShell>
       <div className={page.page}>
-        <PageHeader title="Help centre" description="Guides and answers for getting the most out of the platform." />
+        <PageHeader title="Help centre" description="Guides and answers for getting the most out of the platform." primaryAction={<TourLaunchButton />} />
         <div className={page.body} style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-4)' }}>
           {SECTIONS.map((sec) => (
             <div key={sec.title} className={s.card}>

@@ -52,7 +52,7 @@ export function CreateMenu({ compact = false }: { compact?: boolean }) {
   }
 
   return (
-    <div className={styles.wrap} ref={ref}>
+    <div className={styles.wrap} ref={ref} data-coach="create">
       <Button
         variant="primary"
         size={compact ? 'sm' : 'md'}

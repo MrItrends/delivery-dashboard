@@ -6,6 +6,7 @@ import { GlobalHeader } from './GlobalHeader'
 import { BottomNav } from './BottomNav'
 import { NotificationPanel } from './NotificationPanel'
 import { CommandPalette } from '@/components/overlay/CommandPalette'
+import { Coachmarks } from '@/components/coachmarks/Coachmarks'
 import { useAppStore } from '@/stores/useAppStore'
 import { useOnline } from '@/lib/hooks/useOnline'
 import { useIsMobile } from '@/lib/hooks/useMediaQuery'
@@ -91,6 +92,7 @@ export function AppShell({ children }: AppShellProps) {
       {/* Overlays */}
       <NotificationPanel open={notificationsOpen} onClose={() => setNotificationsOpen(false)} />
       <CommandPalette open={paletteOpen} onClose={() => setPaletteOpen(false)} />
+      <Coachmarks />
     </div>
   )
 }

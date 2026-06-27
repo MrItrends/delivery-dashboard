@@ -26,6 +26,11 @@ const TYPE_ICON: Record<string, IconName> = {
   Portfolio: 'grid', 'Priority area': 'target', Project: 'folder', Intervention: 'layers', Report: 'document',
 }
 
+// Targets for the first-run tour (see lib/coachmarks/tour.ts).
+const COACH_TARGET: Record<string, string> = {
+  '/': 'nav-home', '/priority-areas': 'nav-priority', '/projects': 'nav-projects', '/reports': 'nav-reports',
+}
+
 export function Sidebar({ collapsed, onToggleCollapse, mobileOpen }: SidebarProps) {
   const pathname = usePathname()
   const [recents, setRecents] = useState<RecentItem[]>([])
@@ -54,6 +59,7 @@ export function Sidebar({ collapsed, onToggleCollapse, mobileOpen }: SidebarProp
                   aria-current={active ? 'page' : undefined}
                   aria-label={item.label}
                   data-tooltip={collapsed ? item.label : undefined}
+                  data-coach={COACH_TARGET[item.href]}
                 >
                   <Icon name={item.icon} size={18} className={styles.navIcon} />
                   {!collapsed && <span className={styles.navLabel}>{item.label}</span>}
@@ -98,6 +104,7 @@ export function Sidebar({ collapsed, onToggleCollapse, mobileOpen }: SidebarProp
                   aria-current={active ? 'page' : undefined}
                   aria-label={item.label}
                   data-tooltip={collapsed ? item.label : undefined}
+                  data-coach={COACH_TARGET[item.href]}
                 >
                   <Icon name={item.icon} size={18} className={styles.navIcon} />
                   {!collapsed && <span className={styles.navLabel}>{item.label}</span>}

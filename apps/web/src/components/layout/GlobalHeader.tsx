@@ -75,6 +75,7 @@ export function GlobalHeader({
           className={styles.search}
           onClick={onOpenPalette}
           aria-label="Search (Command or Control K)"
+          data-coach="search"
         >
           <Icon name="search" size={16} className={styles.searchIcon} />
           <span className={styles.searchLabel}>Search…</span>
@@ -97,6 +98,7 @@ export function GlobalHeader({
           className={styles.iconBtn}
           onClick={onOpenNotifications}
           aria-label={`Notifications${unreadCount > 0 ? `, ${unreadCount} unread` : ''}`}
+          data-coach="notifications"
         >
           <Icon name="bell" size={20} />
           {unreadCount > 0 && <span className={styles.badge} aria-hidden="true" />}
