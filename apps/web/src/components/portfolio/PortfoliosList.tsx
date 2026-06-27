@@ -1,6 +1,7 @@
 'use client'
 
 import { useMemo, useState } from 'react'
+import { useRouter } from 'next/navigation'
 import type { ColumnDef } from '@tanstack/react-table'
 import { PageHeader } from '@/components/layout/PageHeader'
 import { DataTable } from '@/components/data/DataTable'
@@ -23,6 +24,7 @@ function fmtDate(iso: string) {
 }
 
 export function PortfoliosList() {
+  const router = useRouter()
   const toast = useToastStore()
   const [view, setView] = useState<'active' | 'archived'>('active')
   const { data, isLoading, isError, refetch } = usePortfolios(view === 'archived')
@@ -117,7 +119,7 @@ export function PortfoliosList() {
               <DataTable
                 data={rows}
                 columns={columns}
-                onRowClick={openEdit}
+                onRowClick={(p) => router.push(`/portfolio/${p.id}`)}
                 getRowId={(r) => r.id}
                 isLoading={isLoading}
                 emptyMessage={view === 'archived' ? 'No archived portfolios.' : 'No portfolios yet. Create your first to get started.'}

@@ -1,10 +1,10 @@
 import { AppShell } from '@/components/layout/AppShell'
-import { InterventionWorkspace } from '@/components/intervention/InterventionWorkspace'
+import { EntityCollection } from '@/components/entity/EntityCollection'
 
 export default function InterventionsPage() {
   return (
     <AppShell>
-      <InterventionWorkspace />
+      <EntityCollection entityKey="intervention" descriptionOverride="Coordinated delivery initiatives across the workspace." />
     </AppShell>
   )
 }
