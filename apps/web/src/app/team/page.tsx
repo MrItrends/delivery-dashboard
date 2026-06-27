@@ -10,7 +10,7 @@ import { TextField } from '@/components/primitives/TextField'
 import { Select } from '@/components/primitives/Select'
 import { Icon } from '@/components/primitives/Icon'
 import { useToastStore } from '@/stores/useToastStore'
-import { getWorkspace, listMembers, updateMemberRole, listInvites, createInvite, deleteInvite } from '@/lib/data/admin'
+import { getWorkspace, listMembers, updateMemberRole, listInvites, deleteInvite } from '@/lib/data/admin'
 import { ROLE_OPTIONS, roleLabel, useCapabilities } from '@/lib/data/roles'
 import page from '@/components/portfolio/PortfolioWorkspace.module.css'
 import s from '@/components/pages/pages.module.css'
@@ -36,9 +36,14 @@ export default function TeamPage() {
     onError: () => toast.error('Could not update role'),
   })
   const inviteMut = useMutation({
-    mutationFn: ({ wsId, email, role }: { wsId: string; email: string; role: string }) => createInvite(wsId, email, role),
-    onSuccess: () => { qc.invalidateQueries({ queryKey: ['team'] }); toast.success('Invitation sent'); setEmail('') },
-    onError: () => toast.error('Could not invite'),
+    mutationFn: async ({ email, role }: { email: string; role: string }) => {
+      const res = await fetch('/api/invite', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email, role }) })
+      const json = await res.json()
+      if (!res.ok) throw new Error(json.error || 'Could not invite')
+      return json as { emailed: boolean }
+    },
+    onSuccess: (data) => { qc.invalidateQueries({ queryKey: ['team'] }); toast.success(data.emailed ? 'Invitation emailed' : 'Invitation created'); setEmail('') },
+    onError: (e) => toast.error(e instanceof Error ? e.message : 'Could not invite'),
   })
   const removeInvite = useMutation({
     mutationFn: (id: string) => deleteInvite(id),
@@ -52,9 +57,8 @@ export default function TeamPage() {
   const invites = data?.invites ?? []
 
   function submitInvite() {
-    if (!data?.wsId) return
     if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email.trim())) { toast.error('Enter a valid email address'); return }
-    inviteMut.mutate({ wsId: data.wsId, email, role })
+    inviteMut.mutate({ email, role })
   }
 
   return (

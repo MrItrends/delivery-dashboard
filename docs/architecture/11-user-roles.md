@@ -1,123 +1,68 @@
 # 11 — User Roles
 
+> **Reconciled to the canonical model (2026-06-27).** This document previously
+> described seven invented roles. The source of truth is the TBI deck (p.23) and
+> `docs/NORTH_STAR.md` §4. There are **four** roles. The implementation is
+> `apps/web/src/lib/data/roles.ts`. If this file and the North Star ever
+> disagree, the North Star wins.
+
 ## Philosophy
 
-**Roles** determine responsibility. **Permissions** determine capability. Do not confuse the two.
+**Roles** communicate responsibility. **Capabilities** define what the system
+lets a person do. A person's role is held per workspace (their `memberships`
+row), not globally.
 
-- Roles communicate organizational structure
-- Permissions define system behavior
-
----
-
-## Role Hierarchy
+## The four roles
 
 ```
-System Administrator
-  ↓
-Workspace Administrator
-  ↓
-Portfolio Manager
-  ↓
-Project Manager
-  ↓
-Intervention Lead
-  ↓
-Contributor
-  ↓
-Observer
+Administrator
+  ↓ approves the work of
+Priority Area Lead / Co-Lead   and   Intervention Lead / Co-Lead
+  ↓ coordinate the work of
+Regular User
 ```
 
----
+### Administrator
+Runs the dashboard end to end.
+- Full access to priority areas and interventions
+- **Approves / rejects milestones**
+- Manages financiers
+- Manages people (invites, role changes) and workspace settings
 
-## Role Definitions
+### Priority Area Lead / Co-Lead
+Responsible for one priority area.
+- Views the priority area assigned to them
+- Creates and edits its actions and milestones
+- Manages the people in their priority area
+- Cannot approve milestones or change workspace settings
 
-### System Administrator
-Responsible for the entire platform.
-
-**Capabilities:**
-- Manage Workspaces
-- Configure Integrations
-- Manage Authentication
-- View Audit Logs
-- Manage Security
-
-Cannot be restricted.
-
----
-
-### Workspace Administrator
-Responsible for one Workspace.
-
-**Can:**
-- Invite Users
-- Manage Teams
-- Manage Settings
-- Configure Permissions
-- Create Portfolios
-- Manage Notifications
-
----
-
-### Portfolio Manager
-Owns strategic delivery.
-
-**Responsible for:**
-- Priority Areas
-- Projects
-- Budgets
-- Executive Reporting
-- Portfolio Health
-
-Can create and archive projects.
-
----
-
-### Project Manager
-Owns execution.
-
-**Responsible for:**
-- Activities
-- Milestones
-- Timeline
-- Files
-- Dependencies
-- Assignments
-- Project Health
-
----
-
-### Intervention Lead
+### Intervention Lead / Co-Lead
 Responsible for one intervention.
+- Views the intervention assigned to them
+- Creates and edits its actions and milestones
+- Manages the people in their intervention
+- Cannot approve milestones or change workspace settings
 
-**Can:**
-- Manage Activities
-- Update Progress
-- Review Deliverables
-- Request Approvals
-- Upload Evidence
+### Regular User
+Contributes to delivery.
+- No create or edit rights on the hierarchy
+- Updates their **own** actions
+- Raises issues within their intervention (comments)
+- Read-only everywhere else
 
----
+> Lead and Co-Lead share the same capabilities; "Co-Lead" denotes a second
+> accountable person, not a lesser one.
 
-### Contributor
-Completes work.
+## Role values (code)
 
-**Can:**
-- Update Activities
-- Upload Files
-- Comment
-- View Progress
+`admin` · `priority-area-lead` · `intervention-lead` · `regular`
 
-Cannot modify strategic information.
+`normalizeRole()` in `roles.ts` maps any legacy value (e.g. `executive`,
+`portfolio-manager`, `project-manager`, `observer`, `contributor`) onto these
+four, so older data degrades sensibly.
 
----
+## Role philosophy
 
-### Observer
-Read-only. Typically: Executives, Auditors, External Partners.
-
-Observers cannot change data.
-
----
-
-## Role Philosophy
-
-> Users should immediately understand **what they own** — not simply what they can edit.
+> Users should immediately understand **what they own** — not merely what they
+> can edit. The interface hides actions a role cannot take rather than showing a
+> dead end (see `12-permissions.md`).
