@@ -143,6 +143,20 @@ code, pre {
   white-space: nowrap;
 }
 
+/* Print: show only the report content (used for PDF / print export). */
+@media print {
+  body * { visibility: hidden; }
+  #report-print, #report-print * { visibility: visible; }
+  #report-print {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    padding: 0;
+  }
+  .no-print { display: none !important; }
+}
+
 .spin {
   animation: spin 0.7s linear infinite;
 }

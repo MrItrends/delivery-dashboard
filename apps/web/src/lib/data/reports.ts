@@ -12,16 +12,30 @@ export interface Report {
   status: string
   version: number
   narrative: string | null
+  recommendations: string | null
   created_at: string
 }
 
 export interface ReportInput {
   title: string
   scope_type: string
+  scope_id?: string | null
   period?: string
   audience?: string
   narrative?: string
+  recommendations?: string
   status?: string
+}
+
+export async function getReport(id: string): Promise<Report | null> {
+  const { data, error } = await createClient().from('reports').select('*').eq('id', id).maybeSingle()
+  if (error) throw error
+  return (data as Report) ?? null
+}
+
+export async function publishReport(id: string, currentVersion: number): Promise<void> {
+  const { error } = await createClient().from('reports').update({ status: 'published', version: currentVersion + 1 }).eq('id', id)
+  if (error) throw error
 }
 
 export async function listReports(): Promise<Report[]> {
