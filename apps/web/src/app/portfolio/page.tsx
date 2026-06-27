@@ -1,10 +1,10 @@
 import { AppShell } from '@/components/layout/AppShell'
-import { PortfolioWorkspace } from '@/components/portfolio/PortfolioWorkspace'
+import { PortfoliosList } from '@/components/portfolio/PortfoliosList'
 
 export default function PortfolioPage() {
   return (
     <AppShell>
-      <PortfolioWorkspace />
+      <PortfoliosList />
     </AppShell>
   )
 }
