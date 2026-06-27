@@ -8,6 +8,9 @@ import {
   useMemo,
 } from 'react'
 import { useToastStore } from '@/stores/useToastStore'
+import { searchAll } from '@/lib/data/search'
+import { getRecents, pushRecent } from '@/lib/data/recents'
+import { highlight } from '@/lib/highlight'
 import styles from './CommandPalette.module.css'
 
 const go = (href: string) => () => { window.location.href = href }
@@ -46,7 +49,7 @@ const DEFAULT_COMMANDS: PaletteCommand[] = [
   { id: 'create-project', label: 'Create Project', category: 'Create', shortcut: 'C P', action: toast('New Project — opens in a drawer (coming soon)'), keywords: ['new', 'add', 'programme'] },
   { id: 'create-intervention', label: 'Create Intervention', category: 'Create', shortcut: 'C I', action: toast('New Intervention — coming soon'), keywords: ['new', 'add'] },
   { id: 'create-activity', label: 'Create Activity', category: 'Create', shortcut: 'C', action: toast('New Activity — coming soon'), keywords: ['new', 'task'] },
-  { id: 'create-report', label: 'Generate Report', category: 'Create', action: toast('Generate Report — coming soon'), keywords: ['report', 'export', 'pdf'] },
+  { id: 'create-report', label: 'Generate Report', category: 'Create', action: go('/reports'), keywords: ['report', 'export', 'pdf'] },
 
   // Actions
   { id: 'act-assign', label: 'Assign to…', category: 'Actions', action: toast('Assign — select an object first'), keywords: ['assign', 'owner', 'delegate'] },
@@ -97,12 +100,46 @@ export function CommandPalette({
 }: CommandPaletteProps) {
   const [query, setQuery] = useState('')
   const [activeIndex, setActiveIndex] = useState(0)
+  const [entityResults, setEntityResults] = useState<PaletteCommand[]>([])
   const inputRef = useRef<HTMLInputElement>(null)
   const listRef = useRef<HTMLDivElement>(null)
 
+  // Live entity search across the workspace (debounced).
+  useEffect(() => {
+    const q = query.trim()
+    if (q.length < 2) { setEntityResults([]); return }
+    let active = true
+    const t = setTimeout(async () => {
+      try {
+        const res = await searchAll(q)
+        if (!active) return
+        setEntityResults(res.map((r) => ({
+          id: `e-${r.type}-${r.id}`,
+          label: r.label,
+          description: r.type,
+          category: 'Results',
+          action: () => { if (r.href) { pushRecent({ label: r.label, href: r.href, type: r.type }); window.location.href = r.href } },
+        })))
+      } catch { if (active) setEntityResults([]) }
+    }, 180)
+    return () => { active = false; clearTimeout(t) }
+  }, [query])
+
+  // Recently visited — shown when the query is empty.
+  const recents = useMemo<PaletteCommand[]>(() => {
+    if (query.trim() || !open) return []
+    return getRecents().map((r) => ({
+      id: `recent-${r.href}`,
+      label: r.label,
+      description: r.type,
+      category: 'Recent',
+      action: () => { window.location.href = r.href },
+    }))
+  }, [query, open])
+
   const allCommands = useMemo(
-    () => [...DEFAULT_COMMANDS, ...extraCommands],
-    [extraCommands]
+    () => [...entityResults, ...recents, ...DEFAULT_COMMANDS, ...extraCommands],
+    [entityResults, recents, extraCommands]
   )
 
   const results = useMemo(() => {
@@ -194,7 +231,7 @@ export function CommandPalette({
             ref={inputRef}
             type="text"
             className={styles.input}
-            placeholder="Type a command or search..."
+            placeholder="Search projects, people, reports — or run a command..."
             value={query}
             onChange={(e) => { setQuery(e.target.value); setActiveIndex(0) }}
             aria-label="Search commands"
@@ -219,7 +256,7 @@ export function CommandPalette({
         >
           {results.length === 0 ? (
             <div className={styles.noResults}>
-              No commands found for &ldquo;{query}&rdquo;
+              No matches for &ldquo;{query}&rdquo;
             </div>
           ) : (
             Array.from(grouped.entries()).map(([category, cmds]) => (
@@ -247,7 +284,7 @@ export function CommandPalette({
                         </span>
                       )}
                       <span className={styles.itemContent}>
-                        <span className={styles.itemLabel}>{cmd.label}</span>
+                        <span className={styles.itemLabel}>{highlight(cmd.label, query)}</span>
                         {cmd.description && (
                           <span className={styles.itemDesc}>{cmd.description}</span>
                         )}

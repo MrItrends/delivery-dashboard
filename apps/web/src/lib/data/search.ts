@@ -9,26 +9,45 @@ export interface SearchResult {
   href: string | null
 }
 
-const SOURCES: { table: string; type: string; route: string | null }[] = [
-  { table: 'portfolios', type: 'Portfolio', route: '/portfolio' },
-  { table: 'priority_areas', type: 'Priority area', route: '/priority-areas' },
-  { table: 'projects', type: 'Project', route: '/projects' },
-  { table: 'interventions', type: 'Intervention', route: '/interventions' },
-  { table: 'activities', type: 'Activity', route: null },
+const SOURCES: { table: string; type: string; column: string; route: string | null }[] = [
+  { table: 'portfolios', type: 'Portfolio', column: 'name', route: '/portfolio' },
+  { table: 'priority_areas', type: 'Priority area', column: 'name', route: '/priority-areas' },
+  { table: 'projects', type: 'Project', column: 'name', route: '/projects' },
+  { table: 'interventions', type: 'Intervention', column: 'name', route: '/interventions' },
+  { table: 'activities', type: 'Activity', column: 'name', route: null },
+  { table: 'reports', type: 'Report', column: 'title', route: '/reports' },
+  { table: 'profiles', type: 'Person', column: 'name', route: null },
+  { table: 'decisions', type: 'Decision', column: 'decision', route: null },
+  { table: 'comments', type: 'Comment', column: 'body', route: null },
 ]
 
 export async function searchAll(query: string): Promise<SearchResult[]> {
   const q = query.trim()
-  if (!q) return []
+  if (q.length < 1) return []
+  const ql = q.toLowerCase()
   const supabase = createClient()
-  const results: SearchResult[] = []
+  const all: (SearchResult & { score: number })[] = []
+
   await Promise.all(
-    SOURCES.map(async (s) => {
-      const { data } = await supabase.from(s.table).select('id, name').ilike('name', `%${q}%`).eq('archived', false).limit(8)
-      for (const r of (data ?? []) as { id: string; name: string }[]) {
-        results.push({ id: r.id, type: s.type, label: r.name, href: s.route ? `${s.route}/${r.id}` : null })
+    SOURCES.map(async (src) => {
+      const { data } = await supabase.from(src.table).select(`id, ${src.column}`).ilike(src.column, `%${q}%`).limit(6)
+      const rows = (data ?? []) as unknown as Record<string, unknown>[]
+      for (const row of rows) {
+        const label = String(row[src.column] ?? '')
+        const lower = label.toLowerCase()
+        const score = lower === ql ? 4 : lower.startsWith(ql) ? 3 : 2
+        all.push({
+          id: String(row.id),
+          type: src.type,
+          label,
+          href: src.route ? `${src.route}/${row.id}` : null,
+          score,
+        })
       }
     })
   )
-  return results
+
+  all.sort((a, b) => b.score - a.score)
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  return all.slice(0, 30).map(({ score, ...rest }) => rest)
 }
