@@ -9,7 +9,7 @@ import { CommandPalette } from '@/components/overlay/CommandPalette'
 import { useAppStore } from '@/stores/useAppStore'
 import { useOnline } from '@/lib/hooks/useOnline'
 import { useIsMobile } from '@/lib/hooks/useMediaQuery'
-import { NOTIFICATIONS } from './navConfig'
+import { useUnreadCount } from '@/lib/data/useNotifications'
 import styles from './AppShell.module.css'
 
 interface AppShellProps {
@@ -42,7 +42,7 @@ export function AppShell({ children, emptyWorkspace }: AppShellProps) {
     ? 'var(--sidebar-collapsed-width)'
     : 'var(--sidebar-width)'
 
-  const unread = NOTIFICATIONS.filter((n) => n.unread).length
+  const unread = useUnreadCount()
 
   return (
     <div

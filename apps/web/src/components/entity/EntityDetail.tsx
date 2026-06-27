@@ -6,7 +6,7 @@ import { PageHeader } from '@/components/layout/PageHeader'
 import { Button } from '@/components/primitives/Button'
 import { Icon } from '@/components/primitives/Icon'
 import { Avatar } from '@/components/primitives/Avatar'
-import { StatusChip, type ObjectStatus } from '@/components/primitives/StatusChip'
+import { type ObjectStatus } from '@/components/primitives/StatusChip'
 import { FormBanner } from '@/components/auth/AuthScaffold'
 import { useToastStore } from '@/stores/useToastStore'
 import { getEntity, type Row } from '@/lib/data/crud'
@@ -14,7 +14,9 @@ import { useEntityMutations } from '@/lib/data/useEntity'
 import { ENTITIES } from '@/lib/data/entities'
 import { EntityCollection } from './EntityCollection'
 import { EntityFormDrawer } from './EntityFormDrawer'
+import { CommentThread } from '@/components/collaboration/CommentThread'
 import page from '@/components/portfolio/PortfolioWorkspace.module.css'
+import sect from './EntityCollection.module.css'
 
 interface EntityDetailProps {
   entityKey: string
@@ -71,10 +73,15 @@ export function EntityDetail({ entityKey, id }: EntityDetailProps) {
           </Button>
         }
       />
-      <div className={page.body}>
-        {childKey
-          ? <EntityCollection entityKey={childKey} parentId={id} embedded />
-          : <StatusChip status={status ?? 'planned'} />}
+      <div className={page.body} style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-8)' }}>
+        {childKey && <EntityCollection entityKey={childKey} parentId={id} embedded />}
+
+        <section className={sect.section} aria-label="Discussion">
+          <div className={sect.sectionHeader}>
+            <h2 className={sect.sectionTitle}>Discussion</h2>
+          </div>
+          <CommentThread objectType={config.table} objectId={id} />
+        </section>
       </div>
 
       <EntityFormDrawer
