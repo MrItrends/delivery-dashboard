@@ -21,9 +21,7 @@ export const PRIMARY_NAV: NavItem[] = [
   { label: 'Interventions', href: '/interventions', icon: 'layers' },
   { label: 'Calendar', href: '/calendar', icon: 'calendar' },
   { label: 'Reports', href: '/reports', icon: 'document' },
-  { label: 'Search', href: '/search', icon: 'search' },
   { label: 'Team', href: '/team', icon: 'users' },
-  { label: 'Notifications', href: '/notifications', icon: 'bell' },
 ]
 
 export const SECONDARY_NAV: NavItem[] = [
