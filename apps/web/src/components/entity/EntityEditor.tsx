@@ -10,7 +10,7 @@ import { Select } from '@/components/primitives/Select'
 import { FormBanner } from '@/components/auth/AuthScaffold'
 import { useToastStore } from '@/stores/useToastStore'
 import { useEntityMutations, useParentOptions } from '@/lib/data/useEntity'
-import { ensureParentId } from '@/lib/data/setup'
+import { ensureParentId, ensureWorkspaceId } from '@/lib/data/setup'
 import { useCapabilities } from '@/lib/data/roles'
 import { ENTITIES, type FieldDef } from '@/lib/data/entities'
 import type { Row } from '@/lib/data/crud'
@@ -67,6 +67,9 @@ export function EntityEditor({ entityKey, parentId }: { entityKey: string; paren
         let pid = parentId ?? parent
         if (!pid) pid = (await ensureParentId(config.key)) ?? ''
         input[config.parent.key] = pid
+      } else if (config.key === 'portfolio') {
+        // Top-level object: stamp the user's workspace (required by RLS).
+        input.workspace_id = await ensureWorkspaceId()
       }
       const row = await new Promise<Row>((resolve, reject) =>
         create.mutate(input, { onSuccess: (r) => resolve(r as Row), onError: reject })
