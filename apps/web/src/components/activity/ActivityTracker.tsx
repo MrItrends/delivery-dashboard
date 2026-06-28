@@ -14,8 +14,11 @@ import { useEntityMutations } from '@/lib/data/useEntity'
 import { useRealtime } from '@/lib/data/useRealtime'
 import { useCapabilities } from '@/lib/data/roles'
 import { getTrackerData, type TrackerActivity } from '@/lib/data/activityTracker'
+import { timeAgo } from '@/lib/format'
 import page from '@/components/portfolio/PortfolioWorkspace.module.css'
 import s from './ActivityTracker.module.css'
+
+const todayStr = () => new Date().toISOString().slice(0, 10)
 
 type Tab = 'current' | 'issues' | 'mine' | 'archived'
 const TABS: { id: Tab; label: string }[] = [
@@ -44,12 +47,14 @@ function category(a: TrackerActivity): typeof CATS[number]['key'] {
 export function ActivityTracker() {
   const { data } = useQuery({ queryKey: ['tracker'], queryFn: getTrackerData })
   useRealtime('activities', ['tracker'])
+  const [view, setView] = useState<'summary' | 'table'>('summary')
   const [tab, setTab] = useState<Tab>('current')
   const [q, setQ] = useState('')
   const [active, setActive] = useState<TrackerActivity | null>(null)
 
   const all = data?.activities ?? []
   const myName = data?.myName ?? null
+  const live = useMemo(() => all.filter((a) => !a.archived), [all])
 
   const counts = useMemo(() => ({
     current: all.filter((a) => !a.archived && a.status !== 'complete').length,
@@ -81,6 +86,15 @@ export function ActivityTracker() {
     <div className={page.page}>
       <PageHeader title="Activity tracker" description="Every action across delivery — who owns it, when it’s due, and what’s overdue." />
       <div className={page.body}>
+        <div className={s.viewToggle} role="group" aria-label="View">
+          <button type="button" className={`${s.viewBtn} ${view === 'summary' ? s.viewActive : ''}`} aria-pressed={view === 'summary'} onClick={() => setView('summary')}>Summary</button>
+          <button type="button" className={`${s.viewBtn} ${view === 'table' ? s.viewActive : ''}`} aria-pressed={view === 'table'} onClick={() => setView('table')}>Table</button>
+        </div>
+
+        {view === 'summary' ? (
+          <Summary activities={live} segs={segs} onOpen={setActive} onOpenTracker={() => setView('table')} />
+        ) : (
+        <>
         {segTotal > 0 && (
           <div className={s.progress} aria-hidden="true">
             {CATS.map((cat) => segs[cat.key] ? <span key={cat.key} className={s.seg} style={{ flex: segs[cat.key], background: cat.color }} /> : null)}
@@ -114,10 +128,79 @@ export function ActivityTracker() {
             </button>
           ))}
         </div>
+        </>
+        )}
       </div>
 
       {active && <ActivityPanel activity={active} onClose={() => setActive(null)} />}
     </div>
+  )
+}
+
+function Donut({ segs }: { segs: Record<string, number> }) {
+  const total = Object.values(segs).reduce((a, b) => a + b, 0)
+  const r = 46
+  const circ = 2 * Math.PI * r
+  let off = 0
+  return (
+    <svg width="132" height="132" viewBox="0 0 140 140" aria-hidden="true">
+      <circle cx="70" cy="70" r={r} fill="none" stroke="var(--color-neutral-100)" strokeWidth="16" />
+      {total > 0 && CATS.map((cat) => {
+        const v = segs[cat.key]
+        if (!v) return null
+        const len = (v / total) * circ
+        const el = <circle key={cat.key} cx="70" cy="70" r={r} fill="none" stroke={cat.color} strokeWidth="16" strokeDasharray={`${len} ${circ - len}`} strokeDashoffset={-off} transform="rotate(-90 70 70)" />
+        off += len
+        return el
+      })}
+    </svg>
+  )
+}
+
+function Summary({ activities, segs, onOpen, onOpenTracker }: { activities: TrackerActivity[]; segs: Record<string, number>; onOpen: (a: TrackerActivity) => void; onOpenTracker: () => void }) {
+  const t = todayStr()
+  const upcoming = activities.filter((a) => a.dueDate && a.dueDate >= t && a.status !== 'complete').sort((x, y) => (x.dueDate ?? '').localeCompare(y.dueDate ?? '')).slice(0, 6)
+  const overdue = activities.filter((a) => a.overdue).sort((x, y) => (x.dueDate ?? '').localeCompare(y.dueDate ?? '')).slice(0, 6)
+  const issues = activities.filter((a) => a.status === 'blocked' || a.status === 'at-risk').sort((x, y) => y.createdAt.localeCompare(x.createdAt)).slice(0, 6)
+  const completed = activities.filter((a) => a.status === 'complete').sort((x, y) => y.updatedAt.localeCompare(x.updatedAt)).slice(0, 6)
+  const total = Object.values(segs).reduce((a, b) => a + b, 0)
+
+  const List = ({ title, items, meta }: { title: string; items: TrackerActivity[]; meta: (a: TrackerActivity) => string }) => (
+    <div className={s.listCard}>
+      <div className={s.listTitle}>{title}</div>
+      {items.length === 0 ? <p className={s.listEmpty}>Nothing here.</p> : items.map((a) => (
+        <button key={a.id} type="button" className={s.li} onClick={() => onOpen(a)}>
+          <span className={s.liName}>{a.name}</span>
+          <span className={s.liMeta}>{meta(a)}</span>
+        </button>
+      ))}
+    </div>
+  )
+
+  return (
+    <>
+      <div className={s.summaryTop}>
+        <Donut segs={segs} />
+        <div className={s.legend2}>
+          {CATS.map((cat) => (
+            <span key={cat.key} className={s.legendItem}><span className={s.dot} style={{ background: cat.color }} />{cat.label}<strong>{segs[cat.key] ?? 0}</strong></span>
+          ))}
+        </div>
+        <div style={{ marginLeft: 'auto' }}>
+          <Button variant="secondary" size="md" onClick={onOpenTracker}>Open activity tracker</Button>
+        </div>
+      </div>
+      {total === 0 ? (
+        <div className={s.empty}>No activities yet. They appear here as you add them to interventions.</div>
+      ) : (
+        <div className={s.lists}>
+          <List title="Upcoming deadlines" items={upcoming} meta={(a) => a.dueDate ?? ''} />
+          <List title="Most overdue" items={overdue} meta={(a) => a.dueDate ?? ''} />
+          <List title="Recently raised issues" items={issues} meta={(a) => (a.createdAt ? timeAgo(a.createdAt) : '')} />
+          <List title="Recently completed" items={completed} meta={(a) => (a.updatedAt ? timeAgo(a.updatedAt) : '')} />
+        </div>
+      )}
+    </>
   )
 }
 
