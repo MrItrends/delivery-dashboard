@@ -110,7 +110,8 @@ export const ENTITIES: Record<string, EntityConfig> = {
     fields: [
       { name: 'name', label: 'Name', type: 'text', placeholder: 'e.g. Primary Healthcare Access', required: true },
       { name: 'mission', label: 'Mission', type: 'textarea', placeholder: 'The national objective this priority area delivers.' },
-      { name: 'owner', label: 'Owner', type: 'text', placeholder: 'e.g. Aisha Bello' },
+      { name: 'owner', label: 'Lead', type: 'text', placeholder: 'e.g. Aisha Bello' },
+      { name: 'co_lead', label: 'Co-Lead', type: 'text', placeholder: 'e.g. Musa Ibrahim' },
       { name: 'health', label: 'Overall health', type: 'select', options: HEALTH_OPTIONS },
       { name: 'budget_health', label: 'Budget health', type: 'select', options: HEALTH_OPTIONS },
       { name: 'target_status', label: 'Target status', type: 'select', options: HEALTH_OPTIONS },

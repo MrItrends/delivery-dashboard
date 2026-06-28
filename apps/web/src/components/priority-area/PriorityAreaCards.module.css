@@ -1,0 +1,60 @@
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: var(--space-4);
+}
+
+.card {
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius-xl);
+  background-color: var(--color-surface-page);
+  padding: var(--space-5);
+  text-align: left;
+  cursor: pointer;
+  transition: border-color var(--duration-fast) var(--ease-out), box-shadow var(--duration-fast) var(--ease-out);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+.card:hover { border-color: var(--color-border-strong); box-shadow: var(--shadow-1); }
+
+.head { display: flex; align-items: flex-start; justify-content: space-between; gap: var(--space-2); }
+.eyebrow { font-size: var(--font-size-xs); color: var(--color-text-tertiary); }
+.name { font-size: var(--font-size-md); font-weight: var(--font-weight-semibold); color: var(--color-text-primary); line-height: var(--line-height-tight); }
+.kebab { background: none; border: none; color: var(--color-text-tertiary); cursor: pointer; padding: 2px; border-radius: var(--radius-sm); flex-shrink: 0; }
+.kebab:hover { background-color: var(--color-surface-hover); color: var(--color-text-secondary); }
+
+.pctLabel { font-size: var(--font-size-xs); color: var(--color-text-secondary); margin-bottom: var(--space-1); }
+.bar { height: 7px; border-radius: var(--radius-full); background-color: var(--color-neutral-100); overflow: hidden; }
+.barFill { height: 100%; border-radius: var(--radius-full); }
+.fillComplete { background-color: var(--color-status-healthy-dot); }
+.fillFunded { background-color: var(--color-status-healthy-dot); }
+.fillSpent { background-color: var(--color-brand-600); }
+
+.block { display: flex; flex-direction: column; gap: var(--space-2); }
+.blockTitle { font-size: var(--font-size-sm); font-weight: var(--font-weight-medium); color: var(--color-text-primary); }
+.money { font-size: var(--font-size-sm); color: var(--color-text-secondary); }
+.miniLabel { font-size: var(--font-size-xs); color: var(--color-text-tertiary); }
+
+.counts { display: flex; gap: var(--space-5); }
+.count { display: flex; flex-direction: column; }
+.countValue { font-size: var(--font-size-lg); font-weight: var(--font-weight-semibold); color: var(--color-text-primary); }
+.countLabel { font-size: var(--font-size-xs); color: var(--color-text-tertiary); }
+
+.chartRow { display: flex; align-items: center; gap: var(--space-4); }
+.legend { display: flex; flex-direction: column; gap: 4px; flex: 1; }
+.legendItem { display: flex; align-items: center; gap: 6px; font-size: var(--font-size-xs); color: var(--color-text-secondary); }
+.dot { width: 8px; height: 8px; border-radius: var(--radius-full); flex-shrink: 0; }
+
+.leads { display: flex; flex-direction: column; gap: 2px; border-top: 1px solid var(--color-border-subtle); padding-top: var(--space-3); }
+.lead { font-size: var(--font-size-xs); color: var(--color-text-secondary); }
+.leadName { color: var(--color-text-primary); font-weight: var(--font-weight-medium); }
+
+.toolbar { display: flex; align-items: center; justify-content: space-between; margin-bottom: var(--space-4); gap: var(--space-3); }
+.toggle { display: inline-flex; gap: 3px; padding: 3px; background-color: var(--color-surface-subtle); border: 1px solid var(--color-border-default); border-radius: var(--radius-md); }
+.toggleBtn { height: 30px; padding: 0 var(--space-3); border: none; background: none; border-radius: var(--radius-sm); font-family: var(--font-family-sans); font-size: var(--font-size-xs); font-weight: var(--font-weight-medium); color: var(--color-text-secondary); cursor: pointer; }
+.toggleActive { background-color: var(--color-surface-page); color: var(--color-text-primary); box-shadow: var(--shadow-1); }
+
+.empty { padding: var(--space-10) var(--space-4); text-align: center; }
+.emptyTitle { font-size: var(--font-size-md); font-weight: var(--font-weight-semibold); color: var(--color-text-primary); margin-bottom: var(--space-2); }
+.emptyCopy { font-size: var(--font-size-sm); color: var(--color-text-tertiary); }

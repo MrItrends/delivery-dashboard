@@ -1,13 +1,10 @@
 import { AppShell } from '@/components/layout/AppShell'
-import { EntityCollection } from '@/components/entity/EntityCollection'
+import { PriorityAreaCards } from '@/components/priority-area/PriorityAreaCards'
 
 export default function PriorityAreasPage() {
   return (
     <AppShell>
-      <EntityCollection
-        entityKey="priorityArea"
-        descriptionOverride="Strategic priority areas across the workspace. Each delivers one national objective."
-      />
+      <PriorityAreaCards />
     </AppShell>
   )
 }
