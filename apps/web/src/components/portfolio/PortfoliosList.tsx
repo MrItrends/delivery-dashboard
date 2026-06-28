@@ -44,7 +44,7 @@ export function PortfoliosList() {
     [data, view]
   )
 
-  function openCreate() { setEditing(null); setDrawerOpen(true) }
+  function openCreate() { router.push('/new/portfolio') }
   function openEdit(p: Portfolio) { setEditing(p); setDrawerOpen(true) }
 
   function handleSubmit(input: PortfolioInput) {

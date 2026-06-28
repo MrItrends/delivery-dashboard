@@ -57,7 +57,20 @@ Client feedback (voice notes; assistant cannot transcribe audio — get gist fro
 
 **STEP 1 DONE (2026-06-28):** Priority Areas overview cards shipped — `components/priority-area/PriorityAreaCards.tsx` (+ donut), `lib/data/priorityAreaOverview.ts` (aggregates per PA from interventions/activities/financiers), wired at `/priority-areas` with a Cards/List toggle (cards default; List = existing table). Create gated by role; realtime. `0010_delivery_fields.sql` adds priority_areas.co_lead; interventions co_lead/spent/programme/classification/region/ref; financiers table; targets.intervention_id. PA form now uses Lead/Co-Lead.
 
-**STEP 2 NEXT:** the Intervention planning form (screenshot 2) — numbered interventions under a priority area, with the fields + Financiers + Targets tables. Then the **Activity Tracker** screens (client will share). Approach for each: match the screenshot's layout/columns/widgets with our tokens/primitives; no fabricated data; Nigeria-first; four-role model.
+**Decisions (2026-06-28, confirmed by client):**
+- **Full-page editors** for the create journey (Notion/Linear style), not modals. Save → land in the new item's workspace.
+- **All five levels** are real creation steps: Portfolio → Priority Area → Project → Intervention → Activity (the deck was the taken-down product; five levels judged more intuitive). Earlier "collapse to 3" is superseded.
+- **Status is derived automatically** from activity progress + deadlines — the manual Health/Budget/Target dropdowns were removed from the forms. **Budget (total) and Amount spent are user-entered figures** (on interventions; PA/portfolio aggregate).
+- Priority Area form fields: pending the client's PA editor screenshot.
+
+**STEP 2 DONE (2026-06-28): full-page creation journey.** `components/entity/EntityEditor.tsx` + route `app/new/[entity]/page.tsx` — a full-page editor for every level; Save navigates to the item's detail/workspace (activity → its intervention). All create entry points now route to `/new/[entity]` (header Create menu, Priority Area cards, lists, Portfolios, Home welcome); edit still uses the drawer. Forms cleaned to real fields (no invented status selects); intervention form matches screenshot 2's scalar fields (Ref, Lead, Co-Lead, Programme, Classification, Region, Status, Budget, Amount spent). `GlobalCreateDrawer` is now unused.
+
+**STILL TO DO (needs screenshots / next):**
+- Intervention editor's **Financiers + Targets sub-tables** (screenshot 2) — data layer ready (financiers table; targets.intervention_id; 0011 will add target start_amount/start_date/deadline). Build as a bespoke full-page intervention editor.
+- **Derived-status rollup across all views** (lists, detail headers, home) from descendant activities — currently only the PA cards derive; new items default to healthy (correct when nothing is overdue) until this lands.
+- **Activity Tracker** screens (Current/Open issues/Assigned to me/Archived tabs; progress bar; columns Title/Team/Category/Assigned to/Deadline/Status/Days/Created; the activity detail with members + % complete + updates; the colour-coded status summary with upcoming/overdue/raised/completed).
+- **Priority Area editor** exact fields (await screenshot).
+- Run migrations through **0010** (and 0011 when added).
 
 Open follow-ups (optional): onboarding-step invites don't email at that moment (Team page does); per-row "edit your own actions" for Regular users (currently read-only); a background task exists to remove unrouted mock components (`components/{portfolio,priority-area,project,intervention,workspace}` leftovers + `lib/mock`) while keeping the `.module.css` files live code imports.
 

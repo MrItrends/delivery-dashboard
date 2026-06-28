@@ -62,8 +62,8 @@ export function HomeView() {
               <span className={h.flowStep}>Activity</span>
             </div>
             <div className={h.welcomeActions}>
-              <Button variant="primary" size="md" iconLeft={<Icon name="plus" size={16} />} onClick={() => router.push('/priority-areas')}>Create a priority area</Button>
-              <Button variant="secondary" size="md" onClick={() => router.push('/portfolio')}>Start with a portfolio</Button>
+              <Button variant="primary" size="md" iconLeft={<Icon name="plus" size={16} />} onClick={() => router.push('/new/priorityArea')}>Create a priority area</Button>
+              <Button variant="secondary" size="md" onClick={() => router.push('/new/portfolio')}>Start with a portfolio</Button>
             </div>
           </div>
         </div>

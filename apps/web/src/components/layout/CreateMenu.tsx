@@ -4,7 +4,6 @@ import { useState, useRef, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { Button } from '@/components/primitives/Button'
 import { Icon, type IconName } from '@/components/primitives/Icon'
-import { GlobalCreateDrawer } from '@/components/entity/GlobalCreateDrawer'
 import { useCapabilities } from '@/lib/data/roles'
 import styles from './CreateMenu.module.css'
 
@@ -25,7 +24,6 @@ const OPTIONS: CreateOption[] = [
 /** Compact icon-only variant for tight headers. */
 export function CreateMenu({ compact = false }: { compact?: boolean }) {
   const [open, setOpen] = useState(false)
-  const [createKey, setCreateKey] = useState<string | null>(null)
   const ref = useRef<HTMLDivElement>(null)
   const router = useRouter()
   const caps = useCapabilities()
@@ -50,7 +48,7 @@ export function CreateMenu({ compact = false }: { compact?: boolean }) {
   function select(option: CreateOption) {
     setOpen(false)
     if (option.id === 'report') { router.push('/reports'); return }
-    setCreateKey(option.id)
+    router.push(`/new/${option.id}`)
   }
 
   if (!caps.canCreate) return null
@@ -86,10 +84,6 @@ export function CreateMenu({ compact = false }: { compact?: boolean }) {
             </button>
           ))}
         </div>
-      )}
-
-      {createKey && (
-        <GlobalCreateDrawer entityKey={createKey} open onClose={() => setCreateKey(null)} />
       )}
     </div>
   )

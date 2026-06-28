@@ -6,7 +6,6 @@ import { useQuery } from '@tanstack/react-query'
 import { PageHeader } from '@/components/layout/PageHeader'
 import { Button } from '@/components/primitives/Button'
 import { Icon } from '@/components/primitives/Icon'
-import { GlobalCreateDrawer } from '@/components/entity/GlobalCreateDrawer'
 import { EntityCollection } from '@/components/entity/EntityCollection'
 import { useCapabilities } from '@/lib/data/roles'
 import { useRealtime } from '@/lib/data/useRealtime'
@@ -100,7 +99,6 @@ export function PriorityAreaCards() {
   const router = useRouter()
   const caps = useCapabilities()
   const [view, setView] = useState<'cards' | 'list'>('cards')
-  const [createOpen, setCreateOpen] = useState(false)
   useRealtime('priority_areas', ['pa-cards'])
   const { data, isLoading } = useQuery({ queryKey: ['pa-cards'], queryFn: listPriorityAreaCards })
   const cards = data ?? []
@@ -110,7 +108,7 @@ export function PriorityAreaCards() {
       <PageHeader
         title="Priority areas"
         description="Which national priorities need attention. Each card summarises delivery, financing and activity."
-        primaryAction={caps.canCreate ? <Button variant="primary" size="md" iconLeft={<Icon name="plus" size={16} />} onClick={() => setCreateOpen(true)}>Create priority area</Button> : undefined}
+        primaryAction={caps.canCreate ? <Button variant="primary" size="md" iconLeft={<Icon name="plus" size={16} />} onClick={() => router.push('/new/priorityArea')}>Create priority area</Button> : undefined}
       />
       <div className={page.body}>
         <div className={c.toolbar}>
@@ -135,8 +133,6 @@ export function PriorityAreaCards() {
           </div>
         )}
       </div>
-
-      {createOpen && <GlobalCreateDrawer entityKey="priorityArea" open onClose={() => setCreateOpen(false)} />}
     </div>
   )
 }

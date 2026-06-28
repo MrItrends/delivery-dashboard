@@ -46,7 +46,7 @@ export function EntityCollection({ entityKey, parentId, embedded, titleOverride,
 
   const rows = useMemo(() => (data ?? []).filter((r) => (view === 'archived' ? r.archived : !r.archived)), [data, view])
 
-  const openCreate = () => { setEditing(null); setDrawerOpen(true) }
+  const openCreate = () => router.push(`/new/${entityKey}${parentId ? `?parent=${parentId}` : ''}`)
   const openEdit = (r: Row) => { setEditing(r); setDrawerOpen(true) }
 
   function handleSubmit(input: Record<string, unknown>) {
