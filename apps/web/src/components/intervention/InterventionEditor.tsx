@@ -108,7 +108,7 @@ export function InterventionEditor({ id, parentId }: { id?: string; parentId?: s
       router.push(`/interventions/${ivId}`)
     } catch (e) {
       setBusy(false)
-      setError(e instanceof Error ? e.message : 'Could not save')
+      setError(e instanceof Error ? e.message : (e && typeof e === 'object' && 'message' in e ? String((e as { message: unknown }).message) : 'Could not save'))
     }
   }
 

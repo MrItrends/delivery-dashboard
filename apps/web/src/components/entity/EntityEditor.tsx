@@ -16,6 +16,13 @@ import type { Row } from '@/lib/data/crud'
 import page from '@/components/portfolio/PortfolioWorkspace.module.css'
 import s from './EntityEditor.module.css'
 
+/** Pull a readable message out of an Error or a Supabase error object. */
+function errorMessage(e: unknown): string {
+  if (e instanceof Error) return e.message
+  if (e && typeof e === 'object' && 'message' in e) return String((e as { message: unknown }).message)
+  return 'Could not create'
+}
+
 /** Full-page create editor (Notion/Linear style). Save lands you in the new
  *  item's workspace. The creation "journey" the client expects. */
 export function EntityEditor({ entityKey, parentId }: { entityKey: string; parentId?: string }) {
@@ -68,7 +75,7 @@ export function EntityEditor({ entityKey, parentId }: { entityKey: string; paren
       else router.push(`${config.route}/${row.id}`)
     } catch (e) {
       setBusy(false)
-      setError(e instanceof Error ? e.message : 'Could not create')
+      setError(errorMessage(e))
     }
   }
 
