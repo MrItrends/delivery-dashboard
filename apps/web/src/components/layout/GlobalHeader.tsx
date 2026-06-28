@@ -3,7 +3,6 @@
 import { usePathname } from 'next/navigation'
 import { Breadcrumb, type BreadcrumbItem } from '@/components/navigation/Breadcrumb'
 import { Icon } from '@/components/primitives/Icon'
-import { CreateMenu } from './CreateMenu'
 import { useWorkspace } from '@/lib/data/useWorkspace'
 import { useCrumbStore } from '@/lib/data/useCrumb'
 import { ROUTE_LABELS } from './navConfig'
@@ -95,8 +94,6 @@ export function GlobalHeader({
         >
           <Icon name="search" size={20} />
         </button>
-
-        <CreateMenu />
 
         <button
           type="button"
