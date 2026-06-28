@@ -95,7 +95,6 @@ export function EntityCollection({ entityKey, parentId, embedded, titleOverride,
         views={[{ id: 'active', label: 'Active' }, { id: 'archived', label: 'Archived' }]}
         activeView={view}
         onViewChange={(v) => setView(v as 'active' | 'archived')}
-        primaryAction={caps.canCreate ? <Button size="sm" variant="secondary" iconLeft={<Icon name="plus" size={15} />} onClick={openCreate}>{config.singular}</Button> : undefined}
       />
       <div className={t.tableWrap}>
         {isError ? (
@@ -109,7 +108,7 @@ export function EntityCollection({ entityKey, parentId, embedded, titleOverride,
             onRowClick={onRowClick}
             getRowId={(r) => r.id}
             isLoading={isLoading}
-            emptyMessage={view === 'archived' ? `No archived ${config.plural.toLowerCase()}.` : `No ${config.plural.toLowerCase()} yet. Create your first to get started.`}
+            emptyMessage={view === 'archived' ? `No archived ${config.plural.toLowerCase()}.` : `No ${config.plural.toLowerCase()} yet. Use “+ ${config.singular}” above to add the first.`}
           />
         )}
       </div>

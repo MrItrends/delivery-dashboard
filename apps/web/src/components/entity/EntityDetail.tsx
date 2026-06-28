@@ -1,8 +1,10 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { useQuery } from '@tanstack/react-query'
+import { useCrumbStore } from '@/lib/data/useCrumb'
+import { listPriorityAreaCards } from '@/lib/data/priorityAreaOverview'
 import { PageHeader } from '@/components/layout/PageHeader'
 import { Button } from '@/components/primitives/Button'
 import { Icon } from '@/components/primitives/Icon'
@@ -39,7 +41,13 @@ export function EntityDetail({ entityKey, id }: EntityDetailProps) {
     queryFn: () => getEntity<Row>(config.table, id),
   })
 
+  const setCrumb = useCrumbStore((st) => st.setLabel)
+  const { data: paCards } = useQuery({ queryKey: ['pa-cards'], queryFn: listPriorityAreaCards, enabled: entityKey === 'priorityArea' })
+
+  useEffect(() => { if (entity?.name) setCrumb(id, String(entity.name)) }, [entity, id, setCrumb])
+
   const childKey = config.childKey
+  const funding = entityKey === 'priorityArea' ? (paCards ?? []).find((c) => c.id === id) : undefined
 
   if (isLoading) {
     return (
@@ -81,6 +89,34 @@ export function EntityDetail({ entityKey, id }: EntityDetailProps) {
         }
       />
       <div className={page.body} style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-8)' }}>
+        {funding && (() => {
+          const money = (n: number) => `₦${Math.round(n).toLocaleString()}`
+          const pct = (p: number, w: number) => (w > 0 ? Math.round((p / w) * 100) : 0)
+          const stat = (label: string, value: string) => (
+            <div><div style={{ fontSize: 'var(--font-size-xl)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-text-primary)' }}>{value}</div><div style={{ fontSize: 'var(--font-size-xs)', color: 'var(--color-text-tertiary)' }}>{label}</div></div>
+          )
+          const bar = (val: number, color: string) => (
+            <div style={{ height: 7, borderRadius: 999, background: 'var(--color-neutral-100)', overflow: 'hidden', marginTop: 4 }}><div style={{ height: '100%', width: `${val}%`, background: color, borderRadius: 999 }} /></div>
+          )
+          return (
+            <section style={{ border: '1px solid var(--color-border-default)', borderRadius: 'var(--radius-xl)', padding: 'var(--space-5)' }} aria-label="Funding">
+              <h2 className={sect.sectionTitle} style={{ marginBottom: 'var(--space-4)' }}>Funding</h2>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: 'var(--space-5)' }}>
+                {stat('Total budget', money(funding.budget))}
+                {stat('Total funding', money(funding.funded))}
+                {stat('Spent', money(funding.spent))}
+                <div>
+                  <div style={{ fontSize: 'var(--font-size-xs)', color: 'var(--color-text-secondary)' }}>{pct(funding.funded, funding.budget)}% funded</div>
+                  {bar(pct(funding.funded, funding.budget), 'var(--color-status-healthy-dot)')}
+                  <div style={{ fontSize: 'var(--font-size-xs)', color: 'var(--color-text-secondary)', marginTop: 6 }}>{pct(funding.spent, funding.budget)}% spent</div>
+                  {bar(pct(funding.spent, funding.budget), 'var(--color-brand-600)')}
+                </div>
+              </div>
+              {funding.budget === 0 && <p style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-text-tertiary)', marginTop: 'var(--space-4)' }}>Budget is the total of the interventions beneath this priority area. Add a project, then interventions with budgets, to see funding here.</p>}
+            </section>
+          )
+        })()}
+
         {childKey && <EntityCollection entityKey={childKey} parentId={id} embedded />}
 
         <section className={sect.section} aria-label="Evidence & documents">

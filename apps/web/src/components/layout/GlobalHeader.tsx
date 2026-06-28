@@ -5,6 +5,7 @@ import { Breadcrumb, type BreadcrumbItem } from '@/components/navigation/Breadcr
 import { Icon } from '@/components/primitives/Icon'
 import { CreateMenu } from './CreateMenu'
 import { useWorkspace } from '@/lib/data/useWorkspace'
+import { useCrumbStore } from '@/lib/data/useCrumb'
 import { ROUTE_LABELS } from './navConfig'
 import styles from './GlobalHeader.module.css'
 
@@ -12,16 +13,20 @@ function prettify(segment: string) {
   return segment.replace(/-/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase())
 }
 
+const isId = (s: string) => /^[0-9a-f]{8}-[0-9a-f]{4}-/i.test(s)
+
 /** Derive the breadcrumb trail automatically from the current route. */
 function useBreadcrumb(rootLabel: string): BreadcrumbItem[] {
   const pathname = usePathname()
+  const labels = useCrumbStore((s) => s.labels)
   const segments = pathname.split('/').filter(Boolean)
 
   const items: BreadcrumbItem[] = [{ label: rootLabel, href: '/' }]
   let path = ''
   for (const seg of segments) {
     path += `/${seg}`
-    items.push({ label: ROUTE_LABELS[seg] ?? prettify(seg), href: path })
+    const label = labels[seg] ?? ROUTE_LABELS[seg] ?? (isId(seg) ? '…' : prettify(seg))
+    items.push({ label, href: path })
   }
   // The last item is the current page (Breadcrumb renders it non-interactive).
   const last = items[items.length - 1]
