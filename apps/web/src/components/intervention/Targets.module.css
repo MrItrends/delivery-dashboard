@@ -1,0 +1,37 @@
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: var(--space-3); }
+
+.card {
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius-lg);
+  padding: var(--space-4);
+  background-color: var(--color-surface-page);
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  text-align: left;
+  width: 100%;
+  font-family: var(--font-family-sans);
+  transition: border-color var(--duration-fast) var(--ease-out);
+}
+.card:hover { border-color: var(--color-border-strong); }
+
+.name { font-size: var(--font-size-sm); font-weight: var(--font-weight-medium); color: var(--color-text-primary); }
+.value { font-size: var(--font-size-xs); color: var(--color-text-tertiary); }
+.value strong { color: var(--color-text-secondary); font-weight: var(--font-weight-medium); }
+
+.bar { height: 6px; border-radius: var(--radius-full); background-color: var(--color-neutral-100); overflow: hidden; }
+.fill { height: 100%; background-color: var(--color-status-healthy-dot); border-radius: var(--radius-full); }
+
+.spark { height: 40px; }
+
+/* Update panel */
+.updateForm { display: flex; flex-direction: column; gap: var(--space-3); }
+.row { display: flex; gap: var(--space-3); align-items: flex-end; }
+
+.log { list-style: none; margin-top: var(--space-4); border-top: 1px solid var(--color-border-subtle); }
+.logItem { display: flex; align-items: baseline; justify-content: space-between; gap: var(--space-3); padding: var(--space-3) 0; border-bottom: 1px solid var(--color-border-subtle); }
+.logVal { font-size: var(--font-size-sm); font-weight: var(--font-weight-semibold); color: var(--color-text-primary); }
+.logMeta { font-size: var(--font-size-xs); color: var(--color-text-tertiary); }
+.logNote { font-size: var(--font-size-sm); color: var(--color-text-secondary); }
+.empty { font-size: var(--font-size-sm); color: var(--color-text-tertiary); padding: var(--space-3) 0; }

@@ -21,6 +21,7 @@ import { EntityFormDrawer } from './EntityFormDrawer'
 import { CommentThread } from '@/components/collaboration/CommentThread'
 import { DocumentList } from '@/components/collaboration/DocumentList'
 import { PriorityAreaSections } from '@/components/priority-area/PriorityAreaSections'
+import { TargetsSection } from '@/components/intervention/TargetsSection'
 import page from '@/components/portfolio/PortfolioWorkspace.module.css'
 import sect from './EntityCollection.module.css'
 
@@ -118,6 +119,8 @@ export function EntityDetail({ entityKey, id }: EntityDetailProps) {
         {entityKey === 'priorityArea'
           ? <PriorityAreaSections id={id} />
           : childKey && <EntityCollection entityKey={childKey} parentId={id} embedded />}
+
+        {entityKey === 'intervention' && <TargetsSection interventionId={id} />}
 
         <section className={sect.section} aria-label="Evidence & documents">
           <div className={sect.sectionHeader}>
