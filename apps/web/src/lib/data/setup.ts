@@ -134,6 +134,19 @@ async function ensureInterventionId(): Promise<string> {
   return data.id as string
 }
 
+/** A project under a specific priority area (reuse the first, else create one).
+ *  Lets "+ Intervention" on a priority area attach correctly. */
+export async function ensureProjectForPriorityArea(priorityAreaId: string): Promise<string> {
+  const supabase = createClient()
+  const { data } = await supabase.from('projects').select('id').eq('priority_area_id', priorityAreaId).eq('archived', false).order('created_at', { ascending: true }).limit(1).maybeSingle()
+  if (data?.id) return data.id as string
+  const { data: created, error } = await supabase.from('projects')
+    .insert({ priority_area_id: priorityAreaId, name: 'General', health: 'healthy', budget_health: 'healthy', delivery_confidence: 'healthy', status: 'planned' })
+    .select('id').single()
+  if (error) throw error
+  return created.id as string
+}
+
 /** Resolve (creating if needed) the parent id for a child entity created with
  *  no parent selected. Returns null for top-level entities. */
 export async function ensureParentId(childKey: string): Promise<string | null> {

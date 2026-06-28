@@ -20,6 +20,7 @@ import { EntityCollection } from './EntityCollection'
 import { EntityFormDrawer } from './EntityFormDrawer'
 import { CommentThread } from '@/components/collaboration/CommentThread'
 import { DocumentList } from '@/components/collaboration/DocumentList'
+import { PriorityAreaSections } from '@/components/priority-area/PriorityAreaSections'
 import page from '@/components/portfolio/PortfolioWorkspace.module.css'
 import sect from './EntityCollection.module.css'
 
@@ -114,7 +115,9 @@ export function EntityDetail({ entityKey, id }: EntityDetailProps) {
           )
         })()}
 
-        {childKey && <EntityCollection entityKey={childKey} parentId={id} embedded />}
+        {entityKey === 'priorityArea'
+          ? <PriorityAreaSections id={id} />
+          : childKey && <EntityCollection entityKey={childKey} parentId={id} embedded />}
 
         <section className={sect.section} aria-label="Evidence & documents">
           <div className={sect.sectionHeader}>

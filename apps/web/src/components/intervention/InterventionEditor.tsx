@@ -14,7 +14,7 @@ import { FormBanner } from '@/components/auth/AuthScaffold'
 import { useToastStore } from '@/stores/useToastStore'
 import { useParentOptions } from '@/lib/data/useEntity'
 import { createEntity, updateEntity, getEntity, type Row } from '@/lib/data/crud'
-import { ensureParentId } from '@/lib/data/setup'
+import { ensureParentId, ensureProjectForPriorityArea } from '@/lib/data/setup'
 import { useCapabilities } from '@/lib/data/roles'
 import { LIFECYCLE_OPTIONS } from '@/lib/data/entities'
 import { listFinanciers, replaceFinanciers, type Financier } from '@/lib/data/financiers'
@@ -38,7 +38,7 @@ const numOrNull = (v: string) => (v.trim() === '' ? null : Number(v))
 
 const emptyForm = { ref: '', name: '', owner: '', co_lead: '', programme: '', classification: '', region: '', status: 'planned', objective: '', description: '', budget: '', spent: '' }
 
-export function InterventionEditor({ id, parentId }: { id?: string; parentId?: string }) {
+export function InterventionEditor({ id, parentId, paId }: { id?: string; parentId?: string; paId?: string }) {
   const router = useRouter()
   const toast = useToastStore()
   const qc = useQueryClient()
@@ -53,7 +53,7 @@ export function InterventionEditor({ id, parentId }: { id?: string; parentId?: s
   const [busy, setBusy] = useState(false)
   const [loading, setLoading] = useState(isEdit)
 
-  const needsProject = !isEdit && !parentId
+  const needsProject = !isEdit && !parentId && !paId
   const projectOptions = useParentOptions('projects', 'name', needsProject)
   const hasProjects = (projectOptions.data?.length ?? 0) > 0
 
@@ -96,6 +96,7 @@ export function InterventionEditor({ id, parentId }: { id?: string; parentId?: s
         await updateEntity('interventions', id, scalar)
       } else {
         let projectId = parentId || project
+        if (!projectId && paId) projectId = await ensureProjectForPriorityArea(paId)
         if (!projectId) projectId = (await ensureParentId('intervention')) ?? ''
         const row = await createEntity<Row>('interventions', { ...scalar, project_id: projectId, health: 'healthy', budget_health: 'healthy' })
         ivId = row.id
