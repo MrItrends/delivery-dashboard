@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { useQuery } from '@tanstack/react-query'
 import { PageHeader } from '@/components/layout/PageHeader'
 import { Button } from '@/components/primitives/Button'
@@ -27,6 +28,7 @@ interface EntityDetailProps {
 
 export function EntityDetail({ entityKey, id }: EntityDetailProps) {
   const config = ENTITIES[entityKey]!
+  const router = useRouter()
   const toast = useToastStore()
   const caps = useCapabilities()
   const { update } = useEntityMutations(config.table)
@@ -72,7 +74,7 @@ export function EntityDetail({ entityKey, id }: EntityDetailProps) {
         metadata={owner ? [{ label: 'Owner', value: (<span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}><Avatar name={owner} size="xs" /> {owner}</span>) }] : undefined}
         primaryAction={
           caps.canEdit ? (
-            <Button variant="secondary" size="md" iconLeft={<Icon name="sliders" size={16} />} onClick={() => setEditOpen(true)}>
+            <Button variant="secondary" size="md" iconLeft={<Icon name="sliders" size={16} />} onClick={() => entityKey === 'intervention' ? router.push(`/interventions/${id}/edit`) : setEditOpen(true)}>
               Edit {config.singular.toLowerCase()}
             </Button>
           ) : undefined

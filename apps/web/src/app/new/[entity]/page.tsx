@@ -1,5 +1,6 @@
 import { AppShell } from '@/components/layout/AppShell'
 import { EntityEditor } from '@/components/entity/EntityEditor'
+import { InterventionEditor } from '@/components/intervention/InterventionEditor'
 
 export default function NewEntityPage({
   params,
@@ -10,7 +11,9 @@ export default function NewEntityPage({
 }) {
   return (
     <AppShell>
-      <EntityEditor entityKey={params.entity} parentId={searchParams.parent} />
+      {params.entity === 'intervention'
+        ? <InterventionEditor parentId={searchParams.parent} />
+        : <EntityEditor entityKey={params.entity} parentId={searchParams.parent} />}
     </AppShell>
   )
 }
