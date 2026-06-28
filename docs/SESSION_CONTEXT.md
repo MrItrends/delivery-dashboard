@@ -1,0 +1,57 @@
+# Session Context — handoff for continuing in a new chat
+
+A self-contained summary of where the TBI Delivery Platform stands, so work can resume without the prior chat. Read `docs/NORTH_STAR.md` first — it is the constitution.
+
+_Last updated: 2026-06-28._
+
+## 1. What this is
+A **national delivery platform for the Government of Nigeria** (built for TBI). It helps government plan, track, and monitor large-scale programmes so leadership always knows what is on track, what is behind, who owns it, and what decision is needed. Built on TBI's Delivery Framework (prioritisation, planning & resourcing, performance management). **Not** a generic PM tool.
+
+The governing documents (highest authority first):
+- `docs/NORTH_STAR.md` — the constitution (Nigeria-first; canonical model; every screen answers one government question; simplicity; demo integrity; no AI slop).
+- `docs/UX_WRITING_STANDARD.md`, `docs/DEMO_INTEGRITY.md`, `docs/FIRST_RUN_EXPERIENCE.md`.
+- Source of truth for the product model is the **client deck** (`Delivery Dashboard - Walkthrough_01.pdf`, text at `Downloads/walkthrough_text.txt`), not the older `docs/` set.
+- Enforcement skills: `.claude/skills/product-auditor`, `.claude/skills/ux-writing-auditor`. Audit on file: `docs/audits/PRODUCT-AUDIT-2026-06-27.md`.
+
+## 2. Canonical model (locked)
+- **Hierarchy:** `Workspace → Portfolio → Priority Area → Project → Intervention → Activity`. Do not re-architect or add levels.
+- **Four roles only:** Admin · Priority Area Lead/Co-Lead · Intervention Lead/Co-Lead · Regular User. Implemented in `apps/web/src/lib/data/roles.ts` (`normalizeRole`, `capabilitiesFor`, `useCapabilities`).
+- **Two dashboard types** (deck): Activity Tracker vs Full Dashboard.
+- Nigeria-first: default country Nigeria, timezone Africa/Lagos, Naira (₦); `.gov.ng` email placeholders; real MDA examples.
+
+## 3. Stack & repo
+- `apps/web` — Next.js 14 (App Router), TypeScript strict, CSS Modules, design tokens in `apps/web/src/styles/tokens.css` (do not redesign the UI).
+- **Supabase** is the single source of truth (Postgres + Auth + Storage + Realtime). Clients: `lib/supabase/{client,server,admin}.ts`. Data fetching via TanStack React Query; state via Zustand.
+- Repo: github.com/MrItrends/delivery-dashboard (private). Deployed on Vercel (root `apps/web`, npm). Verify locally with `npx next build` (sandbox disabled).
+- Commits end with `Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>`; sign with `-c commit.gpgsign=false`. Branch: `main`.
+
+## 4. What is built (working, on real data)
+- **Auth** (Supabase) + middleware route protection + AuthProvider.
+- **Hierarchy CRUD + archive/restore** via a config-driven engine: `lib/data/{crud,useEntity,entities}.tsx`, `components/entity/{EntityCollection,EntityDetail,EntityFormDrawer,GlobalCreateDrawer}`. Routes: `/portfolio` (custom), `/priority-areas`, `/projects`, `/interventions` (generic) + `[id]` detail; activities are leaf (inside intervention detail).
+- **Create from anywhere:** header Create menu (`CreateMenu` → `GlobalCreateDrawer`); parent is optional and auto-provisioned (`ensureParentId` in `lib/data/setup.ts`) so an empty workspace never dead-ends.
+- **Home `/`** rebuilt on live data (`components/workspace/HomeView.tsx`, `lib/data/home.ts`): summary counts, needs-attention, my activities, recent activity; first-run welcome + "Getting started" checklist when empty.
+- **Reporting engine:** `/reports` + `/reports/[id]` (`components/reports/ReportViewer`, `lib/data/reportCompose.ts`) — composes live data by scope, editable narrative/recommendations, publish, PDF (print) + CSV export.
+- **Global search:** `searchAll` across 9 sources with ranking; live in ⌘K command palette (results + highlight + recents) and `/search` (filters + highlight). `lib/data/{search,recents}.ts`, `lib/highlight.tsx`.
+- **Collaboration:** comments + @mentions → notifications, realtime, Storage-backed documents. Realtime on the hierarchy lists. Invited people join the SAME workspace: `workspace_invites` table + sign-up trigger consume + `app/api/invite` route sends email via service-role admin API. Team page invites + role management (admin only).
+- **Calendar:** `/calendar` (`components/calendar/CalendarView.tsx`, `lib/data/calendar.ts`) — Month/Week/Day grid + List/Card agenda driven by real `due_date` on activities and milestones.
+- **First-run coachmark tour:** `lib/coachmarks/tour.ts`, `components/coachmarks/Coachmarks.tsx` — spotlight tour, auto-starts once, replay from Help.
+- **Settings / Profile / Team / Notifications / Audit / Help / Shortcuts / Status / Release-notes / 403 / offline** pages — all real.
+- **RBAC:** `useCapabilities()` gates create/edit/archive/approve/manage across the app (regular = read-only; leads create/edit; admin manages people/workspace/approvals).
+- **Branding:** logomark is `public/tbi-logo.png` (28×28) via `components/auth/Logo.tsx`. Wordmark "TBI Digital Delivery".
+
+## 5. Database migrations (run in order in Supabase SQL editor)
+`0001_init` schema · `0002_auth` profile trigger (no seed) · `0003_realtime` · `0004_documents` + Storage policy · `0005_remove_demo_seed` (clears old demo data) · `0006_workspace_currency` (Naira) · `0007_rbac_rls` (workspace-member RLS; backfills memberships first) · `0008_collaboration` (invites + auto-join + realtime) · `0009_due_dates` (adds `due_date` to activities/milestones for the calendar).
+Also need: a private Storage bucket `documents`; env vars `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY` (client + Vercel) and `SUPABASE_SERVICE_ROLE_KEY` (Vercel only, for invite emails); Supabase email/SMTP for invite emails; email-confirm OFF for smooth demo sign-up.
+
+## 6. Demo integrity (non-negotiable)
+No dummy data. The platform starts empty and fills only with records the user creates (the only allowed seed is the user's own workspace, created at onboarding via `provisionWorkspace`). Empty states teach. Do not reintroduce mock arrays.
+
+## 7. Current direction — NEW (2026-06-28): rebuild the recognisable screens
+Client feedback: the **Priority Areas** and **Project** screens don't yet resemble the **original product** the client already knows (a real delivery dashboard that was taken down). The ask: **bring those screens back, but better — on our design system**, so they look like what the client recognises. The client provided **voice notes** (cannot be transcribed by the assistant — get text/gist from the human) and will share **screenshots step by step**. Approach: for each shared screenshot, match the layout/structure/columns/widgets the client knows, implemented with our tokens and primitives (no UI redesign of the system itself; do not fabricate data; keep Nigeria-first and the four-role model).
+
+Open follow-ups (optional): onboarding-step invites don't email at that moment (Team page does); per-row "edit your own actions" for Regular users (currently read-only); a background task exists to remove unrouted mock components (`components/{portfolio,priority-area,project,intervention,workspace}` leftovers + `lib/mock`) while keeping the `.module.css` files live code imports.
+
+## 8. How to continue
+1. Read `docs/NORTH_STAR.md`, then this file.
+2. For each screen the client shares: study the screenshot, identify the government question it answers, rebuild it with existing primitives + tokens to resemble the original, on live Supabase data. Run `product-auditor` and `ux-writing-auditor` before/after.
+3. Build green (`npx next build`), commit with the trailer, push to `main`.
