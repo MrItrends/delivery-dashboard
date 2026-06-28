@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import { useQuery } from '@tanstack/react-query'
 import { useCrumbStore } from '@/lib/data/useCrumb'
 import { listPriorityAreaCards } from '@/lib/data/priorityAreaOverview'
+import { useHealthMap, asStatus } from '@/lib/data/health'
 import { PageHeader } from '@/components/layout/PageHeader'
 import { Button } from '@/components/primitives/Button'
 import { Icon } from '@/components/primitives/Icon'
@@ -45,6 +46,7 @@ export function EntityDetail({ entityKey, id }: EntityDetailProps) {
 
   const setCrumb = useCrumbStore((st) => st.setLabel)
   const { data: paCards } = useQuery({ queryKey: ['pa-cards'], queryFn: listPriorityAreaCards, enabled: entityKey === 'priorityArea' })
+  const { data: healthMap } = useHealthMap(config.table, entityKey === 'activity' ? [] : [id])
 
   useEffect(() => { if (entity?.name) setCrumb(id, String(entity.name)) }, [entity, id, setCrumb])
 
@@ -72,7 +74,10 @@ export function EntityDetail({ entityKey, id }: EntityDetailProps) {
   }
 
   const description = (entity.mission || entity.description || entity.objective || '') as string
-  const status = entity[config.headerStatusField ?? 'health'] as ObjectStatus | undefined
+  // Activities keep their own status; everything else derives from activities beneath.
+  const status = entityKey === 'activity'
+    ? (entity[config.headerStatusField ?? 'status'] as ObjectStatus | undefined)
+    : asStatus(healthMap?.[id])
   const owner = entity.owner as string | undefined
 
   return (

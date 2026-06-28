@@ -8,12 +8,14 @@ import { DataTable } from '@/components/data/DataTable'
 import { FilterBar } from '@/components/data/FilterBar'
 import { Button } from '@/components/primitives/Button'
 import { Icon } from '@/components/primitives/Icon'
+import { StatusChip } from '@/components/primitives/StatusChip'
 import { FormBanner } from '@/components/auth/AuthScaffold'
 import { useToastStore } from '@/stores/useToastStore'
 import { isSupabaseConfigured } from '@/lib/supabase/client'
 import { useEntityList, useEntityMutations } from '@/lib/data/useEntity'
 import { useRealtime } from '@/lib/data/useRealtime'
 import { useCapabilities } from '@/lib/data/roles'
+import { useHealthMap, asStatus } from '@/lib/data/health'
 import { ENTITIES } from '@/lib/data/entities'
 import type { Row } from '@/lib/data/crud'
 import { EntityFormDrawer } from './EntityFormDrawer'
@@ -45,6 +47,8 @@ export function EntityCollection({ entityKey, parentId, embedded, titleOverride,
   const [editing, setEditing] = useState<Row | null>(null)
 
   const rows = useMemo(() => (data ?? []).filter((r) => (view === 'archived' ? r.archived : !r.archived)), [data, view])
+  const rowIds = useMemo(() => rows.map((r) => r.id), [rows])
+  const { data: healthMap } = useHealthMap(config.table, rowIds)
 
   const openCreate = () => router.push(`/new/${entityKey}${parentId ? `?parent=${parentId}` : ''}`)
   const openEdit = (r: Row) => { setEditing(r); setDrawerOpen(true) }
@@ -66,9 +70,15 @@ export function EntityCollection({ entityKey, parentId, embedded, titleOverride,
   }
 
   const columns = useMemo<ColumnDef<Row, unknown>[]>(() => {
-    if (!caps.canEdit && !caps.canArchive) return config.columns
+    // Replace the stored "Health" column with a derived traffic-light.
+    const base = config.columns.map((col) =>
+      (col as { accessorKey?: string }).accessorKey === 'health'
+        ? { ...col, cell: ({ row }: { row: { original: Row } }) => <StatusChip status={asStatus(healthMap?.[row.original.id])} size="sm" /> }
+        : col
+    )
+    if (!caps.canEdit && !caps.canArchive) return base
     return [
-      ...config.columns,
+      ...base,
       {
         id: 'actions', header: '', size: 80,
         cell: ({ row }) => (
@@ -82,7 +92,7 @@ export function EntityCollection({ entityKey, parentId, embedded, titleOverride,
       },
     ]
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [config, view, caps.canEdit, caps.canArchive])
+  }, [config, view, caps.canEdit, caps.canArchive, healthMap])
 
   const onRowClick = (r: Row) => {
     if (config.childKey) router.push(`${config.route}/${r.id}`)
