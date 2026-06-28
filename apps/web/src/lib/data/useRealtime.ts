@@ -18,20 +18,29 @@ export function useRealtime(table: string, queryKey: QueryKey, filter?: Realtime
   useEffect(() => {
     if (!isSupabaseConfigured) return
     const supabase = createClient()
-    const channel = supabase
-      .channel(`rt:${table}:${filterVal ?? 'all'}`)
-      .on(
-        'postgres_changes',
-        {
-          event: '*',
-          schema: 'public',
-          table,
-          ...(filter ? { filter: `${filter.column}=eq.${filter.value}` } : {}),
-        },
-        () => qc.invalidateQueries({ queryKey }),
-      )
-      .subscribe()
-    return () => { supabase.removeChannel(channel) }
+    // Unique channel per query key so two components watching the same table
+    // don't collide on the same channel topic.
+    const topic = `rt:${table}:${keyStr}:${filterVal ?? 'all'}`
+    let channel: ReturnType<typeof supabase.channel> | null = null
+    try {
+      channel = supabase
+        .channel(topic)
+        .on(
+          'postgres_changes',
+          {
+            event: '*',
+            schema: 'public',
+            table,
+            ...(filter ? { filter: `${filter.column}=eq.${filter.value}` } : {}),
+          },
+          () => qc.invalidateQueries({ queryKey }),
+        )
+        .subscribe()
+    } catch {
+      // Realtime is non-critical — never let it take down the page.
+      channel = null
+    }
+    return () => { if (channel) supabase.removeChannel(channel) }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [table, keyStr, filterVal])
 }
