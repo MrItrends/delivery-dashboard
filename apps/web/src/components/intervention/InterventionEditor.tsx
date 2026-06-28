@@ -7,7 +7,9 @@ import { PageHeader } from '@/components/layout/PageHeader'
 import { Button } from '@/components/primitives/Button'
 import { Icon } from '@/components/primitives/Icon'
 import { TextField } from '@/components/primitives/TextField'
+import { MoneyField } from '@/components/primitives/MoneyField'
 import { Select } from '@/components/primitives/Select'
+import { formatThousands, digitsOnly } from '@/lib/money'
 import { FormBanner } from '@/components/auth/AuthScaffold'
 import { useToastStore } from '@/stores/useToastStore'
 import { useParentOptions } from '@/lib/data/useEntity'
@@ -141,8 +143,8 @@ export function InterventionEditor({ id, parentId }: { id?: string; parentId?: s
               <label className={s.label}>Description</label>
               <textarea className={s.textarea} value={form.description} onChange={(e) => set('description', e.target.value)} />
             </div>
-            <TextField label="Total budget (₦)" type="number" value={form.budget} onChange={(e) => set('budget', e.target.value)} />
-            <TextField label="Amount spent (₦)" type="number" value={form.spent} onChange={(e) => set('spent', e.target.value)} />
+            <MoneyField label="Total budget (₦)" value={form.budget} onChange={(d) => set('budget', d)} />
+            <MoneyField label="Amount spent (₦)" value={form.spent} onChange={(d) => set('spent', d)} />
           </div>
 
           {/* Financiers */}
@@ -159,7 +161,7 @@ export function InterventionEditor({ id, parentId }: { id?: string; parentId?: s
                     <input className={s.input} value={f.name} placeholder="e.g. World Food Program" onChange={(e) => setFinanciers((r) => r.map((x, j) => j === i ? { ...x, name: e.target.value } : x))} />
                     <select className={s.select} value={f.finance_method} onChange={(e) => setFinanciers((r) => r.map((x, j) => j === i ? { ...x, finance_method: e.target.value } : x))}>{FINANCE_METHODS.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}</select>
                     <select className={s.select} value={f.procurement_method} onChange={(e) => setFinanciers((r) => r.map((x, j) => j === i ? { ...x, procurement_method: e.target.value } : x))}>{PROCUREMENT_METHODS.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}</select>
-                    <input className={s.input} type="number" value={f.amount} onChange={(e) => setFinanciers((r) => r.map((x, j) => j === i ? { ...x, amount: e.target.value } : x))} />
+                    <input className={s.input} inputMode="numeric" value={formatThousands(f.amount)} onChange={(e) => setFinanciers((r) => r.map((x, j) => j === i ? { ...x, amount: digitsOnly(e.target.value) } : x))} />
                     <button type="button" className={s.del} aria-label="Remove financier" onClick={() => setFinanciers((r) => r.filter((_, j) => j !== i))}><Icon name="alert-circle" size={15} /></button>
                   </div>
                 ))}
@@ -179,8 +181,8 @@ export function InterventionEditor({ id, parentId }: { id?: string; parentId?: s
                 {targets.map((t, i) => (
                   <div key={t.key} className={`${s.row} ${s.targetGrid}`}>
                     <input className={s.input} value={t.name} placeholder="e.g. 100% of rice produced locally" onChange={(e) => setTargets((r) => r.map((x, j) => j === i ? { ...x, name: e.target.value } : x))} />
-                    <input className={s.input} type="number" value={t.target} onChange={(e) => setTargets((r) => r.map((x, j) => j === i ? { ...x, target: e.target.value } : x))} />
-                    <input className={s.input} type="number" value={t.start_amount} onChange={(e) => setTargets((r) => r.map((x, j) => j === i ? { ...x, start_amount: e.target.value } : x))} />
+                    <input className={s.input} inputMode="numeric" value={formatThousands(t.target)} onChange={(e) => setTargets((r) => r.map((x, j) => j === i ? { ...x, target: digitsOnly(e.target.value) } : x))} />
+                    <input className={s.input} inputMode="numeric" value={formatThousands(t.start_amount)} onChange={(e) => setTargets((r) => r.map((x, j) => j === i ? { ...x, start_amount: digitsOnly(e.target.value) } : x))} />
                     <input className={s.input} value={t.unit} placeholder="e.g. kg" onChange={(e) => setTargets((r) => r.map((x, j) => j === i ? { ...x, unit: e.target.value } : x))} />
                     <input className={s.input} type="date" value={t.deadline} onChange={(e) => setTargets((r) => r.map((x, j) => j === i ? { ...x, deadline: e.target.value } : x))} />
                     <button type="button" className={s.del} aria-label="Remove target" onClick={() => setTargets((r) => r.filter((_, j) => j !== i))}><Icon name="alert-circle" size={15} /></button>

@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import { PageHeader } from '@/components/layout/PageHeader'
 import { Button } from '@/components/primitives/Button'
 import { TextField } from '@/components/primitives/TextField'
+import { MoneyField } from '@/components/primitives/MoneyField'
 import { Select } from '@/components/primitives/Select'
 import { FormBanner } from '@/components/auth/AuthScaffold'
 import { useToastStore } from '@/stores/useToastStore'
@@ -55,7 +56,7 @@ export function EntityEditor({ entityKey, parentId }: { entityKey: string; paren
     const input: Record<string, unknown> = {}
     for (const f of config.fields) {
       let v = form[f.name]
-      if (f.type === 'number') v = v === '' || v == null ? null : Number(v)
+      if (f.type === 'number' || f.type === 'money') v = v === '' || v == null ? null : Number(v)
       if (f.type === 'date') v = v === '' ? null : v
       input[f.name] = v
     }
@@ -100,6 +101,9 @@ export function EntityEditor({ entityKey, parentId }: { entityKey: string; paren
     }
     if (f.type === 'select') {
       return <Select key={f.name} label={f.label} options={f.options ?? []} value={value} onChange={(e) => setField(f.name, e.target.value)} />
+    }
+    if (f.type === 'money') {
+      return <MoneyField key={f.name} label={f.label} value={value} placeholder={f.placeholder} onChange={(d) => setField(f.name, d)} />
     }
     return (
       <TextField key={f.name} label={f.label} type={f.type === 'number' ? 'number' : f.type === 'date' ? 'date' : 'text'}

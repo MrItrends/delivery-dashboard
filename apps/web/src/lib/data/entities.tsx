@@ -63,7 +63,7 @@ export interface ParentRef { key: string; table: string; label: string }
 export interface FieldDef {
   name: string
   label: string
-  type: 'text' | 'textarea' | 'select' | 'date' | 'number'
+  type: 'text' | 'textarea' | 'select' | 'date' | 'number' | 'money'
   options?: SelectOption[]
   placeholder?: string
   required?: boolean
@@ -122,7 +122,7 @@ export const ENTITIES: Record<string, EntityConfig> = {
       { name: 'name', label: 'Name', type: 'text', placeholder: 'e.g. Revitalise 774 Primary Health Centres', required: true },
       { name: 'description', label: 'Description', type: 'textarea' },
       { name: 'owner', label: 'Lead', type: 'text' },
-      { name: 'budget', label: 'Total budget (₦)', type: 'number', placeholder: '0' },
+      { name: 'budget', label: 'Total budget (₦)', type: 'money', placeholder: '0' },
       { name: 'start_date', label: 'Start date', type: 'date' },
       { name: 'end_date', label: 'End date', type: 'date' },
       { name: 'objectives', label: 'Objectives', type: 'textarea' },
