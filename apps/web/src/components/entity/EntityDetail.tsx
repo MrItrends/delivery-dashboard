@@ -101,14 +101,11 @@ export function EntityDetail({ entityKey, id }: EntityDetailProps) {
           return (
             <section style={{ border: '1px solid var(--color-border-default)', borderRadius: 'var(--radius-xl)', padding: 'var(--space-5)' }} aria-label="Funding">
               <h2 className={sect.sectionTitle} style={{ marginBottom: 'var(--space-4)' }}>Funding</h2>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: 'var(--space-5)' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: 'var(--space-5)' }}>
                 {stat('Total budget', money(funding.budget))}
-                {stat('Total funding', money(funding.funded))}
                 {stat('Spent', money(funding.spent))}
                 <div>
-                  <div style={{ fontSize: 'var(--font-size-xs)', color: 'var(--color-text-secondary)' }}>{pct(funding.funded, funding.budget)}% funded</div>
-                  {bar(pct(funding.funded, funding.budget), 'var(--color-status-healthy-dot)')}
-                  <div style={{ fontSize: 'var(--font-size-xs)', color: 'var(--color-text-secondary)', marginTop: 6 }}>{pct(funding.spent, funding.budget)}% spent</div>
+                  <div style={{ fontSize: 'var(--font-size-xs)', color: 'var(--color-text-secondary)' }}>{pct(funding.spent, funding.budget)}% spent</div>
                   {bar(pct(funding.spent, funding.budget), 'var(--color-brand-600)')}
                 </div>
               </div>

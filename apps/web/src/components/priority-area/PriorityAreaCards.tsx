@@ -65,10 +65,8 @@ function Card({ card, onOpen }: { card: PriorityAreaCard; onOpen: () => void }) 
       <div className={c.block}>
         <div className={c.blockTitle}>Financing</div>
         <div className={c.money}>Budget {money(card.budget)}</div>
-        <div className={c.bar}><div className={`${c.barFill} ${c.fillFunded}`} style={{ width: `${pct(card.funded, card.budget)}%` }} /></div>
-        <div className={c.miniLabel}>{pct(card.funded, card.budget)}% funded</div>
         <div className={c.bar}><div className={`${c.barFill} ${c.fillSpent}`} style={{ width: `${pct(card.spent, card.budget)}%` }} /></div>
-        <div className={c.miniLabel}>{pct(card.spent, card.budget)}% spent</div>
+        <div className={c.miniLabel}>{money(card.spent)} spent ({pct(card.spent, card.budget)}%)</div>
       </div>
 
       <div className={c.counts}>
