@@ -73,9 +73,11 @@ export async function getMyRole(): Promise<Role> {
   const { data: a } = await supabase.auth.getUser()
   if (!a.user) return 'regular'
   const { data: m } = await supabase.from('memberships').select('role').eq('user_id', a.user.id).limit(1).maybeSingle()
+  // A member's capabilities come from their workspace role.
   if (m?.role) return normalizeRole(m.role as string)
-  const { data: p } = await supabase.from('profiles').select('role').eq('id', a.user.id).maybeSingle()
-  return normalizeRole(p?.role as string)
+  // No membership yet → this user is bootstrapping their own workspace, so they
+  // own it: treat them as admin. Creating their first object makes this real.
+  return 'admin'
 }
 
 export function useMyRole() {
