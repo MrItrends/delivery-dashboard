@@ -33,6 +33,8 @@ async function interventionsByAncestor(table: string, ids: string[]): Promise<Iv
     const { data } = await supabase.from('interventions').select('project_id, budget, spent').in('project_id', ids).eq('archived', false)
     return (data ?? []).map((i) => ({ ancestor: String(rec(i).project_id), budget: num(rec(i).budget), spent: num(rec(i).spent) }))
   }
+  if (table !== 'priority_areas' && table !== 'portfolios') return []
+
   // priority_areas / portfolios — resolve the chain down to interventions.
   let paIds = ids
   const paToTarget = new Map<string, string>()

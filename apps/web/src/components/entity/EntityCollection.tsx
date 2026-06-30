@@ -15,7 +15,8 @@ import { isSupabaseConfigured } from '@/lib/supabase/client'
 import { useEntityList, useEntityMutations } from '@/lib/data/useEntity'
 import { useRealtime } from '@/lib/data/useRealtime'
 import { useCapabilities } from '@/lib/data/roles'
-import { useHealthMap, asStatus } from '@/lib/data/health'
+import { useFinanceRollup, deriveSpendHealth } from '@/lib/data/financeRollup'
+import { formatThousands } from '@/lib/money'
 import { ENTITIES } from '@/lib/data/entities'
 import type { Row } from '@/lib/data/crud'
 import { EntityFormDrawer } from './EntityFormDrawer'
@@ -48,7 +49,7 @@ export function EntityCollection({ entityKey, parentId, embedded, titleOverride,
 
   const rows = useMemo(() => (data ?? []).filter((r) => (view === 'archived' ? r.archived : !r.archived)), [data, view])
   const rowIds = useMemo(() => rows.map((r) => r.id), [rows])
-  const { data: healthMap } = useHealthMap(config.table, rowIds)
+  const { data: finance } = useFinanceRollup(config.table, rowIds)
 
   const openCreate = () => router.push(`/new/${entityKey}${parentId ? `?parent=${parentId}` : ''}`)
   const openEdit = (r: Row) => { setEditing(r); setDrawerOpen(true) }
@@ -70,12 +71,18 @@ export function EntityCollection({ entityKey, parentId, embedded, titleOverride,
   }
 
   const columns = useMemo<ColumnDef<Row, unknown>[]>(() => {
-    // Replace the stored "Health" column with a derived traffic-light.
-    const base = config.columns.map((col) =>
-      (col as { accessorKey?: string }).accessorKey === 'health'
-        ? { ...col, cell: ({ row }: { row: { original: Row } }) => <StatusChip status={asStatus(healthMap?.[row.original.id])} size="sm" /> }
-        : col
-    )
+    const DROP = ['target_status', 'risk_level', 'delivery_confidence']
+    const base = config.columns
+      // Drop the invented status columns (target / risk / confidence).
+      .filter((col) => !DROP.includes((col as { accessorKey?: string }).accessorKey ?? ''))
+      .map((col) => {
+        const key = (col as { accessorKey?: string }).accessorKey
+        // Health = spend vs budget; "–" when there's no budget to judge.
+        if (key === 'health') return { ...col, cell: ({ row }: { row: { original: Row } }) => { const f = finance?.[row.original.id]; return f && f.budget > 0 ? <StatusChip status={deriveSpendHealth(f)} size="sm" /> : <span className={t.muted}>—</span> } }
+        // Budget = a rolled-up figure, not a status.
+        if (key === 'budget_health') return { ...col, header: 'Budget (₦)', cell: ({ row }: { row: { original: Row } }) => { const b = finance?.[row.original.id]?.budget ?? 0; return <span className={t.muted}>{b > 0 ? formatThousands(b) : '—'}</span> } }
+        return col
+      })
     if (!caps.canEdit && !caps.canArchive) return base
     return [
       ...base,
@@ -92,7 +99,7 @@ export function EntityCollection({ entityKey, parentId, embedded, titleOverride,
       },
     ]
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [config, view, caps.canEdit, caps.canArchive, healthMap])
+  }, [config, view, caps.canEdit, caps.canArchive, finance])
 
   const onRowClick = (r: Row) => {
     if (config.childKey) router.push(`${config.route}/${r.id}`)
