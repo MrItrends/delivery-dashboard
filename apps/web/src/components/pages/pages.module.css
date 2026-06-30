@@ -21,8 +21,9 @@
 .list li:last-child .row,
 .list > .row:last-child { border-bottom: none; }
 
-.rowButton { cursor: pointer; transition: background-color var(--duration-fast) var(--ease-out); }
+.rowButton { cursor: pointer; transition: background-color var(--duration-fast) var(--ease-out); outline: none; }
 .rowButton:hover { background-color: var(--color-surface-hover); }
+.rowButton:focus-visible { outline: 2px solid var(--color-border-focus); outline-offset: -2px; }
 
 .rowMain { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 1px; }
 .rowTitle { font-size: var(--font-size-sm); font-weight: var(--font-weight-medium); color: var(--color-text-primary); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
