@@ -16,6 +16,8 @@ import { isSupabaseConfigured } from '@/lib/supabase/client'
 import { usePortfolios, useCreatePortfolio, useUpdatePortfolio, useArchivePortfolio } from '@/lib/data/usePortfolios'
 import { useRealtime } from '@/lib/data/useRealtime'
 import { useCapabilities } from '@/lib/data/roles'
+import { useFinanceRollup, deriveSpendHealth } from '@/lib/data/financeRollup'
+import { formatThousands } from '@/lib/money'
 import type { Portfolio, PortfolioInput } from '@/lib/data/portfolios'
 import { PortfolioFormDrawer } from './PortfolioFormDrawer'
 import page from './PortfolioWorkspace.module.css'
@@ -43,6 +45,8 @@ export function PortfoliosList() {
     () => (data ?? []).filter((p) => (view === 'archived' ? p.archived : !p.archived)),
     [data, view]
   )
+  const rowIds = useMemo(() => rows.map((p) => p.id), [rows])
+  const { data: finance } = useFinanceRollup('portfolios', rowIds)
 
   function openCreate() { router.push('/new/portfolio') }
   function openEdit(p: Portfolio) { setEditing(p); setDrawerOpen(true) }
@@ -73,10 +77,10 @@ export function PortfoliosList() {
     { accessorKey: 'owner', header: 'Owner', size: 170, cell: ({ row }) => row.original.owner
       ? <span className={t.owner}><Avatar name={row.original.owner} size="xs" /><span className={t.ownerName}>{row.original.owner}</span></span>
       : <span className={t.muted}>—</span> },
-    { accessorKey: 'health', header: 'Health', size: 110, cell: ({ row }) => <StatusChip status={row.original.health} size="sm" /> },
-    { accessorKey: 'budget_health', header: 'Budget', size: 110, cell: ({ row }) => <StatusChip status={row.original.budget_health} size="sm" /> },
-    { accessorKey: 'risk_level', header: 'Risk', size: 110, cell: ({ row }) => <StatusChip status={row.original.risk_level} size="sm" /> },
-    { accessorKey: 'reporting_period', header: 'Reporting period', size: 180, cell: ({ row }) => <span className={t.muted}>{row.original.reporting_period ?? '—'}</span> },
+    { id: 'health', header: 'Health', size: 110, cell: ({ row }) => <StatusChip status={deriveSpendHealth(finance?.[row.original.id] ?? { budget: 0, spent: 0 })} size="sm" /> },
+    { id: 'budget', header: 'Budget', size: 140, cell: ({ row }) => { const b = finance?.[row.original.id]?.budget ?? 0; return <span className={t.muted}>{b > 0 ? `₦${formatThousands(b)}` : '—'}</span> } },
+    { id: 'spent', header: 'Spent', size: 140, cell: ({ row }) => { const sp = finance?.[row.original.id]?.spent ?? 0; return <span className={t.muted}>{sp > 0 ? `₦${formatThousands(sp)}` : '—'}</span> } },
+    { accessorKey: 'reporting_period', header: 'Reporting period', size: 170, cell: ({ row }) => <span className={t.muted}>{row.original.reporting_period ?? '—'}</span> },
     { accessorKey: 'updated_at', header: 'Updated', size: 100, cell: ({ row }) => <span className={t.muted}>{fmtDate(row.original.updated_at)}</span> },
     ...(caps.canEdit || caps.canArchive ? [{ id: 'actions', header: '', size: 80, cell: ({ row }: { row: { original: Portfolio } }) => (
       <span className={t.actions}>
@@ -87,7 +91,7 @@ export function PortfoliosList() {
       </span>
     ) }] as ColumnDef<Portfolio, unknown>[] : []),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  ], [view, caps.canEdit, caps.canArchive])
+  ], [view, caps.canEdit, caps.canArchive, finance])
 
   const header = (
     <PageHeader
@@ -112,7 +116,6 @@ export function PortfoliosList() {
             views={[{ id: 'active', label: 'Active' }, { id: 'archived', label: 'Archived' }]}
             activeView={view}
             onViewChange={(v) => setView(v as 'active' | 'archived')}
-            primaryAction={caps.canCreate ? <Button size="sm" variant="secondary" iconLeft={<Icon name="plus" size={15} />} onClick={openCreate}>Portfolio</Button> : undefined}
           />
           <div className={t.tableWrap}>
             {isError ? (
