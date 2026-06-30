@@ -77,10 +77,9 @@ export function PortfoliosList() {
     { accessorKey: 'owner', header: 'Owner', size: 170, cell: ({ row }) => row.original.owner
       ? <span className={t.owner}><Avatar name={row.original.owner} size="xs" /><span className={t.ownerName}>{row.original.owner}</span></span>
       : <span className={t.muted}>—</span> },
-    { id: 'health', header: 'Health', size: 110, cell: ({ row }) => <StatusChip status={deriveSpendHealth(finance?.[row.original.id] ?? { budget: 0, spent: 0 })} size="sm" /> },
-    { id: 'budget', header: 'Budget', size: 140, cell: ({ row }) => { const b = finance?.[row.original.id]?.budget ?? 0; return <span className={t.muted}>{b > 0 ? `₦${formatThousands(b)}` : '—'}</span> } },
-    { id: 'spent', header: 'Spent', size: 140, cell: ({ row }) => { const sp = finance?.[row.original.id]?.spent ?? 0; return <span className={t.muted}>{sp > 0 ? `₦${formatThousands(sp)}` : '—'}</span> } },
-    { accessorKey: 'reporting_period', header: 'Reporting period', size: 170, cell: ({ row }) => <span className={t.muted}>{row.original.reporting_period ?? '—'}</span> },
+    { id: 'health', header: 'Health', size: 120, cell: ({ row }) => { const f = finance?.[row.original.id]; return f && f.budget > 0 ? <StatusChip status={deriveSpendHealth(f)} size="sm" /> : <span className={t.muted}>—</span> } },
+    { id: 'budget', header: 'Budget (₦)', size: 150, cell: ({ row }) => { const b = finance?.[row.original.id]?.budget ?? 0; return <span className={t.muted}>{b > 0 ? formatThousands(b) : '—'}</span> } },
+    { accessorKey: 'reporting_period', header: 'Reporting period', size: 180, cell: ({ row }) => <span className={t.muted}>{row.original.reporting_period ?? '—'}</span> },
     { accessorKey: 'updated_at', header: 'Updated', size: 100, cell: ({ row }) => <span className={t.muted}>{fmtDate(row.original.updated_at)}</span> },
     ...(caps.canEdit || caps.canArchive ? [{ id: 'actions', header: '', size: 80, cell: ({ row }: { row: { original: Portfolio } }) => (
       <span className={t.actions}>
